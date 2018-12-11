@@ -240,3 +240,7 @@
     (lambda ()
       (interactive)
       (find-alternate-file "..")))
+(define-key dired-mode-map "%" 'find-file)
+(define-key dired-mode-map "d" 'dired-create-directory)
+(define-key dired-mode-map "D" 'dired-flag-file-deletion)
+
