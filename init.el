@@ -31,98 +31,111 @@
 ;; Installed Packages
 ;; ---------------------------------------------------------------
 (use-package counsel-projectile
-             :config
-             (counsel-mode))
+  :config
+  (counsel-mode))
 
 (use-package evil-commentary
-             :init
-             (evil-commentary-mode t))
+  :init
+  (evil-commentary-mode t))
 
-;; Use Vim / EVIL mode
-
+;; EVIL mode is VIM keybindings and leader system
 (use-package evil
-             :init
-             (evil-mode t)
+  :init
+  (evil-mode t)
 
-             :config
-             (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
-             (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
-             (define-key evil-normal-state-map (kbd "-") 'dired-jump)
-             (define-key evil-normal-state-map (kbd "C-h") (kbd "C-w h"))
-             (define-key evil-normal-state-map (kbd "C-j") (kbd "C-w j"))
-             (define-key evil-normal-state-map (kbd "C-k") (kbd "C-w k"))
-             (define-key evil-normal-state-map (kbd "C-l") (kbd "C-w l"))
-             (define-key evil-normal-state-map (kbd "C-b") 'desperately-compile)
+  :config
+  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+  (define-key evil-normal-state-map (kbd "-") 'dired-jump)
+  (define-key evil-normal-state-map (kbd "C-h") (kbd "C-w h"))
+  (define-key evil-normal-state-map (kbd "C-j") (kbd "C-w j"))
+  (define-key evil-normal-state-map (kbd "C-k") (kbd "C-w k"))
+  (define-key evil-normal-state-map (kbd "C-l") (kbd "C-w l"))
+  (define-key evil-normal-state-map (kbd "C-b") 'desperately-compile)
 
-             (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
-             (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
-             (define-key evil-insert-state-map (kbd "C-u")
-             (lambda ()
-                 (interactive)
-                 (evil-delete (point-at-bol) (point))))
+  (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+  (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
+  (define-key evil-insert-state-map (kbd "C-u")
+    (lambda ()
+      (interactive)
+      (evil-delete (point-at-bol) (point))))
 
-             (use-package evil-leader
-                          :config
-                          (setq evil-leader/in-all-states 1)
-                          (global-evil-leader-mode)
-                          (evil-leader/set-leader "SPC")
-                          ;; Set <leader>n to clear highlights
-                          (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
-                          ;; <leader>f finds files in project
-                          (evil-leader/set-key "f" 'counsel-projectile-find-file)
-                          ;; <leader>p finds tags in project
-                          (evil-leader/set-key "p" 'projectile-find-tag)
-                          )
+  (use-package evil-leader
+    :config
+    (setq evil-leader/in-all-states 1)
+    (global-evil-leader-mode)
+    (evil-leader/set-leader "SPC")
+    ;; Set <leader>n to clear highlights
+    (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
+    ;; <leader>f finds files in project
+    (evil-leader/set-key "f" 'counsel-projectile-find-file)
+    ;; <leader>p finds tags in project
+    (evil-leader/set-key "p" 'projectile-find-tag)
+    )
 
-             (use-package evil-surround
-                          :config
-                          (global-evil-surround-mode))
+  (use-package evil-surround
+    :config
+    (global-evil-surround-mode))
 
-             (use-package evil-indent-textobject)
+  (use-package evil-indent-textobject)
 
-             (use-package evil-search-highlight-persist
-                          :config
-                          (global-evil-search-highlight-persist t))
+  (use-package evil-search-highlight-persist
+    :config
+    (global-evil-search-highlight-persist t))
 
-             (use-package use-package-chords
-                          :config
-                          (key-chord-mode 1)
-                          (setq key-chord-two-keys-delay 0.2)
-                          ;; Exit insert mode with 'jj' or 'jk'
-                          (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
-                          ;; ;; Use ensime to get the type at the point
-                          ;; (key-chord-define evil-normal-state-map "et" 'ensime-type-at-point)
-                          )
-             )
+  (use-package use-package-chords
+    :config
+    (key-chord-mode 1)
+    (setq key-chord-two-keys-delay 0.2)
+    ;; Exit insert mode with 'jj' or 'jk'
+    (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
+    (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
+    (key-chord-define evil-insert-state-map "Jk" 'evil-normal-state)
+    (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state)
+    (key-chord-define evil-insert-state-map "JK" 'evil-normal-state)
+    ;; ;; Use ensime to get the type at the point
+    (key-chord-define evil-normal-state-map "et" 'ensime-type-at-point)
+    )
+  )
 
 ;; Show matching paren
 (use-package autopair
-             :config
-             (show-paren-mode t)
-             (autopair-global-mode))
+  :config
+  (show-paren-mode t)
+  (autopair-global-mode))
 
 (use-package smooth-scrolling
-             :config
-             (setq scroll-margin 8
-                   scroll-conservatively 9999
-                   scroll-step 1))
+  :config
+  (setq scroll-margin 8
+        scroll-conservatively 9999
+        scroll-step 1))
 
 (use-package fill-column-indicator
-             :init
-             (setq-default fill-column 80)
-             (add-hook 'after-change-major-mode-hook 'fci-mode))
+  :init
+  (setq-default fill-column 80)
+  (add-hook 'after-change-major-mode-hook 'fci-mode))
 
 ; Ensure that emacs has the shell's PATH variables on osx
 (use-package exec-path-from-shell
-             :config
-             (when (memq window-system '(mac ns x))
-               (exec-path-from-shell-initialize))
-)
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
 (use-package ag
-             :config
-             (setq ag-reuse-buffers 't)
-             )
+  :config
+  (setq ag-reuse-buffers 't))
+
+(use-package scala-mode
+  :interpreter
+  ("scala" . scala-mode))
+
+(use-package ensime
+  :ensure t
+  :config
+  (setq ensime-startup-notification nil)
+  (setq ensime-startup-snapshot-notification nil)
+  :pin melpa-stable)
 
 (use-package 2048-game)
 
