@@ -51,7 +51,7 @@
   (define-key evil-normal-state-map (kbd "C-j") (kbd "C-w j"))
   (define-key evil-normal-state-map (kbd "C-k") (kbd "C-w k"))
   (define-key evil-normal-state-map (kbd "C-l") (kbd "C-w l"))
-  (define-key evil-normal-state-map (kbd "C-b") 'desperately-compile)
+  (define-key evil-normal-state-map (kbd "C-b") 'make-without-asking)
 
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
@@ -65,12 +65,8 @@
     (setq evil-leader/in-all-states 1)
     (global-evil-leader-mode)
     (evil-leader/set-leader "SPC")
-    ;; Set <leader>n to clear highlights
     (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
-    ;; <leader>f finds files in project
     (evil-leader/set-key "f" 'counsel-projectile-find-file)
-    ;; <leader>p finds tags in project
-    (evil-leader/set-key "p" 'projectile-find-tag)
     )
 
   (use-package evil-surround
@@ -94,6 +90,8 @@
     (key-chord-define evil-insert-state-map "Jk" 'evil-normal-state)
     (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state)
     (key-chord-define evil-insert-state-map "JK" 'evil-normal-state)
+    (key-chord-define evil-normal-state-map "ls" 'buffer-menu)
+
     ;; ;; Use ensime to get the type at the point
     (key-chord-define evil-normal-state-map "et" 'ensime-type-at-point)
     )
@@ -138,6 +136,11 @@
   :pin melpa-stable)
 
 (use-package 2048-game)
+
+(use-package cc-mode
+  :config)
+
+(use-package solarized-theme)
 
 ;; ===============================================================
 ;; General Editor Settings
@@ -226,11 +229,35 @@
 (modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
 (modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
 
+(setq auto-mode-alist
+      (append
+       '(("\\.cpp$"    . c++-mode)
+         ("\\.hin$"    . c++-mode)
+         ("\\.cin$"    . c++-mode)
+         ("\\.inl$"    . c++-mode)
+         ("\\.rdc$"    . c++-mode)
+         ("\\.h$"    . c++-mode)
+         ("\\.c$"   . c++-mode)
+         ("\\.cc$"   . c++-mode)
+         ("\\.c8$"   . c++-mode)
+         ("\\.txt$" . indented-text-mode)
+         ("\\.emacs$" . emacs-lisp-mode)
+         ("\\.gen$" . gen-mode)
+         ("\\.ms$" . fundamental-mode)
+         ("\\.m$" . objc-mode)
+         ("\\.mm$" . objc-mode)
+         ("\\.scala$" . scala-mode)
+         ("\\.sc$" . scala-mode)
+         ("\\.sbt$" . sbt-mode)
+         ) auto-mode-alist))
+
+
 ; Clock
 (display-time)
 
 ; Theme based configuration
-(load-theme 'zenburn t)
+;; (load-theme 'zenburn t)
+(load-theme 'solarized-dark t)
 (set-face-attribute 'default t :font "Liberation Mono-11.5")
 (set-face-background 'hl-line "midnight blue")
 (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
@@ -242,6 +269,25 @@
 (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
 (set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
 (set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
+
+
+(menu-bar-mode -1)
+(set-foreground-color "burlywood3")
+; (set-background-color "#161616")
+(set-cursor-color "#40FF40")
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . fullheight))
+
+; Startup windowing
+(setq next-line-add-newlines nil)
+(setq-default truncate-lines t)
+(setq truncate-partial-width-windows nil)
+(split-window-horizontally)
+
+(defun never-split-a-window ()
+    "Don't want to attempt to split windows if i dont have to"
+    nil)
+(setq split-window-preferred-function 'never-split-a-window)
 
 ;; ===============================================================
 ;; Scala Mode Configuration
@@ -255,33 +301,58 @@
 ;; ===============================================================
 ;; C++ Mode Configuration
 ;; ---------------------------------------------------------------
+(setq compilation-directory-locked nil)
+(setq makescript-file "build.sh")
 
-; Show the 'compile' buffer in a vertical split
-(defadvice compile (around split-horizontally activate)
-  (let ((split-width-threshold 0)
-        (split-height-threshold nil))
-    ad-do-it))
+; Compile Settings
+(setq compilation-context-lines 0)
+(setq compilation-error-regexp-alist
+    (cons '("^\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:fatal error\\|warnin\\(g\\)\\) C[0-9]+:" 2 3 nil (4))
+     compilation-error-regexp-alist))
 
-; travel up the tree to find a makefile
-(defun desperately-compile ()
-  "Traveling up the path, find a Makefile and `compile'."
+(defun find-project-directory-recursive ()
+  "Recursively search for a makefile."
   (interactive)
-  (other-window 0)
-  (save-some-buffers 1)
-  (when (locate-dominating-file default-directory "build.sh")
-  (with-temp-buffer
-    (cd (locate-dominating-file default-directory "build.sh"))
-    (compile "./build.sh"))))
+  (if (file-exists-p makescript-file) t
+      (cd "../")
+      (find-project-directory-recursive)))
 
+(defun lock-compilation-directory ()
+  "The compilation process should NOT hunt for a makefile"
+  (interactive)
+  (setq compilation-directory-locked t)
+  (message "Compilation directory is locked."))
+
+(defun unlock-compilation-directory ()
+  "The compilation process SHOULD hunt for a makefile"
+  (interactive)
+  (setq compilation-directory-locked nil)
+  (message "Compilation directory is roaming."))
+
+(defun find-project-directory ()
+  "Find the project directory."
+  (interactive)
+  (setq find-project-from-directory default-directory)
+  (switch-to-buffer-other-window "*compilation*")
+  (if compilation-directory-locked (cd last-compilation-directory)
+  (cd find-project-from-directory)
+  (find-project-directory-recursive)
+  (setq last-compilation-directory default-directory)))
+
+(defun make-without-asking ()
+  "Make the current build."
+  (interactive)
+  (if (find-project-directory) (compile (concat "./" makescript-file)))
+  (other-window 1))
 
 ; Add header files to C++ mode
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 ; use C-b to compile in c++ mode
 ; (define-key c++-mode-map (kbd "C-b") 'desperately-compile)
-(add-hook
-     'c++-mode-hook
-      (lambda ()
-      (local-set-key (kbd "C-b") 'desperately-compile)))
+;; (add-hook
+;;      'c++-mode-hook
+;;       (lambda ()
+;;       (local-set-key (kbd "C-b") 'make-without-asking)))
 
 ;; ---------------------------------------------------------------
