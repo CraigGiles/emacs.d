@@ -235,4 +235,8 @@
         (split-height-threshold nil))
     ad-do-it))
 
-; Commands
+; Move to the parent directory when in the dired directory listing
+(define-key dired-mode-map "-"
+    (lambda ()
+      (interactive)
+      (find-alternate-file "..")))
