@@ -142,8 +142,6 @@
 ;; ===============================================================
 ;; General Editor Settings
 ;; ===============================================================
-(load-theme 'zenburn t)
-
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
@@ -183,7 +181,6 @@
   (evil-scroll-line-to-center nil))
 
 (advice-add 'evil-search-next :after #'my-center-line)
-(global-linum-mode t)
 
 (setq evil-motion-state-modes
       (append evil-emacs-state-modes evil-motion-state-modes))
@@ -201,8 +198,17 @@
 (defun nil-bell ())
 (setq ring-bell-function 'nil-bell)
 
+; Move to the parent directory when in the dired directory listing
+(define-key dired-mode-map "%" 'find-file)
+(define-key dired-mode-map "d" 'dired-create-directory)
+(define-key dired-mode-map "D" 'delete-file-or-directory)
+(define-key dired-mode-map "-"
+    (lambda ()
+      (interactive)
+      (find-alternate-file "..")))
+
 ; Bright-red TODOs, NOTEs, and other things
- (setq fixme-modes '(c++-mode c-mode emacs-lisp-mode))
+(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode))
 (make-face 'font-lock-fixme-face)
 (make-face 'font-lock-study-face)
 (make-face 'font-lock-important-face)
@@ -223,6 +229,8 @@
 ; Clock
 (display-time)
 
+; Theme based configuration
+(load-theme 'zenburn t)
 (set-face-attribute 'default t :font "Liberation Mono-11.5")
 (set-face-background 'hl-line "midnight blue")
 (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
@@ -235,7 +243,25 @@
 (set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
 (set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
 
-; Compile stuff
+;; ===============================================================
+;; Scala Mode Configuration
+;; ---------------------------------------------------------------
+
+; Nothing unique, so far just everything up in the `evil` and `evil-leader`
+; packages..
+
+;; ---------------------------------------------------------------
+
+;; ===============================================================
+;; C++ Mode Configuration
+;; ---------------------------------------------------------------
+
+; Show the 'compile' buffer in a vertical split
+(defadvice compile (around split-horizontally activate)
+  (let ((split-width-threshold 0)
+        (split-height-threshold nil))
+    ad-do-it))
+
 ; travel up the tree to find a makefile
 (defun desperately-compile ()
   "Traveling up the path, find a Makefile and `compile'."
@@ -248,17 +274,10 @@
     (compile "./build.sh"))))
 
 
-; Show the 'compile' buffer in a vertical split
-(defadvice compile (around split-horizontally activate)
-  (let ((split-width-threshold 0)
-        (split-height-threshold nil))
-    ad-do-it))
+; Add header files to C++ mode
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
-; Move to the parent directory when in the dired directory listing
-(define-key dired-mode-map "%" 'find-file)
-(define-key dired-mode-map "d" 'dired-create-directory)
-(define-key dired-mode-map "D" 'delete-file-or-directory)
-(define-key dired-mode-map "-"
-    (lambda ()
-      (interactive)
-      (find-alternate-file "..")))
+; use C-b to compile in c++ mode
+(define-key c++-mode-map "C-b" 'some-function-i-want-to-call)
+
+;; ---------------------------------------------------------------
