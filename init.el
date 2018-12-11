@@ -39,6 +39,7 @@
              (evil-commentary-mode t))
 
 ;; Use Vim / EVIL mode
+
 (use-package evil
              :init
              (evil-mode t)
@@ -53,7 +54,12 @@
              (define-key evil-normal-state-map (kbd "C-l") (kbd "C-w l"))
              (define-key evil-normal-state-map (kbd "C-b") 'desperately-compile)
 
-             (global-set-key (kbd "C-p") 'counsel-projectile-find-file)
+             (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+             (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
+             (define-key evil-insert-state-map (kbd "C-u")
+             (lambda ()
+                 (interactive)
+                 (evil-delete (point-at-bol) (point))))
 
              (use-package evil-leader
                           :config
@@ -240,7 +246,8 @@
     (lambda ()
       (interactive)
       (find-alternate-file "..")))
+
 (define-key dired-mode-map "%" 'find-file)
 (define-key dired-mode-map "d" 'dired-create-directory)
-(define-key dired-mode-map "D" 'dired-flag-file-deletion)
+(define-key dired-mode-map "D" 'delete-file-or-directory)
 
