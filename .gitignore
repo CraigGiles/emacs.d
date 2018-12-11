@@ -1,0 +1,8 @@
+elpa/
+history
+.sx/filter.el
+backup/*
+\#*\#
+recentf
+projectile-bookmarks.eld
+auto-save-list/

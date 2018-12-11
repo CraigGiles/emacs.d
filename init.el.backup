@@ -1,0 +1,291 @@
+;; ===============================================================
+;; Package Management
+;; ===============================================================
+
+;; require is the equivalent of import, so we're importing emacs's
+;; package configuration and management system
+(require 'package)
+
+;; find packages in melpa, melpa stable, or for org mode, orgmode over
+;; elpa (or marmalade for that matter)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
+(setq package-archive-priorities
+  '(("melpa-stable" . 1)
+    ("org" . 2)))
+
+;; start the package manager
+(package-initialize)
+
+;; make sure all packages we use "ensure" so they're always loaded
+(setq use-package-always-ensure t)
+
+;; we're going to be using use-package to define and load packages.
+;; it's a code based configuration with a bunch of fancy extensions
+(when
+  (not package-archive-contents)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; ===============================================================
+;; General Editor Settings
+;; ===============================================================
+(load-theme 'zenburn t)
+
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
+;; Put all the backup files in an ~/.emacs.d/backup dir
+(setq backup-directory-alist `(("." . "~/.emacs.d/backup/")))
+
+;; given that I have to work with eclipse users it's the only way to
+;; stay sane.
+(defun fix-format-buffer ()
+  "indent, untabify and remove trailing whitespace for a buffer"
+  (interactive)
+  (save-excursion
+    (delete-trailing-whitespace)
+    (indent-region (point-min) (point-max))
+    (untabify (point-min) (point-max))))
+
+;; Set the OSX's CMD key as the meta key
+(setq mac-option-key-is-meta nil)
+(setq mac-command-key-is-meta t)
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier nil)
+
+;; use spaces with 4 spaces per tab
+(setq-default tab-width 4 indent-tabs-mode nil)
+
+;; Disable scroll bars
+(scroll-bar-mode -1)
+
+;; We don't need those pesky toolbars
+(tool-bar-mode -1)
+
+;; Put the backup files in a single directory
+(setq backup-directory-alist
+  `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+  `((".*" ,temporary-file-directory t)))
+
+;; Center the search (nzz)
+(defun my-center-line (&rest _)
+  (evil-scroll-line-to-center nil))
+
+(advice-add 'evil-search-next :after #'my-center-line)
+(global-linum-mode t)
+
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+	     (next-win-buffer (window-buffer (next-window)))
+	     (this-win-edges (window-edges (selected-window)))
+	     (next-win-edges (window-edges (next-window)))
+	     (this-win-2nd (not (and (<= (car this-win-edges)
+					 (car next-win-edges))
+				     (<= (cadr this-win-edges)
+					 (cadr next-win-edges)))))
+	     (splitter
+	      (if (= (car this-win-edges)
+		     (car (window-edges (next-window))))
+		  'split-window-horizontally
+		'split-window-vertically)))
+	(delete-other-windows)
+	(let ((first-win (selected-window)))
+	  (funcall splitter)
+	  (if this-win-2nd (other-window 1))
+	  (set-window-buffer (selected-window) this-win-buffer)
+	  (set-window-buffer (next-window) next-win-buffer)
+	  (select-window first-win)
+	  (if this-win-2nd (other-window 1))))))
+
+(use-package evil-commentary
+  :init
+    (evil-commentary-mode t))
+
+;; Use Vim / EVIL mode
+(use-package evil
+  :init
+    (evil-mode t)
+
+  :config
+    (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+    (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+    (define-key evil-normal-state-map (kbd "C-h") (kbd "C-w h"))
+    (define-key evil-normal-state-map (kbd "C-j") (kbd "C-w j"))
+    (define-key evil-normal-state-map (kbd "C-k") (kbd "C-w k"))
+    (define-key evil-normal-state-map (kbd "C-l") (kbd "C-w l"))
+    (global-set-key (kbd "C-p") 'counsel-projectile-find-file)
+  
+  (use-package evil-leader
+    :config
+      (setq evil-leader/in-all-states 1)
+      (global-evil-leader-mode)
+      (evil-leader/set-leader "SPC")
+      ;; Set <leader>n to clear highlights
+      (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
+      ;; <leader>f finds files in project
+      (evil-leader/set-key "f" 'counsel-projectile-find-file)
+      ;; <leader>p finds tags in project
+      (evil-leader/set-key "p" 'projectile-find-tag)
+      (evil-leader/set-key "vs" 'toggle-window-split)
+      (evil-leader/set-key "sp" 'toggle-window-split)
+      (evil-leader/set-key "et" 'ensime-type-at-point)
+      (evil-leader/set-key "ed" 'ensime-edit-definition-of-thing-at-point)
+  )
+
+  (use-package evil-surround
+    :config
+      (global-evil-surround-mode))
+
+  (use-package evil-indent-textobject)
+
+  (use-package evil-search-highlight-persist
+    :config
+      (global-evil-search-highlight-persist t))
+
+  (use-package use-package-chords
+    :config
+      (key-chord-mode 1)
+      (setq key-chord-two-keys-delay 0.2)
+      ;; Exit insert mode with 'jj' or 'jk'
+      (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+      ;; ;; Use ensime to get the type at the point
+      ;; (key-chord-define evil-normal-state-map "et" 'ensime-type-at-point)
+  )
+)
+
+(use-package sbt-mode
+  :pin melpa
+  :commands sbt-start sbt-command)
+
+(use-package scala-mode
+  :pin melpa
+  :interpreter ("scala" . scala-mode))
+
+; (use-package ivy
+;   :pin melpa-stable
+;   :bind
+;     (:map ivy-mode-map
+;       ("C-'" . ivy-avy))
+;   :diminish (ivy-mode . "")
+;   :config
+;     (ivy-mode 1)
+;     ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
+;     (setq ivy-use-virtual-buffers t)
+;     ;; number of result lines to display
+;     (setq ivy-height 10)
+;     ;; does not count candidates
+;     (setq ivy-count-format "")
+;     ;; no regexp by default
+;     (setq ivy-initial-inputs-alist nil)
+;     ;; configure regexp engine.
+;     (setq ivy-re-builders-alist
+;     ;; allow input not in order
+;     '((t   . ivy--regex-ignore-order))))
+
+; (use-package counsel-projectile
+;   :config
+;   (counsel-mode))
+
+; (use-package popup
+;   :pin melpa-stable)
+
+; (use-package ensime
+;   :pin melpa
+;   :init
+;     (put 'ensime-auto-generate-config 'safe-local-variable #'booleanp)
+;     (setq
+;       ensime-startup-snapshot-notification nil
+;       ensime-startup-notification nil)
+;   :config
+;     (require 'ensime-expand-region)
+;     (add-hook 'git-timemachine-mode-hook (lambda () (ensime-mode 0))))
+
+; (add-hook 'ensime-mode-hook
+;   (lambda ()
+;     (let ((backends (company-backends-for-buffer)))
+;     (setq company-backends
+;       (push '(ensime-company company-yasnippet) backends)))))
+
+(use-package neotree
+  :pin melpa-stable
+  :config
+    (define-key evil-normal-state-map "-" 'neotree-toggle)
+    (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+    (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+    (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+    (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+)
+
+; (use-package salt-mode
+;   :bind
+;     ("M-k" . salt-mode-browse-doc)
+;   )
+; (use-package helm
+;   :config
+;     (use-package helm-config)
+;     (use-package helm-misc)
+;     (use-package helm-projectile)
+;     (use-package helm-locate)
+;     (setq helm-quick-update t)
+;     (setq helm-bookmark-show-location t)
+;     (setq helm-buffers-fuzzy-matching t)
+
+;     (global-set-key (kbd "M-x") 'helm-M-x)
+
+
+;     (defun helm-my-buffers ()
+;       (interactive)
+;       (let ((helm-ff-transformer-show-only-basename nil))
+;       (helm-other-buffer '(helm-c-source-buffers-list
+;         helm-c-source-elscreen
+;         helm-c-source-projectile-files-list
+;         helm-c-source-ctags
+;         helm-c-source-recentf
+;         helm-c-source-locate)
+;           "*helm-my-buffers*")))
+
+;     (global-set-key (kbd "M-x") #'helm-M-x)
+; ;; (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+; ;; (global-set-key (kbd "C-x C-f") #'helm-find-files)
+; ;; (helm-mode 1)
+; )
+
+;; Show matching paren
+(use-package autopair
+  :config
+    (show-paren-mode t)
+    (autopair-global-mode))
+
+(setq evil-motion-state-modes
+  (append evil-emacs-state-modes evil-motion-state-modes))
+(setq evil-emacs-state-modes nil)
+
+(use-package fill-column-indicator
+  :init
+    (setq-default fill-column 80)
+    (add-hook 'after-change-major-mode-hook 'fci-mode))
+
+(use-package smooth-scrolling
+  :config
+  (setq scroll-margin 8
+        scroll-conservatively 9999
+        scroll-step 1))
+
+(use-package 2048-game)
+
+;; =================================================================
+;; Plugins
+;; -----------------------------------------------------------------
+(use-package magit
+  :ensure t)
+
+;; (use-package jumpc
+;;   :init
+;;     (define-key evil-normal-state-map (kbd "C-o") 'jumpc-jump-backward)
+;;     (define-key evil-normal-state-map (kbd "C-i") 'jumpc-jump-forward))
