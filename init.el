@@ -94,6 +94,7 @@
 
     ;; ;; Use ensime to get the type at the point
     (key-chord-define evil-normal-state-map "et" 'ensime-type-at-point)
+    (key-chord-define evil-normal-state-map "ed" 'ensime-edit-definition-other-window)
     )
   )
 
@@ -126,7 +127,8 @@
 
 (use-package scala-mode
   :interpreter
-  ("scala" . scala-mode))
+  ("scala" . scala-mode)
+  :config)
 
 (use-package ensime
   :ensure t
