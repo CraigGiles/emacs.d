@@ -278,6 +278,10 @@
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 ; use C-b to compile in c++ mode
-(define-key c++-mode-map "C-b" 'some-function-i-want-to-call)
+; (define-key c++-mode-map (kbd "C-b") 'desperately-compile)
+(add-hook
+     'c++-mode-hook
+      (lambda ()
+      (local-set-key (kbd "C-b") 'desperately-compile)))
 
 ;; ---------------------------------------------------------------
