@@ -46,7 +46,7 @@
   :config
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
-  (define-key evil-normal-state-map (kbd "-") 'dired-jump)
+  (define-key evil-normal-state-map (kbd "-") 'dired)
   (define-key evil-normal-state-map (kbd "C-h") (kbd "C-w h"))
   (define-key evil-normal-state-map (kbd "C-j") (kbd "C-w j"))
   (define-key evil-normal-state-map (kbd "C-k") (kbd "C-w k"))
@@ -255,12 +255,10 @@
     ad-do-it))
 
 ; Move to the parent directory when in the dired directory listing
+(define-key dired-mode-map "%" 'find-file)
+(define-key dired-mode-map "d" 'dired-create-directory)
+(define-key dired-mode-map "D" 'delete-file-or-directory)
 (define-key dired-mode-map "-"
     (lambda ()
       (interactive)
       (find-alternate-file "..")))
-
-(define-key dired-mode-map "%" 'find-file)
-(define-key dired-mode-map "d" 'dired-create-directory)
-(define-key dired-mode-map "D" 'delete-file-or-directory)
-
