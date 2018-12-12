@@ -289,10 +289,11 @@
 ; -----------------------------------------------
 ; Set in stone: Dont change
 ; -----------------------------------------------
-(set-foreground-color "beige")
 (set-face-attribute 'default t :font "Liberation Mono-11.5")
+
+(set-foreground-color "beige")
 (set-face-attribute 'font-lock-comment-face nil :foreground "gray50") ; comments
-(set-background-color "#152426")               ; something akin to J.Blow's theme
+(set-background-color "#152426") ; something akin to J.Blow's theme
 (set-face-background 'hl-line "midnight blue") ; the -always on- horizontal highlight
 (set-cursor-color "#40FF40")
 
