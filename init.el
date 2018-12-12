@@ -59,7 +59,6 @@
   ;; (define-key evil-normal-state-map (kbd "C-w C-k") (kbd "C-w k"))
   ;; (define-key evil-normal-state-map (kbd "C-w C-l") (kbd "C-w l"))
 
-  (define-key evil-normal-state-map (kbd "C-SPC") 'other-window)
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-insert-state-map (kbd "C-u")
@@ -74,6 +73,7 @@
     (evil-leader/set-leader "SPC")
     (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
     (evil-leader/set-key "f" 'counsel-projectile-find-file)
+    (evil-leader/set-key "SPC" 'other-window)
     )
 
   (use-package evil-surround
