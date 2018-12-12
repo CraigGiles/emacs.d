@@ -332,19 +332,12 @@
 ;; ===============================================================
 ;; Scala Mode Configuration
 ;; ---------------------------------------------------------------
-;; TODO(craig) I'd like to get this working but i just don't have the time to
-;; look into it at the moment. Right now when I open up an SBT window it will
-;; pop up in the same window.
-;; (defun sbt-load-in-other-window ()
-;;   "load sbt in the next window"
-;;   (interactive)
-;;   ;; locate and save the root, calling sbt-start from that root
-;;   (sbt:run-sbt)
-;;   (evil-switch-to-windows-last-buffer)
-;;   (other-window 1)
-;;   (switch-to-buffer-other-window (string-match-p (regexp-quote "*sbt*<-") 'buffers))
+(defun sbt-load-in-other-window ()
+  "load sbt in the next window"
+  (interactive)
+  (switch-to-buffer-other-window (sbt:run-sbt)))
 
-(define-key scala-mode-map [f5] 'sbt-start)
+(define-key scala-mode-map [f5] 'sbt-load-in-other-window)
 
 ;; ---------------------------------------------------------------
 
