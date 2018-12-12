@@ -51,7 +51,6 @@
   (define-key evil-normal-state-map (kbd "C-j") (kbd "C-w j"))
   (define-key evil-normal-state-map (kbd "C-k") (kbd "C-w k"))
   (define-key evil-normal-state-map (kbd "C-l") (kbd "C-w l"))
-  (define-key evil-normal-state-map (kbd "C-b") 'make-without-asking)
 
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
@@ -258,25 +257,46 @@
 (display-time)
 
 ; Theme based configuration
-;; (load-theme 'zenburn t)
-(load-theme 'solarized-dark t)
-(set-face-attribute 'default t :font "Liberation Mono-11.5")
-(set-face-background 'hl-line "midnight blue")
+(load-theme 'zenburn t)
+;; (load-theme 'solarized-dark t)
+
+; -----------------------------------------------
+; Old Theme Settings
+; -----------------------------------------------
 (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
+;; (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
 (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
-(set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
 (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
 (set-face-attribute 'font-lock-function-name-face nil :foreground "burlywood3")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
-(set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
 (set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
-(set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
+; (set-face-attribute 'font-lock-constant-face nil :foreground "DarkGoldenrod3")
 
+;; (menu-bar-mode -1)
+;; (set-background-color "#161616")
+
+; -----------------------------------------------
+; Working on these
+; -----------------------------------------------
+
+; -----------------------------------------------
+; I like but dont love
+; -----------------------------------------------
+(set-face-attribute 'font-lock-variable-name-face nil :foreground "beige")
+(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
+(set-face-attribute 'font-lock-constant-face nil :foreground "burlywood3")
+(set-face-attribute 'font-lock-string-face nil :foreground "#5b845c")
+
+; -----------------------------------------------
+; Set in stone: Dont change
+; -----------------------------------------------
+(set-foreground-color "beige")
+(set-face-attribute 'default t :font "Liberation Mono-11.5")
+(set-face-attribute 'font-lock-comment-face nil :foreground "gray50") ; comments
+(set-background-color "#152426")               ; something akin to J.Blow's theme
+(set-face-background 'hl-line "midnight blue") ; the -always on- horizontal highlight
+(set-cursor-color "#40FF40")
 
 (menu-bar-mode -1)
-(set-foreground-color "burlywood3")
-; (set-background-color "#161616")
-(set-cursor-color "#40FF40")
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(fullscreen . fullheight))
 
