@@ -59,10 +59,7 @@
   ;; (define-key evil-normal-state-map (kbd "C-w C-k") (kbd "C-w k"))
   ;; (define-key evil-normal-state-map (kbd "C-w C-l") (kbd "C-w l"))
 
-  (define-key evil-normal-state-map (kbd "C-w C-h") 'other-window)
-  (define-key evil-normal-state-map (kbd "C-w C-l") 'other-window)
-  (define-key evil-normal-state-map (kbd "C-l") 'other-window)
-
+  (define-key evil-normal-state-map (kbd "C-SPC") 'other-window)
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-insert-state-map (kbd "C-u")
@@ -335,9 +332,19 @@
 ;; ===============================================================
 ;; Scala Mode Configuration
 ;; ---------------------------------------------------------------
+;; TODO(craig) I'd like to get this working but i just don't have the time to
+;; look into it at the moment. Right now when I open up an SBT window it will
+;; pop up in the same window.
+;; (defun sbt-load-in-other-window ()
+;;   "load sbt in the next window"
+;;   (interactive)
+;;   ;; locate and save the root, calling sbt-start from that root
+;;   (sbt:run-sbt)
+;;   (evil-switch-to-windows-last-buffer)
+;;   (other-window 1)
+;;   (switch-to-buffer-other-window (string-match-p (regexp-quote "*sbt*<-") 'buffers))
 
-; Nothing unique, so far just everything up in the `evil` and `evil-leader`
-; packages..
+(define-key scala-mode-map [f5] 'sbt-start)
 
 ;; ---------------------------------------------------------------
 
