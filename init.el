@@ -272,8 +272,8 @@
 ; -----------------------------------------------
 ; Old Theme Settings
 ; -----------------------------------------------
-(add-to-list 'default-frame-alist '(font . "Liberation Mono-11.5"))
-(set-face-attribute 'default t :font "Liberation Mono-11.5")
+(add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
+(set-face-attribute 'default t :font "Liberation Mono-12")
 (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
 (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
 (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
@@ -284,6 +284,9 @@
 ;; (set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
 ;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
 
+(set-face-attribute 'mode-line-buffer-id nil :foreground "black")
+(set-face-attribute 'mode-line nil :background "burlywood3")
+(set-face-attribute 'mode-line nil :foreground "black")
 
 ; -----------------------------------------------
 ; I like but dont love
