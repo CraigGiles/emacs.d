@@ -27,6 +27,8 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; ---------------------------------------------------------------
+
 ;; ===============================================================
 ;; Installed Packages
 ;; ---------------------------------------------------------------
@@ -112,11 +114,11 @@
   (show-paren-mode t)
   (autopair-global-mode))
 
-(use-package smooth-scrolling
-  :config
-  (setq scroll-margin 8
-        scroll-conservatively 9999
-        scroll-step 1))
+;; (use-package smooth-scrolling
+;;   :config
+;;   (setq scroll-margin 8
+;;         scroll-conservatively 9999
+;;         scroll-step 1))
 
 (use-package fill-column-indicator
   :init
@@ -152,9 +154,14 @@
 
 (use-package solarized-theme)
 
+;; (use-package magit
+;;   :init)
+
+;; ---------------------------------------------------------------
+
 ;; ===============================================================
 ;; General Editor Settings
-;; ===============================================================
+;; ---------------------------------------------------------------
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
@@ -265,6 +272,8 @@
 ; Clock
 (display-time)
 
+;; ---------------------------------------------------------------
+
 ; Theme based configuration
 ;; (load-theme 'zenburn t)
 ;; (load-theme 'solarized-dark t)
@@ -305,6 +314,8 @@
 (set-face-background 'hl-line "midnight blue") ; the -always on- horizontal highlight
 (set-foreground-color "beige")
 (set-cursor-color "#40FF40")
+
+;; ---------------------------------------------------------------
 
 (menu-bar-mode -1)
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
