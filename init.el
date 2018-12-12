@@ -368,13 +368,6 @@
 ; Add header files to C++ mode
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
-; use C-b to compile in c++ mode
-; (define-key c++-mode-map (kbd "C-b") 'desperately-compile)
-;; (add-hook
-;;      'c++-mode-hook
-;;       (lambda ()
-;;       (local-set-key (kbd "C-b") 'make-without-asking)))
-
 ;; ---------------------------------------------------------------
 
 
@@ -474,15 +467,17 @@
     (find-file-other-window buffer-file-name)
     (craigs-find-corresponding-file)
     (other-window -1))
+
   (define-key c++-mode-map [f12] 'craigs-find-corresponding-file)
   (define-key c++-mode-map [M-f12] 'craigs-find-corresponding-file-other-window)
+  (define-key c++-mode-map [f5] 'make-without-asking)
 
-  ; devenv.com error parsing
+                                        ; devenv.com error parsing
   (add-to-list 'compilation-error-regexp-alist 'craigs-devenv)
   (add-to-list 'compilation-error-regexp-alist-alist '(craigs-devenv
-   "*\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:see declaration\\|\\(?:warnin\\(g\\)\\|[a-z ]+\\) C[0-9]+:\\)"
-    2 3 nil (4)))
-)
+                                                       "*\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:see declaration\\|\\(?:warnin\\(g\\)\\|[a-z ]+\\) C[0-9]+:\\)"
+                                                       2 3 nil (4)))
+  )
 
 (defun craigs-replace-string (FromString ToString)
   "Replace a string without moving point."
