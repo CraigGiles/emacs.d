@@ -51,10 +51,15 @@
   ;; (define-key evil-normal-state-map (kbd "C-j") (kbd "C-w j"))
   ;; (define-key evil-normal-state-map (kbd "C-k") (kbd "C-w k"))
   ;; (define-key evil-normal-state-map (kbd "C-l") (kbd "C-w l"))
-  (define-key evil-normal-state-map (kbd "C-w C-h") (kbd "C-w h"))
-  (define-key evil-normal-state-map (kbd "C-w C-j") (kbd "C-w j"))
-  (define-key evil-normal-state-map (kbd "C-w C-k") (kbd "C-w k"))
-  (define-key evil-normal-state-map (kbd "C-w C-l") (kbd "C-w l"))
+
+  ;; (define-key evil-normal-state-map (kbd "C-w C-h") (kbd "C-w h"))
+  ;; (define-key evil-normal-state-map (kbd "C-w C-j") (kbd "C-w j"))
+  ;; (define-key evil-normal-state-map (kbd "C-w C-k") (kbd "C-w k"))
+  ;; (define-key evil-normal-state-map (kbd "C-w C-l") (kbd "C-w l"))
+
+  (define-key evil-normal-state-map (kbd "C-w C-h") 'other-window)
+  (define-key evil-normal-state-map (kbd "C-w C-l") 'other-window)
+  (define-key evil-normal-state-map (kbd "C-l") 'other-window)
 
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
@@ -483,12 +488,51 @@
                                                        2 3 nil (4)))
   )
 
-(defun craigs-replace-string (FromString ToString)
+
+;; ---------------------------------------------------------------
+
+;; All code within an #if 0 block should be set to the comment color
+(defun my-c-mode-font-lock-if0 (limit)
+  (save-restriction
+    (widen)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((depth 0) str start start-depth)
+        (while (re-search-forward "^\\s-*#\\s-*\\(if\\|else\\|endif\\)" limit 'move)
+          (setq str (match-string 1))
+          (if (string= str "if")
+              (progn
+                (setq depth (1+ depth))
+                (when (and (null start) (looking-at "\\s-+0"))
+                  (setq start (match-end 0)
+                        start-depth depth)))
+            (when (and start (= depth start-depth))
+              (c-put-font-lock-face start (match-beginning 0) 'font-lock-comment-face)
+              (setq start nil))
+            (when (string= str "endif")
+              (setq depth (1- depth)))))
+        (when (and start (> depth 0))
+          (c-put-font-lock-face start (point) 'font-lock-comment-face)))))
+  nil)
+
+(defun my-c-mode-common-hook ()
+  (font-lock-add-keywords
+   nil
+   '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
+
+(add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+
+
+;; ---------------------------------------------------------------
+
+
+;; Find replace string shoudl work without moving locations
+(defun replace-string-in-place (FromString ToString)
   "Replace a string without moving point."
   (interactive "sReplace: \nsReplace: %s  With: ")
   (save-excursion
     (replace-string FromString ToString)
   ))
-(define-key global-map [f8] 'craigs-replace-string)
+(define-key global-map [f8] 'replace-string-in-place)
 
 (add-hook 'c-mode-common-hook 'craigs-big-fun-c-hook)
