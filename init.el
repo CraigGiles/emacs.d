@@ -74,6 +74,7 @@
     (evil-leader/set-leader "SPC")
     (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
     (evil-leader/set-key "f" 'counsel-projectile-find-file)
+    (evil-leader/set-key "o" 'find-file-other-window)
     (evil-leader/set-key "SPC" 'other-window)
     )
 
@@ -104,7 +105,18 @@
     (key-chord-define evil-normal-state-map "et" 'ensime-type-at-point)
     (key-chord-define evil-normal-state-map "ed" 'ensime-edit-definition-other-window)
     )
+
   )
+
+(with-eval-after-load 'evil
+  (defalias #'forward-evil-word #'forward-evil-symbol))
+
+;; (with-eval-after-load 'evil
+;;   (defadvice evil-inner-word (around underscore-as-word activate)
+;;     (let ((table (copy-syntax-table (syntax-table))))
+;;       (modify-syntax-entry ?_ "w" table)
+;;       (with-syntax-table table ad-do-it)))
+;; )
 
 ;; Show matching paren
 (use-package autopair
@@ -286,27 +298,30 @@
 ;; ---------------------------------------------------------------
 
 ; Theme based configuration
-;; (load-theme 'zenburn t)
+(load-theme 'zenburn t)
 ;; (load-theme 'solarized-dark t)
 
 ; -----------------------------------------------
 ; Old Theme Settings
 ; -----------------------------------------------
-(add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
-(set-face-attribute 'default t :font "Liberation Mono-12")
-(set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
-(set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
-(set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
-(set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
-(set-face-attribute 'font-lock-function-name-face nil :foreground "burlywood3")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
-(set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
+;; (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
+;; (set-face-attribute 'default t :font "Liberation Mono-12")
 ;; (set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
 ;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
 
-(set-face-attribute 'mode-line-buffer-id nil :foreground "black")
-(set-face-attribute 'mode-line nil :background "burlywood3")
-(set-face-attribute 'mode-line nil :foreground "black")
+(set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
+;; (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
+;; (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
+;; (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
+(set-face-attribute 'font-lock-function-name-face nil :foreground "burlywood3")
+(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
+;; (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
+
+;; (set-face-attribute 'mode-line-buffer-id nil :foreground "black")
+(set-face-attribute 'mode-line nil
+                    :background "burlywood3"
+                    :foreground "black")
+
 (set-face-attribute 'evil-search-highlight-persist-highlight-face nil
                     :foreground "base03"
                     :background "DarkGoldenrod3")
@@ -317,19 +332,19 @@
 ; -----------------------------------------------
 ; I like but dont love
 ; -----------------------------------------------
-(set-face-attribute 'font-lock-type-face nil :foreground "beige")
-(set-face-attribute 'font-lock-variable-name-face nil :foreground "beige")
+(set-face-attribute 'font-lock-type-face nil :foreground "#dcdcdc")
+(set-face-attribute 'font-lock-variable-name-face nil :foreground "#dcdcdc")
 (set-face-attribute 'font-lock-constant-face nil :foreground "burlywood3")
 ;; (set-face-attribute 'font-lock-string-face nil :foreground "#5b845c")
 
 ; -----------------------------------------------
 ; Set in stone: Dont change
 ; -----------------------------------------------
-(set-face-attribute 'default t :font "Liberation Mono-11.5")
+(set-face-attribute 'default t :font "Liberation Mono-12")
 
-(set-background-color "#152426")               ; something akin to J.Blow's theme
+;; (set-background-color "#152426")               ; something akin to J.Blow's theme
 (set-face-background 'hl-line "midnight blue") ; the -always on- horizontal highlight
-(set-foreground-color "beige")
+(set-foreground-color "#dcdcdc")
 (set-cursor-color "#40FF40")
 
 ;; ---------------------------------------------------------------
@@ -364,6 +379,19 @@
 ;; ===============================================================
 ;; C++ Mode Configuration
 ;; ---------------------------------------------------------------
+(defun save-buffers-without-asking ()
+(interactive)
+  (save-some-buffers 'no-confirm (lambda ()
+    (cond
+      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
+      ((and buffer-file-name (eq major-mode 'markdown-mode)))
+      ((and buffer-file-name (eq major-mode 'c-mode)))
+      ((and buffer-file-name (eq major-mode 'cc-mode)))
+      ((and buffer-file-name (eq major-mode 'c++-mode)))
+      ((and buffer-file-name (eq major-mode 'scala-mode)))
+      ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+      ((and buffer-file-name (derived-mode-p 'org-mode)))))))
+
 (setq compilation-directory-locked nil)
 (setq makescript-file "build.sh")
 
@@ -405,6 +433,7 @@
 (defun make-without-asking ()
   "Make the current build."
   (interactive)
+  (save-buffers-without-asking)
   (if (find-project-directory) (compile (concat "./" makescript-file)))
   (other-window 1))
 
