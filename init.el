@@ -59,6 +59,7 @@
   ;; (define-key evil-normal-state-map (kbd "C-w C-k") (kbd "C-w k"))
   ;; (define-key evil-normal-state-map (kbd "C-w C-l") (kbd "C-w l"))
 
+  (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-insert-state-map (kbd "C-u")
@@ -306,7 +307,13 @@
 (set-face-attribute 'mode-line-buffer-id nil :foreground "black")
 (set-face-attribute 'mode-line nil :background "burlywood3")
 (set-face-attribute 'mode-line nil :foreground "black")
+(set-face-attribute 'evil-search-highlight-persist-highlight-face nil
+                    :foreground "base03"
+                    :background "DarkGoldenrod3")
 
+;; (set-face-attribute 'lazy-highlight nil
+;;                     :foreground "black"
+;;                     :background "midnight blue")
 ; -----------------------------------------------
 ; I like but dont love
 ; -----------------------------------------------
