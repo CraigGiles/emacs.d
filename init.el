@@ -133,9 +133,21 @@
   (setq ag-reuse-buffers 't))
 
 (use-package scala-mode
-  :interpreter
-  ("scala" . scala-mode)
+  :pin melpa-stable
+  :chords ((":." . ":.")
+           (".>" . "⇒")
+           ("->" . "→")
+           ("<-" . "←")
+           ("++" . "⧺")
+           ("<." . "≤")
+           (">." . "≥")
+           (".." . "≡"))
+  :interpreter ("scala" . scala-mode)
   :config)
+
+(use-package sbt-mode
+  :pin melpa-stable
+  :commands sbt-start sbt-command)
 
 (use-package ensime
   :ensure t
@@ -145,14 +157,15 @@
   :pin melpa-stable)
 
 (use-package 2048-game)
-
-(use-package cc-mode
-  :config)
-
+(use-package cc-mode)
 (use-package solarized-theme)
 
-;; (use-package magit
-;;   :init)
+(use-package markdown-mode
+  :pin melpa-stable
+  :init
+  (setq
+   auto-mode-alist  (cons '("\\.md$" . markdown-mode) auto-mode-alist)
+   auto-mode-alist  (cons '("\\.markdown$" . markdown-mode) auto-mode-alist)))
 
 ;; ---------------------------------------------------------------
 
@@ -225,7 +238,7 @@
       (find-alternate-file "..")))
 
 ; Bright-red TODOs, NOTEs, and other things
-(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode))
+(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode scala-mode org-mode))
 (make-face 'font-lock-fixme-face)
 (make-face 'font-lock-study-face)
 (make-face 'font-lock-important-face)
