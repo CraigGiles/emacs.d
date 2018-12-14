@@ -253,7 +253,7 @@
       (find-alternate-file "..")))
 
 ; Bright-red TODOs, NOTEs, and other things
-(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode scala-mode org-mode))
+(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode scala-mode org-mode markdown-mode))
 (make-face 'font-lock-fixme-face)
 (make-face 'font-lock-study-face)
 (make-face 'font-lock-important-face)
