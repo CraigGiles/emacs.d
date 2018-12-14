@@ -59,7 +59,9 @@
   ;; (define-key evil-normal-state-map (kbd "C-w C-k") (kbd "C-w k"))
   ;; (define-key evil-normal-state-map (kbd "C-w C-l") (kbd "C-w l"))
 
+  (define-key evil-normal-state-map (kbd "C-p") 'counsel-find-file)
   (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
+  (define-key evil-normal-state-map (kbd "C-l") 'other-window)
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-insert-state-map (kbd "C-u")
@@ -73,7 +75,7 @@
     (global-evil-leader-mode)
     (evil-leader/set-leader "SPC")
     (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
-    (evil-leader/set-key "f" 'counsel-projectile-find-file)
+    (evil-leader/set-key "f" 'find-file)
     (evil-leader/set-key "o" 'find-file-other-window)
     (evil-leader/set-key "SPC" 'other-window)
     )
@@ -322,9 +324,9 @@
                     :background "burlywood3"
                     :foreground "black")
 
-(set-face-attribute 'evil-search-highlight-persist-highlight-face nil
-                    :foreground "base03"
-                    :background "DarkGoldenrod3")
+;; (set-face-attribute 'evil-search-highlight-persist-highlight-face nil
+;;                     :foreground "base03"
+;;                     :background "DarkGoldenrod3")
 
 ;; (set-face-attribute 'lazy-highlight nil
 ;;                     :foreground "black"
