@@ -76,7 +76,7 @@
     (evil-leader/set-leader "SPC")
     (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
     (evil-leader/set-key "f" 'find-file)
-    (evil-leader/set-key "o" 'find-file-other-window)
+    (evil-leader/set-key "o" 'projectile-find-file-other-window)
     (evil-leader/set-key "SPC" 'other-window)
     )
 
@@ -149,14 +149,6 @@
 
 (use-package scala-mode
   :pin melpa-stable
-  :chords ((":." . ":.")
-           (".>" . "⇒")
-           ("->" . "→")
-           ("<-" . "←")
-           ("++" . "⧺")
-           ("<." . "≤")
-           (">." . "≥")
-           (".." . "≡"))
   :interpreter ("scala" . scala-mode)
   :config)
 
