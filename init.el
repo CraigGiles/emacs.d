@@ -59,7 +59,7 @@
   ;; (define-key evil-normal-state-map (kbd "C-w C-k") (kbd "C-w k"))
   ;; (define-key evil-normal-state-map (kbd "C-w C-l") (kbd "C-w l"))
 
-  (define-key evil-normal-state-map (kbd "C-p") 'counsel-find-file)
+  (define-key evil-normal-state-map (kbd "C-p") 'projectile--find-file)
   (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
   (define-key evil-normal-state-map (kbd "C-l") 'other-window)
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
@@ -182,6 +182,13 @@
    auto-mode-alist  (cons '("\\.md$" . markdown-mode) auto-mode-alist)
    auto-mode-alist  (cons '("\\.markdown$" . markdown-mode) auto-mode-alist)))
 
+(use-package magit
+  :pin melpa-stable
+  :commands magit-status magit-blame
+  :init
+  (setq magit-auto-revert-mode nil
+        magit-last-seen-setup-instructions "1.4.0"))
+
 ;; ---------------------------------------------------------------
 
 ;; ===============================================================
@@ -215,7 +222,7 @@
 ;; Disable scroll bars and toolbars and welcome screen
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
-(setq inhibit-startup-screen t)
+; (setq inhibit-startup-screen t)
 
 ;; Put the backup files in a single directory
 (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
@@ -290,7 +297,7 @@
          ("\\.mm$" . objc-mode)
          ("\\.scala$" . scala-mode)
          ("\\.sc$" . scala-mode)
-         ("\\.sbt$" . sbt-mode)
+         ("\\.sbt$" . scala-mode)
          ) auto-mode-alist))
 
 
