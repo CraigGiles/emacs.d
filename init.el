@@ -242,6 +242,14 @@
     (interactive)
     (find-alternate-file "..")))
 
+;; Use TAB key to cycle through ido match results
+(defun bind-ido-keys ()
+  "Keybindings for ido mode."
+  (define-key ido-completion-map (kbd "TAB") 'ido-next-match))
+
+(add-hook 'ido-setup-hook 'bind-ido-keys)
+
+
 ;; Bright-red TODOs, NOTEs, and other things
 (setq fixme-modes '(c++-mode c-mode emacs-lisp-mode scala-mode org-mode markdown-mode))
 (make-face 'font-lock-fixme-face)
