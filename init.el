@@ -154,6 +154,11 @@
   (setq ensime-startup-snapshot-notification nil)
   :pin melpa-stable)
 
+(use-package make-mode
+  :pin melpa-stable
+  :config
+  (remove-hook 'before-save-hook 'fix-format-buffer t))
+
 (use-package 2048-game)
 (use-package cc-mode)
 (use-package solarized-theme)
@@ -288,10 +293,6 @@
          ("\\.sbt$" . scala-mode)
          ) auto-mode-alist))
 
-;; Fix whitespace before saving to disc
-(add-hook 'before-save-hook
-          'fix-format-buffer)
-
 ;; add global line numbers
 (global-linum-mode t)
 
@@ -376,6 +377,9 @@
   (switch-to-buffer-other-window (sbt:run-sbt)))
 
 (define-key scala-mode-map [f5] 'sbt-load-in-other-window)
+
+(add-hook 'scala-mode-hook 'fix-format-buffer)
+(add-hook 'c++-mode-hook 'fix-format-buffer)
 
 ;; ---------------------------------------------------------------
 
@@ -587,6 +591,7 @@
    '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
 
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+(add-hook 'c-mode-common-hook 'fix-format-buffer)
 
 
 ;; ---------------------------------------------------------------
