@@ -96,13 +96,10 @@
     :config
     (key-chord-mode 1)
     (setq key-chord-two-keys-delay 0.2)
-    ;; Exit insert mode with 'jj' or 'jk'
+    ;; Exit insert mode with 'jj'
     (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
-    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
     (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
-    (key-chord-define evil-insert-state-map "Jk" 'evil-normal-state)
     (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state)
-    (key-chord-define evil-insert-state-map "JK" 'evil-normal-state)
     (key-chord-define evil-normal-state-map "ls" 'buffer-menu)
 
     ;; ;; Use ensime to get the type at the point
