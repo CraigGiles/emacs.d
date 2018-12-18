@@ -33,15 +33,18 @@
 ;; Installed Packages
 ;; ---------------------------------------------------------------
 (use-package counsel-projectile
+  :pin melpa-stable
   :config
   (counsel-mode))
 
 (use-package evil-commentary
+  :pin melpa-stable
   :init
   (evil-commentary-mode t))
 
 ;; EVIL mode is VIM keybindings and leader system
 (use-package evil
+  :pin melpa-stable
   :init
   (evil-mode t)
 
@@ -49,21 +52,11 @@
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
   (define-key evil-normal-state-map (kbd "-") 'dired)
-  ;; (define-key evil-normal-state-map (kbd "C-h") (kbd "C-w h"))
-  ;; (define-key evil-normal-state-map (kbd "C-j") (kbd "C-w j"))
-  ;; (define-key evil-normal-state-map (kbd "C-k") (kbd "C-w k"))
-  ;; (define-key evil-normal-state-map (kbd "C-l") (kbd "C-w l"))
-
-  ;; (define-key evil-normal-state-map (kbd "C-w C-h") (kbd "C-w h"))
-  ;; (define-key evil-normal-state-map (kbd "C-w C-j") (kbd "C-w j"))
-  ;; (define-key evil-normal-state-map (kbd "C-w C-k") (kbd "C-w k"))
-  ;; (define-key evil-normal-state-map (kbd "C-w C-l") (kbd "C-w l"))
 
   (define-key evil-normal-state-map (kbd "C-p") 'find-file)
   (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
 
   ;; NOTE(craig) -- i want to get in the habit of <C-w><C-w> to goto other window
-  ;; (define-key evil-normal-state-map (kbd "C-l") 'other-window)
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-insert-state-map (kbd "C-u")
@@ -72,6 +65,7 @@
       (evil-delete (point-at-bol) (point))))
 
   (use-package evil-leader
+    :pin melpa-stable
     :config
     (setq evil-leader/in-all-states 1)
     (global-evil-leader-mode)
@@ -83,16 +77,20 @@
     )
 
   (use-package evil-surround
+    :pin melpa-stable
     :config
     (global-evil-surround-mode))
 
-  (use-package evil-indent-textobject)
+  (use-package evil-indent-textobject
+    :pin melpa-stable)
 
   (use-package evil-search-highlight-persist
+    :pin melpa-stable
     :config
     (global-evil-search-highlight-persist t))
 
   (use-package use-package-chords
+    :pin melpa-stable
     :config
     (key-chord-mode 1)
     (setq key-chord-two-keys-delay 0.2)
@@ -113,28 +111,33 @@
   (defalias #'forward-evil-word #'forward-evil-symbol))
 
 (use-package autopair
+  :pin melpa-stable
   :config
   (show-paren-mode t)
   )
 
 (use-package smooth-scrolling
+  :pin melpa-stable
   :config
   (setq scroll-margin 8
         scroll-conservatively 9999
         scroll-step 1))
 
 (use-package fill-column-indicator
+  :pin melpa-stable
   :init
   (setq-default fill-column 80)
   (add-hook 'after-change-major-mode-hook 'fci-mode))
 
 ;; Ensure that emacs has the shell's PATH variables on osx
 (use-package exec-path-from-shell
+  :pin melpa-stable
   :config
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
 (use-package ag
+  :pin melpa-stable
   :config
   (setq ag-reuse-buffers 't))
 
