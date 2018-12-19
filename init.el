@@ -53,7 +53,7 @@
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
   (define-key evil-normal-state-map (kbd "-") 'dired)
 
-  (define-key evil-normal-state-map (kbd "C-p") 'find-file)
+  (define-key evil-normal-state-map (kbd "C-p") 'projectile--find-file)
   (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
 
   ;; NOTE(craig) -- i want to get in the habit of <C-w><C-w> to goto other window
@@ -71,10 +71,15 @@
     (global-evil-leader-mode)
     (evil-leader/set-leader "SPC")
     (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
-    (evil-leader/set-key "f" 'projectile--find-file)
-    (evil-leader/set-key "o" 'projectile-find-file-other-window)
+    (evil-leader/set-key "f" 'find-file)
+    (evil-leader/set-key "o" 'ido-find-file-other-window)
+    
+    ;; (Evil-leader/set-key "f" 'projectile-find-file)
+    ;; (evil-leader/set-key "o" 'projectile-find-file-other-window)
     (evil-leader/set-key "SPC" 'other-window)
     )
+
+  (setq ido-use-virtual-buffers t)
 
   (use-package evil-surround
     :pin melpa-stable
@@ -164,7 +169,6 @@
 
 (use-package 2048-game)
 (use-package cc-mode)
-(use-package solarized-theme)
 
 (use-package markdown-mode
   :pin melpa-stable
@@ -210,7 +214,7 @@
 ;; Disable scroll bars and toolbars and welcome screen
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
-;; (setq inhibit-startup-screen t)
+(setq inhibit-startup-screen t)
 
 ;; Put the backup files in a single directory
 (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
@@ -254,7 +258,6 @@
 
 (add-hook 'ido-setup-hook 'bind-ido-keys)
 
-
 ;; Bright-red TODOs, NOTEs, and other things
 (setq fixme-modes '(c++-mode c-mode emacs-lisp-mode scala-mode org-mode markdown-mode))
 (make-face 'font-lock-fixme-face)
@@ -281,19 +284,19 @@
          ("\\.cin$"    . c++-mode)
          ("\\.inl$"    . c++-mode)
          ("\\.rdc$"    . c++-mode)
-         ("\\.h$"    . c++-mode)
-         ("\\.c$"   . c++-mode)
-         ("\\.cc$"   . c++-mode)
-         ("\\.c8$"   . c++-mode)
-         ("\\.txt$" . indented-text-mode)
-         ("\\.emacs$" . emacs-lisp-mode)
-         ("\\.gen$" . gen-mode)
-         ("\\.ms$" . fundamental-mode)
-         ("\\.m$" . objc-mode)
-         ("\\.mm$" . objc-mode)
-         ("\\.scala$" . scala-mode)
-         ("\\.sc$" . scala-mode)
-         ("\\.sbt$" . scala-mode)
+         ("\\.h$"      . c++-mode)
+         ("\\.c$"      . c++-mode)
+         ("\\.cc$"     . c++-mode)
+         ("\\.c8$"     . c++-mode)
+         ("\\.txt$"    . indented-text-mode)
+         ("\\.emacs$"  . emacs-lisp-mode)
+         ("\\.gen$"    . gen-mode)
+         ("\\.ms$"     . fundamental-mode)
+         ("\\.m$"      . objc-mode)
+         ("\\.mm$"     . objc-mode)
+         ("\\.scala$"  . scala-mode)
+         ("\\.sc$"     . scala-mode)
+         ("\\.sbt$"    . scala-mode)
          ) auto-mode-alist))
 
 ;; add global line numbers
@@ -306,7 +309,6 @@
 
 ;; Theme based configuration
 (load-theme 'zenburn t)
-;; (load-theme 'solarized-dark t)
 
 ;; -----------------------------------------------
 ;; Old Theme Settings
