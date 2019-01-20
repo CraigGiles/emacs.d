@@ -27,8 +27,6 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; ---------------------------------------------------------------
-
 ;; ===============================================================
 ;; Installed Packages
 ;; ---------------------------------------------------------------
@@ -72,7 +70,7 @@
     (evil-leader/set-leader "SPC")
     (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
     (evil-leader/set-key "f" 'find-file)
-    (evil-leader/set-key "o" 'ido-find-file-other-window)
+    (evil-leader/set-key "o" 'projectile-find-file-other-window)
     
     ;; (Evil-leader/set-key "f" 'projectile-find-file)
     ;; (evil-leader/set-key "o" 'projectile-find-file-other-window)
@@ -184,16 +182,9 @@
   (setq magit-auto-revert-mode nil
         magit-last-seen-setup-instructions "1.4.0"))
 
-;; ---------------------------------------------------------------
-
 ;; ===============================================================
-;; General Editor Settings
+;; Custom Functions
 ;; ---------------------------------------------------------------
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
-
-;; Put all the backup files in an ~/.emacs.d/backup dir
-(setq backup-directory-alist `(("." . "~/.emacs.d/backup/")))
 
 ;; given that I have to work with eclipse users it's the only way to
 ;; stay sane.
@@ -205,6 +196,36 @@
     (indent-region (point-min) (point-max))
     (untabify (point-min) (point-max))))
 
+;; Center the search (nzz)
+(defun my-center-line (&rest _)
+  (evil-scroll-line-to-center nil))
+
+;; ===============================================================
+;; General Editor Settings
+;; ---------------------------------------------------------------
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
+;; Put all the backup files in an ~/.emacs.d/backup dir
+(setq backup-directory-alist `(("." . "~/.emacs.d/backup/")))
+
+;; Put the backup files in a single directory
+(setq backup-directory-alist `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+
+;; Start up full screen with a vertical split
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . fullheight))
+(setq next-line-add-newlines nil)
+(setq-default truncate-lines t)
+(setq truncate-partial-width-windows nil)
+(split-window-horizontally)
+
+;; Stop Emacs from losing undo information by setting very high limits for undo
+;; buffers
+(setq undo-limit 20000000)
+(setq undo-strong-limit 40000000)
+
 ;; Set the OSX's CMD key as the meta key
 (setq mac-option-key-is-meta nil)
 (setq mac-command-key-is-meta t)
@@ -214,34 +235,38 @@
 ;; Disable scroll bars and toolbars and welcome screen
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
+(menu-bar-mode -1)
 (setq inhibit-startup-screen t)
-
-;; Put the backup files in a single directory
-(setq backup-directory-alist `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
-
-;; Center the search (nzz)
-(defun my-center-line (&rest _)
-  (evil-scroll-line-to-center nil))
-
-(advice-add 'evil-search-next :after #'my-center-line)
-
-(setq evil-motion-state-modes
-      (append evil-emacs-state-modes evil-motion-state-modes))
-(setq evil-emacs-state-modes nil)
-
-;; Stop Emacs from losing undo information by setting very high limits for undo
-;; buffers
-(setq undo-limit 20000000)
-(setq undo-strong-limit 40000000)
 
 ;; Create a big horizontal blue bar so i don't keep loosing my cursor
 (global-hl-line-mode 1)
+
+;; add global line numbers
+(global-linum-mode t)
+(column-number-mode t)
+
+;; Clock
+(display-time)
 
 ;; Turn off the bell on Mac OS X
 (defun nil-bell ())
 (setq ring-bell-function 'nil-bell)
 
+;; Center the search (nzz)
+(advice-add 'evil-search-next :after #'my-center-line)
+(setq evil-motion-state-modes
+      (append evil-emacs-state-modes evil-motion-state-modes))
+(setq evil-emacs-state-modes nil)
+
+(defun never-split-a-window ()
+  "Don't want to attempt to split windows if i dont have to"
+  nil)
+(setq split-window-preferred-function 'never-split-a-window)
+
+
+;; ===============================================================
+;; Plugin Settings
+;; ---------------------------------------------------------------
 ;; Move to the parent directory when in the dired directory listing
 (define-key dired-mode-map "%" 'find-file)
 (define-key dired-mode-map "D" 'dired-create-directory)
@@ -258,28 +283,10 @@
 
 (add-hook 'ido-setup-hook 'bind-ido-keys)
 
-;; Bright-red TODOs, NOTEs, and other things
-(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode scala-mode org-mode markdown-mode))
-(make-face 'font-lock-fixme-face)
-(make-face 'font-lock-study-face)
-(make-face 'font-lock-important-face)
-(make-face 'font-lock-note-face)
-(mapc (lambda (mode)
-        (font-lock-add-keywords
-         mode
-         '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
-           ("\\<\\(STUDY\\)" 1 'font-lock-study-face t)
-           ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
-           ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
-      fixme-modes)
-(modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
-(modify-face 'font-lock-study-face "Yellow" nil nil t nil t nil nil)
-(modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
-(modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
-
 (setq auto-mode-alist
       (append
        '(("\\.cpp$"    . c++-mode)
+         ("\\.hpp$"    . c++-mode)
          ("\\.hin$"    . c++-mode)
          ("\\.cin$"    . c++-mode)
          ("\\.inl$"    . c++-mode)
@@ -299,80 +306,6 @@
          ("\\.sbt$"    . scala-mode)
          ) auto-mode-alist))
 
-;; add global line numbers
-(global-linum-mode t)
-
-;; Clock
-(display-time)
-
-;; ---------------------------------------------------------------
-
-;; Theme based configuration
-(load-theme 'zenburn t)
-
-;; -----------------------------------------------
-;; Old Theme Settings
-;; -----------------------------------------------
-;; (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
-;; (set-face-attribute 'default t :font "Liberation Mono-12")
-;; (set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
-;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
-
-(set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
-;; (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
-;; (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
-;; (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
-(set-face-attribute 'font-lock-function-name-face nil :foreground "burlywood3")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
-;; (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
-
-;; (set-face-attribute 'mode-line-buffer-id nil :foreground "black")
-(set-face-attribute 'mode-line nil
-                    :background "burlywood3"
-                    :foreground "black")
-
-;; (set-face-attribute 'evil-search-highlight-persist-highlight-face nil
-;;                     :foreground "base03"
-;;                     :background "DarkGoldenrod3")
-
-;; (set-face-attribute 'lazy-highlight nil
-;;                     :foreground "black"
-;;                     :background "midnight blue")
-;; -----------------------------------------------
-;; I like but dont love
-;; -----------------------------------------------
-(set-face-attribute 'font-lock-type-face nil :foreground "#dcdcdc")
-(set-face-attribute 'font-lock-variable-name-face nil :foreground "#dcdcdc")
-(set-face-attribute 'font-lock-constant-face nil :foreground "burlywood3")
-;; (set-face-attribute 'font-lock-string-face nil :foreground "#5b845c")
-
-;; -----------------------------------------------
-;; Set in stone: Dont change
-;; -----------------------------------------------
-(set-face-attribute 'default t :font "Liberation Mono-12")
-
-;; (set-background-color "#152426")              ;; something akin to J.Blow's theme
-(set-face-background 'hl-line "midnight blue");; the -always on- horizontal highlight
-(set-foreground-color "#dcdcdc")
-(set-cursor-color "#40FF40")
-
-;; ---------------------------------------------------------------
-
-(menu-bar-mode -1)
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(fullscreen . fullheight))
-
-;; Startup windowing
-(setq next-line-add-newlines nil)
-(setq-default truncate-lines t)
-(setq truncate-partial-width-windows nil)
-(split-window-horizontally)
-
-(defun never-split-a-window ()
-  "Don't want to attempt to split windows if i dont have to"
-  nil)
-(setq split-window-preferred-function 'never-split-a-window)
-
 ;; ===============================================================
 ;; Scala Mode Configuration
 ;; ---------------------------------------------------------------
@@ -384,7 +317,7 @@
 (define-key scala-mode-map [f5] 'sbt-load-in-other-window)
 
 (add-hook 'scala-mode-hook 'fix-format-buffer)
-(add-hook 'c++-mode-hook 'fix-format-buffer)
+;; (add-hook 'c++-mode-hook 'fix-format-buffer)
 
 ;; ===============================================================
 ;; Company Mode
@@ -633,9 +566,8 @@
    nil
    '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
 
+(add-hook 'before-save-hook #'my-c++-mode-before-save-hook)
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
-(add-hook 'c-mode-common-hook 'fix-format-buffer)
-
 
 ;; ---------------------------------------------------------------
 
@@ -650,3 +582,75 @@
 (define-key global-map [f8] 'replace-string-in-place)
 
 (add-hook 'c-mode-common-hook 'craigs-big-fun-c-hook)
+
+
+;; ===============================================================
+;; Theme Settings
+;; ---------------------------------------------------------------
+;; Bright-red TODOs, NOTEs, and other things
+(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode scala-mode org-mode markdown-mode make-mode))
+(make-face 'font-lock-fixme-face)
+(make-face 'font-lock-study-face)
+(make-face 'font-lock-important-face)
+(make-face 'font-lock-note-face)
+(mapc (lambda (mode)
+        (font-lock-add-keywords
+         mode
+         '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
+           ("\\<\\(STUDY\\)" 1 'font-lock-study-face t)
+           ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
+           ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
+      fixme-modes)
+(modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
+(modify-face 'font-lock-study-face "Yellow" nil nil t nil t nil nil)
+(modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
+(modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
+
+;; Theme based configuration
+(load-theme 'zenburn t)
+
+;; -----------------------------------------------
+;; Old Theme Settings
+;; -----------------------------------------------
+;; (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
+;; (set-face-attribute 'default t :font "Liberation Mono-12")
+;; (set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
+;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
+
+(set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
+;; (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
+;; (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
+;; (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
+(set-face-attribute 'font-lock-function-name-face nil :foreground "burlywood3")
+(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
+;; (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
+
+;; (set-face-attribute 'mode-line-buffer-id nil :foreground "black")
+(set-face-attribute 'mode-line nil
+                    :background "burlywood3"
+                    :foreground "black")
+
+;; (set-face-attribute 'evil-search-highlight-persist-highlight-face nil
+;;                     :foreground "base03"
+;;                     :background "DarkGoldenrod3")
+
+;; (set-face-attribute 'lazy-highlight nil
+;;                     :foreground "black"
+;;                     :background "midnight blue")
+;; -----------------------------------------------
+;; I like but dont love
+;; -----------------------------------------------
+(set-face-attribute 'font-lock-type-face nil :foreground "#dcdcdc")
+(set-face-attribute 'font-lock-variable-name-face nil :foreground "#dcdcdc")
+(set-face-attribute 'font-lock-constant-face nil :foreground "burlywood3")
+;; (set-face-attribute 'font-lock-string-face nil :foreground "#5b845c")
+
+;; -----------------------------------------------
+;; Set in stone: Dont change
+;; -----------------------------------------------
+(set-face-attribute 'default t :font "Liberation Mono-12")
+
+;; (set-background-color "#152426")              ;; something akin to J.Blow's theme
+(set-face-background 'hl-line "midnight blue");; the -always on- horizontal highlight
+(set-foreground-color "#dcdcdc")
+(set-cursor-color "#40FF40")
