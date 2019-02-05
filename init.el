@@ -40,7 +40,6 @@
   :init
   (evil-commentary-mode t))
 
-;; EVIL mode is VIM keybindings and leader system
 (use-package evil
   :pin melpa-stable
   :init
@@ -132,12 +131,13 @@
   (setq-default fill-column 80)
   (add-hook 'after-change-major-mode-hook 'fci-mode))
 
+;; NOTE(craig): This causes a big lag spike
 ;; Ensure that emacs has the shell's PATH variables on osx
-(use-package exec-path-from-shell
-  :pin melpa-stable
-  :config
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+; (use-package exec-path-from-shell
+;   :pin melpa-stable
+;   :init
+;   (when (memq window-system '(mac ns x))
+;     (exec-path-from-shell-initialize)))
 
 (use-package ag
   :pin melpa-stable
@@ -166,14 +166,14 @@
   (remove-hook 'before-save-hook 'fix-format-buffer t))
 
 (use-package 2048-game)
-(use-package cc-mode)
+; (use-package cc-mode)
 
-(use-package markdown-mode
-  :pin melpa-stable
-  :init
-  (setq
-   auto-mode-alist  (cons '("\\.md$" . markdown-mode) auto-mode-alist)
-   auto-mode-alist  (cons '("\\.markdown$" . markdown-mode) auto-mode-alist)))
+; (use-package markdown-mode
+;   :pin melpa-stable
+;   :init
+;   (setq
+;    auto-mode-alist  (cons '("\\.md$" . markdown-mode) auto-mode-alist)
+;    auto-mode-alist  (cons '("\\.markdown$" . markdown-mode) auto-mode-alist)))
 
 (use-package magit
   :pin melpa-stable
@@ -181,6 +181,7 @@
   :init
   (setq magit-auto-revert-mode nil
         magit-last-seen-setup-instructions "1.4.0"))
+
 
 ;; ===============================================================
 ;; Custom Functions
@@ -199,6 +200,16 @@
 ;; Center the search (nzz)
 (defun my-center-line (&rest _)
   (evil-scroll-line-to-center nil))
+
+;; Find replace string shoudl work without moving locations
+(defun replace-string-in-place (FromString ToString)
+  "Replace a string without moving point."
+  (interactive "sReplace: \nsReplace: %s  With: ")
+  (save-excursion
+    (replace-string FromString ToString)
+    ))
+(define-key global-map [f8] 'replace-string-in-place)
+
 
 ;; ===============================================================
 ;; General Editor Settings
@@ -245,6 +256,10 @@
 (global-linum-mode t)
 (column-number-mode t)
 
+;; Turn off the bell on Mac OS X
+(defun nil-bell ())
+(setq ring-bell-function 'nil-bell)
+
 ;; Clock
 (display-time)
 
@@ -262,7 +277,6 @@
   "Don't want to attempt to split windows if i dont have to"
   nil)
 (setq split-window-preferred-function 'never-split-a-window)
-
 
 ;; ===============================================================
 ;; Plugin Settings
@@ -306,6 +320,7 @@
          ("\\.sbt$"    . scala-mode)
          ) auto-mode-alist))
 
+
 ;; ===============================================================
 ;; Scala Mode Configuration
 ;; ---------------------------------------------------------------
@@ -317,47 +332,6 @@
 (define-key scala-mode-map [f5] 'sbt-load-in-other-window)
 
 (add-hook 'scala-mode-hook 'fix-format-buffer)
-;; (add-hook 'c++-mode-hook 'fix-format-buffer)
-
-;; ===============================================================
-;; Company Mode
-;; ---------------------------------------------------------------
-;; Prevent suggestions from being triggered automatically. In particular,
-;; this makes it so that:
-;; - TAB will always complete the current selection.
-;; - RET will only complete the current selection if the user has explicitly
-;;   interacted with Company.
-;; - SPC will never complete the current selection.
-;;
-;; Based on:
-;; - https://github.com/company-mode/company-mode/issues/530#issuecomment-226566961
-;; - https://emacs.stackexchange.com/a/13290/12534
-;; - http://stackoverflow.com/a/22863701/3538165
-;;
-;; See also:
-;; - https://emacs.stackexchange.com/a/24800/12534
-;; - https://emacs.stackexchange.com/q/27459/12534
-
-;; <return> is for windowed Emacs; RET is for terminal Emacs
-(dolist (key '("<return>" "RET"))
-  ;; Here we are using an advanced feature of define-key that lets
-  ;; us pass an "extended menu item" instead of an interactive
-  ;; function. Doing this allows RET to regain its usual
-  ;; functionality when the user has not explicitly interacted with
-  ;; Company.
-  (define-key company-active-map (kbd key)
-    `(menu-item nil company-complete
-		:filter ,(lambda (cmd)
-			   (when (company-explicit-action-p)
-			     cmd)))))
-(define-key company-active-map (kbd "TAB") #'company-complete-selection)
-(define-key company-active-map (kbd "SPC") nil)
-
-;; Company appears to override the above keymap based on company-auto-complete-chars.
-;; Turning it off ensures we have full control.
-(setq company-auto-complete-chars nil)
-
-;; ---------------------------------------------------------------
 
 ;; ===============================================================
 ;; C++ Mode Configuration
@@ -568,20 +542,45 @@
 
 (add-hook 'before-save-hook #'my-c++-mode-before-save-hook)
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
-
-;; ---------------------------------------------------------------
-
-
-;; Find replace string shoudl work without moving locations
-(defun replace-string-in-place (FromString ToString)
-  "Replace a string without moving point."
-  (interactive "sReplace: \nsReplace: %s  With: ")
-  (save-excursion
-    (replace-string FromString ToString)
-    ))
-(define-key global-map [f8] 'replace-string-in-place)
-
 (add-hook 'c-mode-common-hook 'craigs-big-fun-c-hook)
+
+;; ===============================================================
+;; Company Mode Configuration
+;; ---------------------------------------------------------------
+;; Prevent suggestions from being triggered automatically. In particular,
+;; this makes it so that:
+;; - TAB will always complete the current selection.
+;; - RET will only complete the current selection if the user has explicitly
+;;   interacted with Company.
+;; - SPC will never complete the current selection.
+;;
+;; Based on:
+;; - https://github.com/company-mode/company-mode/issues/530#issuecomment-226566961
+;; - https://emacs.stackexchange.com/a/13290/12534
+;; - http://stackoverflow.com/a/22863701/3538165
+;;
+;; See also:
+;; - https://emacs.stackexchange.com/a/24800/12534
+;; - https://emacs.stackexchange.com/q/27459/12534
+
+;; <return> is for windowed Emacs; RET is for terminal Emacs
+(dolist (key '("<return>" "RET"))
+  ;; Here we are using an advanced feature of define-key that lets
+  ;; us pass an "extended menu item" instead of an interactive
+  ;; function. Doing this allows RET to regain its usual
+  ;; functionality when the user has not explicitly interacted with
+  ;; Company.
+  (define-key company-active-map (kbd key)
+    `(menu-item nil company-complete
+		:filter ,(lambda (cmd)
+			   (when (company-explicit-action-p)
+			     cmd)))))
+(define-key company-active-map (kbd "TAB") #'company-complete-selection)
+(define-key company-active-map (kbd "SPC") nil)
+
+;; Company appears to override the above keymap based on company-auto-complete-chars.
+;; Turning it off ensures we have full control.
+(setq company-auto-complete-chars nil)
 
 
 ;; ===============================================================
@@ -654,3 +653,4 @@
 (set-face-background 'hl-line "midnight blue");; the -always on- horizontal highlight
 (set-foreground-color "#dcdcdc")
 (set-cursor-color "#40FF40")
+
