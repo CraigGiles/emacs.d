@@ -434,7 +434,7 @@
                                     (access-label          . -4)
                                     (substatement-open     .  0)
                                     (statement-case-intro  .  4)
-                                    (statement-block-intro .  c-lineup-for)
+                                    ;; (statement-block-intro .  c-lineup-for)
                                     (case-label            .  4)
                                     (block-open            .  0)
                                     (inline-open           .  0)
@@ -613,21 +613,11 @@
 ;; -----------------------------------------------
 ;; (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
 ;; (set-face-attribute 'default t :font "Liberation Mono-12")
-;; (set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
-;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
+(set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
+(set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
 
-(set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
 ;; (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
-;; (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
-;; (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
-(set-face-attribute 'font-lock-function-name-face nil :foreground "burlywood3")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
 ;; (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
-
-;; (set-face-attribute 'mode-line-buffer-id nil :foreground "black")
-(set-face-attribute 'mode-line nil
-                    :background "burlywood3"
-                    :foreground "black")
 
 ;; (set-face-attribute 'evil-search-highlight-persist-highlight-face nil
 ;;                     :foreground "base03"
@@ -642,15 +632,27 @@
 (set-face-attribute 'font-lock-type-face nil :foreground "#dcdcdc")
 (set-face-attribute 'font-lock-variable-name-face nil :foreground "#dcdcdc")
 (set-face-attribute 'font-lock-constant-face nil :foreground "burlywood3")
-;; (set-face-attribute 'font-lock-string-face nil :foreground "#5b845c")
+
+(set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
+(set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
+
+(set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
+(set-face-attribute 'font-lock-function-name-face nil :foreground "burlywood3")
+(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
+
+(set-face-attribute 'font-lock-string-face nil :foreground "#5b845c")
 
 ;; -----------------------------------------------
 ;; Set in stone: Dont change
 ;; -----------------------------------------------
 (set-face-attribute 'default t :font "Liberation Mono-12")
 
-;; (set-background-color "#152426")              ;; something akin to J.Blow's theme
+(set-background-color "#152426")              ;; something akin to J.Blow's theme
 (set-face-background 'hl-line "midnight blue");; the -always on- horizontal highlight
 (set-foreground-color "#dcdcdc")
 (set-cursor-color "#40FF40")
+
+(set-face-attribute 'mode-line nil
+                    :background "burlywood3"
+                    :foreground "black")
 
