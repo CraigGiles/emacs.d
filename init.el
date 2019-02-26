@@ -48,7 +48,7 @@
   :config
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
-  (define-key evil-normal-state-map (kbd "-") 'find-file)
+  (define-key evil-normal-state-map (kbd "-") 'dired)
 
   (define-key evil-normal-state-map (kbd "C-p") 'projectile--find-file)
   (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
@@ -218,12 +218,8 @@
 (load custom-file)
 
 ;; Put all the backup files in an ~/.emacs.d/backup dir
-(setq backup-directory-alist `(("." . "~/.emacs.d/backup/")))
-
-;; Put the backup files in a single directory
-(setq temporary-file-directory "~/.emacs.d/backup/")
-(setq backup-directory-alist `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+(setq backup-directory-alist '(("." . "~/.emacs.d/auto-saves")))
+(setq create-lockfiles nil)
 
 ;; Start up full screen with a vertical split
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
