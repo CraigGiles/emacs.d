@@ -218,11 +218,8 @@
 (load custom-file)
 
 ;; Put all the backup files in an ~/.emacs.d/backup dir
-(setq backup-directory-alist `(("." . "~/.emacs.d/backup/")))
-
-;; Put the backup files in a single directory
-(setq backup-directory-alist `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+(setq backup-directory-alist '(("." . "~/.emacs.d/auto-saves")))
+(setq create-lockfiles nil)
 
 ;; Start up full screen with a vertical split
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
