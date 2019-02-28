@@ -653,3 +653,5 @@
                     :background "burlywood3"
                     :foreground "black")
 
+
+(load-file "~/.emacs.d/init-local.el")
