@@ -158,6 +158,27 @@
   :config
   (setq ensime-startup-notification nil)
   (setq ensime-startup-snapshot-notification nil)
+
+  ;; https://github.com/syl20bnr/spacemacs/issues/4746
+  (setq ensime-sem-high-faces
+        '(
+          (implicitConversion nil)
+          (var . (:foreground "#ff2222"))
+          (varField . (:foreground "#ff3333"))
+          (functionCall . (:foreground "#dc9157"))
+          (object . (:foreground "#D884E3"))
+          (operator . (:foreground "#cc7832"))
+          (object . (:foreground "#6897bb" :slant italic))
+          (package . (:foreground "yellow"))
+          (deprecated . (:strike-through "#a9b7c6"))
+          (implicitParams nil)
+          )
+        ;; ensime-completion-style 'company
+        ;; ensime-sem-high-enabled-p nil ;; disable semantic highlighting
+        ensime-tooltip-hints t ;; disable type-inspecting tooltips
+        ensime-tooltip-type-hints t ;; disable typeinspecting tooltips
+        )
+
   :pin melpa-stable)
 
 (use-package make-mode
