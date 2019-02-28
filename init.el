@@ -133,11 +133,11 @@
 
 ;; NOTE(craig): This causes a big lag spike
 ;; Ensure that emacs has the shell's PATH variables on osx
-; (use-package exec-path-from-shell
-;   :pin melpa-stable
-;   :init
-;   (when (memq window-system '(mac ns x))
-;     (exec-path-from-shell-initialize)))
+(use-package exec-path-from-shell
+  :pin melpa-stable
+  :init
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
 (use-package ag
   :pin melpa-stable
