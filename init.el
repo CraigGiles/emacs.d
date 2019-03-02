@@ -76,8 +76,6 @@
     (evil-leader/set-key "SPC" 'other-window)
     )
 
-  (setq ido-use-virtual-buffers t)
-
   (use-package evil-surround
     :pin melpa-stable
     :config
@@ -115,8 +113,7 @@
 (use-package autopair
   :pin melpa-stable
   :config
-  (show-paren-mode t)
-  )
+  (show-paren-mode t))
 
 (use-package smooth-scrolling
   :pin melpa-stable
@@ -128,10 +125,10 @@
 (use-package fill-column-indicator
   :pin melpa-stable
   :init
-  (setq-default fill-column 80)
+  (setq-default fill-column 100)
   (add-hook 'after-change-major-mode-hook 'fci-mode))
 
-;; NOTE(craig): This causes a big lag spike
+;; IMPORTANT(craig): This causes a big lag spike
 ;; Ensure that emacs has the shell's PATH variables on osx
 (use-package exec-path-from-shell
   :pin melpa-stable
@@ -161,23 +158,23 @@
 
   ;; https://github.com/syl20bnr/spacemacs/issues/4746
   (setq ensime-sem-high-faces
-        '(
-          (implicitConversion nil)
-          (var . (:foreground "#ff2222"))
-          (varField . (:foreground "#ff3333"))
-          (functionCall . (:foreground "#dc9157"))
-          (object . (:foreground "#D884E3"))
-          (operator . (:foreground "#cc7832"))
-          (object . (:foreground "#6897bb" :slant italic))
-          (package . (:foreground "yellow"))
-          (deprecated . (:strike-through "#a9b7c6"))
-          (implicitParams nil)
-          )
-        ;; ensime-completion-style 'company
-        ;; ensime-sem-high-enabled-p nil ;; disable semantic highlighting
-        ensime-tooltip-hints t ;; disable type-inspecting tooltips
-        ensime-tooltip-type-hints t ;; disable typeinspecting tooltips
-        )
+	'(
+	  (implicitConversion nil)
+	  (var . (:foreground "#ff2222"))
+	  (varField . (:foreground "#ff3333"))
+	  (functionCall . (:foreground "#dc9157"))
+	  (object . (:foreground "#D884E3"))
+	  (operator . (:foreground "#cc7832"))
+	  (object . (:foreground "#6897bb" :slant italic))
+	  (package . (:foreground "yellow"))
+	  (deprecated . (:strike-through "#a9b7c6"))
+	  (implicitParams nil)
+	  )
+	;; ensime-completion-style 'company
+	;; ensime-sem-high-enabled-p nil ;; disable semantic highlighting
+	ensime-tooltip-hints t ;; disable type-inspecting tooltips
+	ensime-tooltip-type-hints t ;; disable typeinspecting tooltips
+	)
 
   :pin melpa-stable)
 
@@ -187,22 +184,6 @@
   (remove-hook 'before-save-hook 'fix-format-buffer t))
 
 (use-package 2048-game)
-; (use-package cc-mode)
-
-; (use-package markdown-mode
-;   :pin melpa-stable
-;   :init
-;   (setq
-;    auto-mode-alist  (cons '("\\.md$" . markdown-mode) auto-mode-alist)
-;    auto-mode-alist  (cons '("\\.markdown$" . markdown-mode) auto-mode-alist)))
-
-(use-package magit
-  :pin melpa-stable
-  :commands magit-status magit-blame
-  :init
-  (setq magit-auto-revert-mode nil
-        magit-last-seen-setup-instructions "1.4.0"))
-
 
 ;; ===============================================================
 ;; Custom Functions
@@ -226,9 +207,7 @@
 (defun replace-string-in-place (FromString ToString)
   "Replace a string without moving point."
   (interactive "sReplace: \nsReplace: %s  With: ")
-  (save-excursion
-    (replace-string FromString ToString)
-    ))
+  (save-excursion (replace-string FromString ToString)))
 (define-key global-map [f8] 'replace-string-in-place)
 
 
@@ -241,6 +220,7 @@
 ;; Put all the backup files in an ~/.emacs.d/backup dir
 (setq backup-directory-alist '(("." . "~/.emacs.d/auto-saves")))
 (setq create-lockfiles nil)
+(setq auto-save-default nil) ;; IMPORTANT(craig) - remove this if it becomes necessary
 
 ;; Start up full screen with a vertical split
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
@@ -248,7 +228,6 @@
 (setq next-line-add-newlines nil)
 (setq-default truncate-lines t)
 (setq truncate-partial-width-windows nil)
-(split-window-horizontally)
 
 ;; Stop Emacs from losing undo information by setting very high limits for undo
 ;; buffers
@@ -302,13 +281,13 @@
 ;; Move to the parent directory when in the dired directory listing
 (define-key dired-mode-map "%" 'find-file)
 (define-key dired-mode-map "D" 'dired-create-directory)
-;; (define-key dired-mode-map "D" 'delete-file-or-directory)
 (define-key dired-mode-map "-"
   (lambda ()
     (interactive)
     (find-alternate-file "..")))
 
 ;; Use TAB key to cycle through ido match results
+;; TODO(craig) -- Necessary? can i remove this?
 (defun bind-ido-keys ()
   "Keybindings for ido mode."
   (define-key ido-completion-map (kbd "TAB") 'ido-next-match))
@@ -348,7 +327,6 @@
   (switch-to-buffer-other-window (sbt:run-sbt)))
 
 (define-key scala-mode-map [f5] 'sbt-load-in-other-window)
-
 (add-hook 'scala-mode-hook 'fix-format-buffer)
 
 ;; ===============================================================
@@ -357,15 +335,15 @@
 (defun save-buffers-without-asking ()
   (interactive)
   (save-some-buffers 'no-confirm (lambda ()
-                                   (cond
-                                    ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
-                                    ((and buffer-file-name (eq major-mode 'markdown-mode)))
-                                    ((and buffer-file-name (eq major-mode 'c-mode)))
-                                    ((and buffer-file-name (eq major-mode 'cc-mode)))
-                                    ((and buffer-file-name (eq major-mode 'c++-mode)))
-                                    ((and buffer-file-name (eq major-mode 'scala-mode)))
-                                    ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
-                                    ((and buffer-file-name (derived-mode-p 'org-mode)))))))
+				   (cond
+				    ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
+				    ((and buffer-file-name (eq major-mode 'markdown-mode)))
+				    ((and buffer-file-name (eq major-mode 'c-mode)))
+				    ((and buffer-file-name (eq major-mode 'cc-mode)))
+				    ((and buffer-file-name (eq major-mode 'c++-mode)))
+				    ((and buffer-file-name (eq major-mode 'scala-mode)))
+				    ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+				    ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
 (setq compilation-directory-locked nil)
 (setq makescript-file "build.sh")
@@ -424,42 +402,42 @@
     (c-tab-always-indent         . t)
     (c-comment-only-line-offset  . 0)
     (c-hanging-braces-alist      . ((class-open)
-                                    (class-close)
-                                    (defun-open)
-                                    (defun-close)
-                                    (inline-open)
-                                    (inline-close)
-                                    (brace-list-open)
-                                    (brace-list-close)
-                                    (brace-list-intro)
-                                    (brace-list-entry)
-                                    (block-open)
-                                    (block-close)
-                                    (substatement-open)
-                                    (statement-case-open)
-                                    (class-open)))
+				    (class-close)
+				    (defun-open)
+				    (defun-close)
+				    (inline-open)
+				    (inline-close)
+				    (brace-list-open)
+				    (brace-list-close)
+				    (brace-list-intro)
+				    (brace-list-entry)
+				    (block-open)
+				    (block-close)
+				    (substatement-open)
+				    (statement-case-open)
+				    (class-open)))
     (c-hanging-colons-alist      . ((inher-intro)
-                                    (case-label)
-                                    (label)
-                                    (access-label)
-                                    (access-key)
-                                    (member-init-intro)))
+				    (case-label)
+				    (label)
+				    (access-label)
+				    (access-key)
+				    (member-init-intro)))
     (c-cleanup-list              . (scope-operator
-                                    list-close-comma
-                                    defun-close-semi))
+				    list-close-comma
+				    defun-close-semi))
     (c-offsets-alist             . ((arglist-close         .  c-lineup-arglist)
-                                    (label                 . -4)
-                                    (access-label          . -4)
-                                    (substatement-open     .  0)
-                                    (statement-case-intro  .  4)
-                                    ;; (statement-block-intro .  c-lineup-for)
-                                    (case-label            .  4)
-                                    (block-open            .  0)
-                                    (inline-open           .  0)
-                                    (topmost-intro-cont    .  0)
-                                    (knr-argdecl-intro     . -4)
-                                    (brace-list-open       .  0)
-                                    (brace-list-intro      .  4)))
+				    (label                 . -4)
+				    (access-label          . -4)
+				    (substatement-open     .  0)
+				    (statement-case-intro  .  4)
+				    ;; (statement-block-intro .  c-lineup-for)
+				    (case-label            .  4)
+				    (block-open            .  0)
+				    (inline-open           .  0)
+				    (topmost-intro-cont    .  0)
+				    (knr-argdecl-intro     . -4)
+				    (brace-list-open       .  0)
+				    (brace-list-intro      .  4)))
     (c-echo-syntactic-information-p . t))
   "Craigs's Big Fun C++ Style")
 
