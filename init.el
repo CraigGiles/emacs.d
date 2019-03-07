@@ -125,7 +125,7 @@
 (use-package fill-column-indicator
   :pin melpa-stable
   :init
-  (setq-default fill-column 100)
+  (setq-default fill-column 80)
   (add-hook 'after-change-major-mode-hook 'fci-mode))
 
 ;; IMPORTANT(craig): This causes a big lag spike
@@ -601,30 +601,15 @@
 (modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
 (modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
 
-;; Theme based configuration
-(load-theme 'zenburn t)
 
 ;; -----------------------------------------------
 ;; Old Theme Settings
 ;; -----------------------------------------------
-;; (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
-;; (set-face-attribute 'default t :font "Liberation Mono-12")
+;; Theme based configuration
+(load-theme 'zenburn t)
 (set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
 (set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
 
-;; (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
-;; (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
-
-;; (set-face-attribute 'evil-search-highlight-persist-highlight-face nil
-;;                     :foreground "base03"
-;;                     :background "DarkGoldenrod3")
-
-;; (set-face-attribute 'lazy-highlight nil
-;;                     :foreground "black"
-;;                     :background "midnight blue")
-;; -----------------------------------------------
-;; I like but dont love
-;; -----------------------------------------------
 (set-face-attribute 'font-lock-type-face nil :foreground "#dcdcdc")
 (set-face-attribute 'font-lock-variable-name-face nil :foreground "#dcdcdc")
 (set-face-attribute 'font-lock-constant-face nil :foreground "burlywood3")
@@ -638,9 +623,6 @@
 
 (set-face-attribute 'font-lock-string-face nil :foreground "#5b845c")
 
-;; -----------------------------------------------
-;; Set in stone: Dont change
-;; -----------------------------------------------
 (set-face-attribute 'default t :font "Liberation Mono-12")
 
 (set-background-color "#152426")              ;; something akin to J.Blow's theme
@@ -652,5 +634,42 @@
                     :background "burlywood3"
                     :foreground "black")
 
+;; -----------------------------------------------
+;; After tinkering again
+;; -----------------------------------------------
 
-(load-file "~/.emacs.d/local-init.el")
+;; (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
+;; (set-face-attribute 'default t :font "Liberation Mono-12")
+;; (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
+;; (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
+;; (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
+;; (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
+;; (set-face-attribute 'font-lock-function-name-face nil :foreground "white")
+;; (set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
+;; (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
+;; (set-face-attribute 'font-lock-type-face nil :foreground "#dcdcdc")
+;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "#dcdcdc")
+
+;; (set-background-color "#152426")              ;; something akin to J.Blow's theme
+;; (set-face-background 'hl-line "midnight blue");; the -always on- horizontal highlight
+;; (set-foreground-color "#dcdcdc")
+;; (set-cursor-color "#40FF40")
+
+;; (set-face-attribute 'mode-line nil
+;;                     :background "burlywood3"
+;;                     :foreground "black")
+
+
+(defun post-load-stuff ()
+  (interactive)
+  "Load all the things that I want loaded, AFTER emacs is up and running"
+  (menu-bar-mode -1)
+  (maximize-frame)
+  (set-foreground-color "burlywood3")
+  (set-background-color "#161616")
+  (set-cursor-color "#40FF40")
+  (exec-path-from-shell-initialize)
+  (load-file "~/.emacs.d/local-init.el")
+)
+(add-hook 'window-setup-hook 'post-load-stuff t)
+
