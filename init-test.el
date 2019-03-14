@@ -209,8 +209,15 @@
 (global-set-key (read-kbd-macro "\eb")  'ido-switch-buffer)
 (global-set-key (read-kbd-macro "\eB")  'ido-switch-buffer-other-window)
 
-(define-key c++-mode-map "\ej" 'imenu)
+(define-key global-map "\ej" 'imenu)
 (define-key global-map "\ec" 'quick-calc)
+
+;; TODO(craig): Figure out what these need to be
+;; (define-key global-map [f9] 'first-error)
+;; (define-key global-map [f10] 'previous-error)
+;; (define-key global-map [f11] 'next-error)
+;; (define-key global-map "\en" 'next-error)
+;; (define-key global-map "\eN" 'previous-error)
 
 ;; ===============================================================
 ;; Theme Settings
