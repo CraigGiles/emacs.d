@@ -756,7 +756,7 @@
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
   (set-foreground-color "burlywood3")
-  (set-background-color "#161616")
+  ;; (set-background-color "#161616")
   (set-cursor-color "#40FF40")
 )
 
