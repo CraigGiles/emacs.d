@@ -1,0 +1,1 @@
+- Load emacs with a vertical split
