@@ -8,3 +8,4 @@ projectile-bookmarks.eld
 auto-save-list/
 auto-saves/
 local-init.el
+custom.el
