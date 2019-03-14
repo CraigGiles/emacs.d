@@ -197,6 +197,10 @@
 
 (define-key evil-normal-state-map (kbd "C-k") 'previous-blank-line)
 (define-key evil-normal-state-map (kbd "C-j") 'next-blank-line)
+
+(define-key evil-visual-state-map (kbd "C-k") 'previous-blank-line)
+(define-key evil-visual-state-map (kbd "C-j") 'next-blank-line)
+
 (define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
 (define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
 
