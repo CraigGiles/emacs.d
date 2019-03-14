@@ -195,8 +195,6 @@
   (forward-line -1)
 )
 
-(define-key evil-normal-state-map (kbd "C-l") 'forward-word)
-(define-key evil-normal-state-map (kbd "C-h") 'backward-word)
 (define-key evil-normal-state-map (kbd "C-k") 'previous-blank-line)
 (define-key evil-normal-state-map (kbd "C-j") 'next-blank-line)
 (define-key evil-normal-state-map [home] 'beginning-of-line)
