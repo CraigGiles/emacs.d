@@ -165,12 +165,95 @@
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier nil)
 
+; Turn off the bell on Mac OS X
+(defun nil-bell ())
+(setq ring-bell-function 'nil-bell)
+
+(defun craig-ediff-setup-windows (buffer-A buffer-B buffer-C control-buffer)
+  (ediff-setup-windows-plain buffer-A buffer-B buffer-C control-buffer)
+)
+(setq ediff-window-setup-function 'craig-ediff-setup-windows)
+(setq ediff-split-window-function 'split-window-horizontally)
+
 ;; Create a big horizontal blue bar so i don't keep loosing my cursor
 (global-hl-line-mode 1)
 
 ;; ===============================================================
+;; Custom Functions
+;; ---------------------------------------------------------------
+(defun previous-blank-line ()
+  "Moves to the previous line containing nothing but whitespace."
+  (interactive)
+  (search-backward-regexp "^[ \t]*\n")
+)
+
+(defun next-blank-line ()
+  "Moves to the next line containing nothing but whitespace."
+  (interactive)
+  (forward-line)
+  (search-forward-regexp "^[ \t]*\n")
+  (forward-line -1)
+)
+
+(define-key evil-normal-state-map (kbd "C-l") 'forward-word)
+(define-key evil-normal-state-map (kbd "C-h") 'backward-word)
+(define-key evil-normal-state-map (kbd "C-k") 'previous-blank-line)
+(define-key evil-normal-state-map (kbd "C-j") 'next-blank-line)
+(define-key evil-normal-state-map [home] 'beginning-of-line)
+(define-key evil-normal-state-map [end] 'end-of-line)
+
+;; ===============================================================
+;; Keymap
+;; ---------------------------------------------------------------
+(define-key global-map "\ef" 'find-file)
+(define-key global-map "\eF" 'find-file-other-window)
+
+(global-set-key (read-kbd-macro "\eb")  'ido-switch-buffer)
+(global-set-key (read-kbd-macro "\eB")  'ido-switch-buffer-other-window)
+
+(define-key c++-mode-map "\ej" 'imenu)
+(define-key global-map "\ec" 'quick-calc)
+
+;; ===============================================================
 ;; Theme Settings
 ;; ---------------------------------------------------------------
+(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode))
+(make-face 'font-lock-fixme-face)
+(make-face 'font-lock-study-face)
+(make-face 'font-lock-important-face)
+(make-face 'font-lock-note-face)
+(mapc (lambda (mode)
+ (font-lock-add-keywords
+  mode
+  '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
+    ("\\<\\(STUDY\\)" 1 'font-lock-study-face t)
+    ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
+    ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
+  fixme-modes)
+(modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
+(modify-face 'font-lock-study-face "Yellow" nil nil t nil t nil nil)
+(modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
+(modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
+
+; Accepted file extensions and their appropriate modes
+(setq auto-mode-alist
+      (append
+       '(("\\.cpp$"    . c++-mode)
+         ("\\.hin$"    . c++-mode)
+         ("\\.cin$"    . c++-mode)
+         ("\\.inl$"    . c++-mode)
+         ("\\.rdc$"    . c++-mode)
+         ("\\.h$"    . c++-mode)
+         ("\\.c$"   . c++-mode)
+         ("\\.cc$"   . c++-mode)
+         ("\\.c8$"   . c++-mode)
+         ("\\.txt$" . indented-text-mode)
+         ("\\.emacs$" . emacs-lisp-mode)
+         ("\\.gen$" . gen-mode)
+         ("\\.ms$" . fundamental-mode)
+         ("\\.m$" . objc-mode)
+         ("\\.mm$" . objc-mode)
+         ) auto-mode-alist))
 (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
 (set-face-attribute 'default t :font "Liberation Mono-12")
 (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
