@@ -124,6 +124,14 @@
 ;; ===============================================================
 ;; General Editor Settings
 ;; ---------------------------------------------------------------
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
+;; Put all the backup files in an ~/.emacs.d/backup dir
+(setq backup-directory-alist '(("." . "~/.emacs.d/auto-saves")))
+(setq create-lockfiles nil)
+(setq auto-save-default nil) ;; IMPORTANT(craig) - remove this if it becomes necessary
+
 ;; Start up full screen with a vertical split
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(fullscreen . fullheight))
@@ -193,6 +201,8 @@
   (setq casey-makescript "./build.linux")
   (display-battery-mode 1)
 )
+
+(setq casey-makescript "build.sh")
 
 ; Turn off the toolbar
 (tool-bar-mode 0)
@@ -679,32 +689,6 @@
 (setq truncate-partial-width-windows nil)
 (split-window-horizontally)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(auto-save-default nil)
- '(auto-save-interval 0)
- '(auto-save-list-file-prefix nil)
- '(auto-save-timeout 0)
- '(auto-show-mode t t)
- '(delete-auto-save-files nil)
- '(delete-old-versions (quote other))
- '(imenu-auto-rescan t)
- '(imenu-auto-rescan-maxout 500000)
- '(kept-new-versions 5)
- '(kept-old-versions 5)
- '(make-backup-file-name-function (quote ignore))
- '(make-backup-files nil)
- '(mouse-wheel-follow-mouse nil)
- '(mouse-wheel-progressive-speed nil)
- '(mouse-wheel-scroll-amount (quote (15)))
- '(package-selected-packages
-   (quote
-    (dired zenburn-theme use-package-chords solarized-theme smooth-scrolling simpleclip realgud neotree markdown-mode magit fill-column-indicator exec-path-from-shell evil-surround evil-search-highlight-persist evil-leader evil-indent-textobject evil-commentary ensime counsel-projectile autopair ag 2048-game)))
- '(version-control nil))
-
 (define-key global-map "\t" 'dabbrev-expand)
 (define-key global-map [S-tab] 'indent-for-tab-command)
 (define-key global-map [backtab] 'indent-for-tab-command)
@@ -756,7 +740,6 @@
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
   (set-foreground-color "burlywood3")
-  ;; (set-background-color "#161616")
   (set-cursor-color "#40FF40")
 )
 
