@@ -1,2 +1,3 @@
 - Load emacs with a vertical split
 - dired key bindings ( - in dired goes up the tree )
+- Replace String function
