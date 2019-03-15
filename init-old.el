@@ -48,6 +48,7 @@
   :config
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+
   (define-key evil-normal-state-map (kbd "-") 'find-file)
 
   (define-key evil-normal-state-map (kbd "C-p") 'projectile--find-file)
@@ -68,13 +69,7 @@
     (global-evil-leader-mode)
     (evil-leader/set-leader "SPC")
     (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
-    (evil-leader/set-key "f" 'find-file)
-    (evil-leader/set-key "o" 'projectile-find-file-other-window)
-    
-    ;; (Evil-leader/set-key "f" 'projectile-find-file)
-    ;; (evil-leader/set-key "o" 'projectile-find-file-other-window)
-    (evil-leader/set-key "SPC" 'other-window)
-    )
+    (evil-leader/set-key "SPC" 'other-window))
 
   (use-package evil-surround
     :pin melpa-stable
@@ -98,7 +93,7 @@
     (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
     (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
     (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state)
-    (key-chord-define evil-normal-state-map "ls" 'buffer-menu)
+    ;; (key-chord-define evil-normal-state-map "ls" 'buffer-menu)
 
     ;; ;; Use ensime to get the type at the point
     (key-chord-define evil-normal-state-map "et" 'ensime-type-at-point)
@@ -130,11 +125,11 @@
 
 ;; IMPORTANT(craig): This causes a big lag spike
 ;; Ensure that emacs has the shell's PATH variables on osx
-(use-package exec-path-from-shell
-  :pin melpa-stable
-  :init
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+;; (use-package exec-path-from-shell
+;;   :pin melpa-stable
+;;   :init
+;;   (when (memq window-system '(mac ns x))
+;;     (exec-path-from-shell-initialize)))
 
 (use-package ag
   :pin melpa-stable
@@ -182,6 +177,10 @@
   :pin melpa-stable
   :config
   (remove-hook 'before-save-hook 'fix-format-buffer t))
+
+(use-package cc-mode)
+(use-package compile)
+(use-package ido)
 
 (use-package 2048-game)
 
@@ -260,10 +259,6 @@
 ;; Clock
 (display-time)
 
-;; Turn off the bell on Mac OS X
-(defun nil-bell ())
-(setq ring-bell-function 'nil-bell)
-
 ;; Center the search (nzz)
 (advice-add 'evil-search-next :after #'my-center-line)
 (setq evil-motion-state-modes
@@ -317,6 +312,26 @@
          ("\\.sbt$"    . scala-mode)
          ) auto-mode-alist))
 
+;; ===============================================================
+;; General Key Bindings
+;; ---------------------------------------------------------------
+
+;; Setup my find-files
+(define-key global-map "\ef" 'find-file)
+(define-key global-map "\eF" 'find-file-other-window)
+
+;; Switch Buffers
+(global-set-key (read-kbd-macro "\eb")  'ido-switch-buffer)
+(global-set-key (read-kbd-macro "\eB")  'ido-switch-buffer-other-window)
+
+(defun casey-ediff-setup-windows (buffer-A buffer-B buffer-C control-buffer)
+  (ediff-setup-windows-plain buffer-A buffer-B buffer-C control-buffer)
+)
+(setq ediff-window-setup-function 'casey-ediff-setup-windows)
+(setq ediff-split-window-function 'split-window-horizontally)
+
+; no screwing with my middle mouse button
+(global-unset-key [mouse-2])
 
 ;; ===============================================================
 ;; Scala Mode Configuration
@@ -468,6 +483,52 @@
   ;; Abbrevation expansion
   (abbrev-mode 1)
 
+  (defun craig-header-format ()
+     "Format the given file as a header file."
+     (interactive)
+     (setq BaseFileName (file-name-sans-extension (file-name-nondirectory buffer-file-name)))
+     (insert "#if !defined(")
+     (push-mark)
+     (insert BaseFileName)
+     (upcase-region (mark) (point))
+     (pop-mark)
+     (insert "_H)\n")
+     (insert "/* ========================================================================\n")
+     (insert "   $File: $\n")
+     (insert "   $Date: $\n")
+     (insert "   $Revision: $\n")
+     (insert "   $Creator: Casey Muratori $\n")
+     (insert "   $Notice: (C) Copyright 2015 by Molly Rocket, Inc. All Rights Reserved. $\n")
+     (insert "   ======================================================================== */\n")
+     (insert "\n")
+     (insert "#define ")
+     (push-mark)
+     (insert BaseFileName)
+     (upcase-region (mark) (point))
+     (pop-mark)
+     (insert "_H\n")
+     (insert "#endif")
+  )
+
+  (defun craig-source-format ()
+     "Format the given file as a source file."
+     (interactive)
+     (setq BaseFileName (file-name-sans-extension (file-name-nondirectory buffer-file-name)))
+     (insert "/* ========================================================================\n")
+     (insert "   $File: $\n")
+     (insert "   $Date: $\n")
+     (insert "   $Revision: $\n")
+     (insert "   $Creator: Casey Muratori $\n")
+     (insert "   $Notice: (C) Copyright 2015 by Molly Rocket, Inc. All Rights Reserved. $\n")
+     (insert "   ======================================================================== */\n")
+  )
+
+  (cond ((file-exists-p buffer-file-name) t)
+        ((string-match "[.]hin" buffer-file-name) (craig-source-format))
+        ((string-match "[.]cin" buffer-file-name) (craig-source-format))
+        ((string-match "[.]h" buffer-file-name) (craig-header-format))
+        ((string-match "[.]cpp" buffer-file-name) (craig-source-format)))
+
   (defun craigs-find-corresponding-file ()
     "Find the file that corresponds to this one."
     (interactive)
@@ -502,8 +563,157 @@
   (add-to-list 'compilation-error-regexp-alist-alist '(craigs-devenv
                                                        "*\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:see declaration\\|\\(?:warnin\\(g\\)\\|[a-z ]+\\) C[0-9]+:\\)"
                                                        2 3 nil (4)))
+
+  (define-key c++-mode-map "\t" 'dabbrev-expand)
+  (define-key c++-mode-map [S-tab] 'indent-for-tab-command)
+  (define-key c++-mode-map "\C-y" 'indent-for-tab-command)
+  (define-key c++-mode-map [C-tab] 'indent-region)
+  (define-key c++-mode-map "	" 'indent-region)
+
+  (define-key c++-mode-map "\ej" 'imenu)
+
+  (define-key c++-mode-map "\e." 'c-fill-paragraph)
+
+  (define-key c++-mode-map "\e/" 'c-mark-function)
+
+  (define-key c++-mode-map "\e " 'set-mark-command)
+  (define-key c++-mode-map "\eq" 'append-as-kill)
+  (define-key c++-mode-map "\ea" 'yank)
+  (define-key c++-mode-map "\ez" 'kill-region)
   )
 
+
+(defun casey-big-fun-c-hook ()
+  ; Set my style for the current buffer
+  (c-add-style "BigFun" casey-big-fun-c-style t)
+  
+  ; 4-space tabs
+  (setq tab-width 4
+        indent-tabs-mode nil)
+
+  ; Additional style stuff
+  (c-set-offset 'member-init-intro '++)
+
+  ; No hungry backspace
+  (c-toggle-auto-hungry-state -1)
+
+  ; Newline indents, semi-colon doesn't
+  (define-key c++-mode-map "\C-m" 'newline-and-indent)
+  (setq c-hanging-semi&comma-criteria '((lambda () 'stop)))
+
+  ; Handle super-tabbify (TAB completes, shift-TAB actually tabs)
+  (setq dabbrev-case-replace t)
+  (setq dabbrev-case-fold-search t)
+  (setq dabbrev-upcase-means-case-search t)
+
+  ; Abbrevation expansion
+  (abbrev-mode 1)
+ 
+  (defun casey-header-format ()
+     "Format the given file as a header file."
+     (interactive)
+     (setq BaseFileName (file-name-sans-extension (file-name-nondirectory buffer-file-name)))
+     (insert "#if !defined(")
+     (push-mark)
+     (insert BaseFileName)
+     (upcase-region (mark) (point))
+     (pop-mark)
+     (insert "_H)\n")
+     (insert "/* ========================================================================\n")
+     (insert "   $File: $\n")
+     (insert "   $Date: $\n")
+     (insert "   $Revision: $\n")
+     (insert "   $Creator: Casey Muratori $\n")
+     (insert "   $Notice: (C) Copyright 2015 by Molly Rocket, Inc. All Rights Reserved. $\n")
+     (insert "   ======================================================================== */\n")
+     (insert "\n")
+     (insert "#define ")
+     (push-mark)
+     (insert BaseFileName)
+     (upcase-region (mark) (point))
+     (pop-mark)
+     (insert "_H\n")
+     (insert "#endif")
+  )
+
+  (defun casey-source-format ()
+     "Format the given file as a source file."
+     (interactive)
+     (setq BaseFileName (file-name-sans-extension (file-name-nondirectory buffer-file-name)))
+     (insert "/* ========================================================================\n")
+     (insert "   $File: $\n")
+     (insert "   $Date: $\n")
+     (insert "   $Revision: $\n")
+     (insert "   $Creator: Casey Muratori $\n")
+     (insert "   $Notice: (C) Copyright 2015 by Molly Rocket, Inc. All Rights Reserved. $\n")
+     (insert "   ======================================================================== */\n")
+  )
+
+  (cond ((file-exists-p buffer-file-name) t)
+        ((string-match "[.]hin" buffer-file-name) (casey-source-format))
+        ((string-match "[.]cin" buffer-file-name) (casey-source-format))
+        ((string-match "[.]h" buffer-file-name) (casey-header-format))
+        ((string-match "[.]cpp" buffer-file-name) (casey-source-format)))
+
+  (defun casey-find-corresponding-file ()
+    "Find the file that corresponds to this one."
+    (interactive)
+    (setq CorrespondingFileName nil)
+    (setq BaseFileName (file-name-sans-extension buffer-file-name))
+    (if (string-match "\\.c" buffer-file-name)
+       (setq CorrespondingFileName (concat BaseFileName ".h")))
+    (if (string-match "\\.h" buffer-file-name)
+       (if (file-exists-p (concat BaseFileName ".c")) (setq CorrespondingFileName (concat BaseFileName ".c"))
+	   (setq CorrespondingFileName (concat BaseFileName ".cpp"))))
+    (if (string-match "\\.hin" buffer-file-name)
+       (setq CorrespondingFileName (concat BaseFileName ".cin")))
+    (if (string-match "\\.cin" buffer-file-name)
+       (setq CorrespondingFileName (concat BaseFileName ".hin")))
+    (if (string-match "\\.cpp" buffer-file-name)
+       (setq CorrespondingFileName (concat BaseFileName ".h")))
+    (if CorrespondingFileName (find-file CorrespondingFileName)
+       (error "Unable to find a corresponding file")))
+  (defun casey-find-corresponding-file-other-window ()
+    "Find the file that corresponds to this one."
+    (interactive)
+    (find-file-other-window buffer-file-name)
+    (casey-find-corresponding-file)
+    (other-window -1))
+  (define-key c++-mode-map [f12] 'casey-find-corresponding-file)
+  (define-key c++-mode-map [M-f12] 'casey-find-corresponding-file-other-window)
+
+  ; Alternate bindings for F-keyless setups (ie MacOS X terminal)
+  (define-key c++-mode-map "\ec" 'casey-find-corresponding-file)
+  (define-key c++-mode-map "\eC" 'casey-find-corresponding-file-other-window)
+
+  (define-key c++-mode-map "\es" 'casey-save-buffer)
+
+  (define-key c++-mode-map "\t" 'dabbrev-expand)
+  (define-key c++-mode-map [S-tab] 'indent-for-tab-command)
+  (define-key c++-mode-map "\C-y" 'indent-for-tab-command)
+  (define-key c++-mode-map [C-tab] 'indent-region)
+  (define-key c++-mode-map "	" 'indent-region)
+
+  (define-key c++-mode-map "\ej" 'imenu)
+
+  (define-key c++-mode-map "\e." 'c-fill-paragraph)
+
+  (define-key c++-mode-map "\e/" 'c-mark-function)
+
+  (define-key c++-mode-map "\e " 'set-mark-command)
+  (define-key c++-mode-map "\eq" 'append-as-kill)
+  (define-key c++-mode-map "\ea" 'yank)
+  (define-key c++-mode-map "\ez" 'kill-region)
+
+  ; devenv.com error parsing
+  (add-to-list 'compilation-error-regexp-alist 'casey-devenv)
+  (add-to-list 'compilation-error-regexp-alist-alist '(casey-devenv
+   "*\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:see declaration\\|\\(?:warnin\\(g\\)\\|[a-z ]+\\) C[0-9]+:\\)"
+    2 3 nil (4)))
+
+  ; Turn on line numbers
+  ;(linum-mode)
+)
 
 ;; ---------------------------------------------------------------
 
@@ -539,6 +749,7 @@
 (add-hook 'before-save-hook #'my-c++-mode-before-save-hook)
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 (add-hook 'c-mode-common-hook 'craigs-big-fun-c-hook)
+;; (add-hook 'c-mode-common-hook 'casey-big-fun-c-hook)
 
 ;; ===============================================================
 ;; Company Mode Configuration
@@ -606,49 +817,24 @@
 ;; Old Theme Settings
 ;; -----------------------------------------------
 ;; Theme based configuration
-(load-theme 'zenburn t)
-(set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
-(set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
+;; (load-theme 'zenburn t)
+;; (set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
+;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
 
-(set-face-attribute 'font-lock-type-face nil :foreground "#dcdcdc")
-(set-face-attribute 'font-lock-variable-name-face nil :foreground "#dcdcdc")
-(set-face-attribute 'font-lock-constant-face nil :foreground "burlywood3")
-
-(set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
-(set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
-
-(set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
-(set-face-attribute 'font-lock-function-name-face nil :foreground "burlywood3")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
-
-(set-face-attribute 'font-lock-string-face nil :foreground "#5b845c")
-
-(set-face-attribute 'default t :font "Liberation Mono-12")
-
-(set-background-color "#152426")              ;; something akin to J.Blow's theme
-(set-face-background 'hl-line "midnight blue");; the -always on- horizontal highlight
-(set-foreground-color "#dcdcdc")
-(set-cursor-color "#40FF40")
-
-(set-face-attribute 'mode-line nil
-                    :background "burlywood3"
-                    :foreground "black")
-
-;; -----------------------------------------------
-;; After tinkering again
-;; -----------------------------------------------
-
-;; (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
-;; (set-face-attribute 'default t :font "Liberation Mono-12")
-;; (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
-;; (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
-;; (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
-;; (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
-;; (set-face-attribute 'font-lock-function-name-face nil :foreground "white")
-;; (set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
-;; (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
 ;; (set-face-attribute 'font-lock-type-face nil :foreground "#dcdcdc")
 ;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "#dcdcdc")
+;; (set-face-attribute 'font-lock-constant-face nil :foreground "burlywood3")
+
+;; (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
+;; (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
+
+;; (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
+;; (set-face-attribute 'font-lock-function-name-face nil :foreground "burlywood3")
+;; (set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
+
+;; (set-face-attribute 'font-lock-string-face nil :foreground "#5b845c")
+
+;; (set-face-attribute 'default t :font "Liberation Mono-12")
 
 ;; (set-background-color "#152426")              ;; something akin to J.Blow's theme
 ;; (set-face-background 'hl-line "midnight blue");; the -always on- horizontal highlight
@@ -659,15 +845,37 @@
 ;;                     :background "burlywood3"
 ;;                     :foreground "black")
 
+;; -----------------------------------------------
+;; After tinkering again
+;; -----------------------------------------------
+
+(add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
+(set-face-attribute 'default t :font "Liberation Mono-12")
+(set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
+(set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
+(set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
+(set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
+(set-face-attribute 'font-lock-function-name-face nil :foreground "white")
+(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
+(set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
+(set-face-attribute 'font-lock-type-face nil :foreground "#dcdcdc")
+(set-face-attribute 'font-lock-variable-name-face nil :foreground "#dcdcdc")
+
+(set-face-background 'hl-line "midnight blue");; the -always on- horizontal highlight
+(set-background-color "#152426")              ;; something akin to J.Blow's theme
+(set-foreground-color "#dcdcdc")
+;; (set-foreground-color "burlywood3")
+(set-cursor-color "#40FF40")
+
+(set-face-attribute 'mode-line nil
+                    :background "burlywood3"
+                    :foreground "black")
+
 
 (defun post-load-stuff ()
   (interactive)
   "Load all the things that I want loaded, AFTER emacs is up and running"
   (menu-bar-mode -1)
-  (maximize-frame)
-  (set-foreground-color "burlywood3")
-  (set-background-color "#161616")
-  (set-cursor-color "#40FF40")
   (exec-path-from-shell-initialize)
   (load-file "~/.emacs.d/local-init.el")
 )
