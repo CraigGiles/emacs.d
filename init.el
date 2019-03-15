@@ -575,115 +575,6 @@
     2 3 nil (4)))
 )
 
-;; ;; C++ indentation style
-;; (defconst craigs-big-fun-c-style
-;;   '((c-electric-pound-behavior   . nil)
-;;     (c-tab-always-indent         . t)
-;;     (c-comment-only-line-offset  . 0)
-;;     (c-hanging-braces-alist      . ((class-open)
-;; 				    (class-close)
-;; 				    (defun-open)
-;; 				    (defun-close)
-;; 				    (inline-open)
-;; 				    (inline-close)
-;; 				    (brace-list-open)
-;; 				    (brace-list-close)
-;; 				    (brace-list-intro)
-;; 				    (brace-list-entry)
-;; 				    (block-open)
-;; 				    (block-close)
-;; 				    (substatement-open)
-;; 				    (statement-case-open)
-;; 				    (class-open)))
-;;     (c-hanging-colons-alist      . ((inher-intro)
-;; 				    (case-label)
-;; 				    (label)
-;; 				    (access-label)
-;; 				    (access-key)
-;; 				    (member-init-intro)))
-;;     (c-cleanup-list              . (scope-operator
-;; 				    list-close-comma
-;; 				    defun-close-semi))
-;;     (c-offsets-alist             . ((arglist-close         .  c-lineup-arglist)
-;; 				    (label                 . -4)
-;; 				    (access-label          . -4)
-;; 				    (substatement-open     .  0)
-;; 				    (statement-case-intro  .  4)
-;; 				    ;; (statement-block-intro .  c-lineup-for)
-;; 				    (case-label            .  4)
-;; 				    (block-open            .  0)
-;; 				    (inline-open           .  0)
-;; 				    (topmost-intro-cont    .  0)
-;; 				    (knr-argdecl-intro     . -4)
-;; 				    (brace-list-open       .  0)
-;; 				    (brace-list-intro      .  4)))
-;;     (c-echo-syntactic-information-p . t))
-;;   "Craigs's Big Fun C++ Style")
-
-;; ;; CC++ mode handling
-;; (defun craigs-big-fun-c-hook ()
-;;   ;; Set my style for the current buffer
-;;   (c-add-style "BigFun" craigs-big-fun-c-style t)
-
-;;   ;; 4-space tabs
-;;   (setq tab-width 4
-;;         indent-tabs-mode nil)
-
-;;   ;; Additional style stuff
-;;   (c-set-offset 'member-init-intro '++)
-
-;;   ;; No hungry backspace
-;;   (c-toggle-auto-hungry-state -1)
-
-;;   ;; Newline indents, semi-colon doesn't
-;;   (define-key c++-mode-map "\C-m" 'newline-and-indent)
-;;   (setq c-hanging-semi&comma-criteria '((lambda () 'stop)))
-
-;;   ;; Handle super-tabbify (TAB completes, shift-TAB actually tabs)
-;;   (setq dabbrev-case-replace t)
-;;   (setq dabbrev-case-fold-search t)
-;;   (setq dabbrev-upcase-means-case-search t)
-
-;;   ;; Abbrevation expansion
-;;   (abbrev-mode 1)
-
-;;   (defun craigs-find-corresponding-file ()
-;;     "Find the file that corresponds to this one."
-;;     (interactive)
-;;     (setq CorrespondingFileName nil)
-;;     (setq BaseFileName (file-name-sans-extension buffer-file-name))
-;;     (if (string-match "\\.c" buffer-file-name)
-;;         (setq CorrespondingFileName (concat BaseFileName ".h")))
-;;     (if (string-match "\\.h" buffer-file-name)
-;;         (if (file-exists-p (concat BaseFileName ".c")) (setq CorrespondingFileName (concat BaseFileName ".c"))
-;;           (setq CorrespondingFileName (concat BaseFileName ".cpp"))))
-;;     (if (string-match "\\.hin" buffer-file-name)
-;;         (setq CorrespondingFileName (concat BaseFileName ".cin")))
-;;     (if (string-match "\\.cin" buffer-file-name)
-;;         (setq CorrespondingFileName (concat BaseFileName ".hin")))
-;;     (if (string-match "\\.cpp" buffer-file-name)
-;;         (setq CorrespondingFileName (concat BaseFileName ".h")))
-;;     (if CorrespondingFileName (find-file CorrespondingFileName)
-;;       (error "Unable to find a corresponding file")))
-;;   (defun craigs-find-corresponding-file-other-window ()
-;;     "Find the file that corresponds to this one."
-;;     (interactive)
-;;     (find-file-other-window buffer-file-name)
-;;     (craigs-find-corresponding-file)
-;;     (other-window -1))
-
-;;   (define-key c++-mode-map [f12] 'craigs-find-corresponding-file)
-;;   (define-key c++-mode-map [M-f12] 'craigs-find-corresponding-file-other-window)
-;;   (define-key c++-mode-map [f5] 'make-without-asking)
-
-;;   ;; devenv.com error parsing
-;;   (add-to-list 'compilation-error-regexp-alist 'craigs-devenv)
-;;   (add-to-list 'compilation-error-regexp-alist-alist '(craigs-devenv
-;;                                                        "*\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:see declaration\\|\\(?:warnin\\(g\\)\\|[a-z ]+\\) C[0-9]+:\\)"
-;;                                                        2 3 nil (4)))
-;;   )
-
-
 ;; ;; ---------------------------------------------------------------
 
 ;; ;; All code within an #if 0 block should be set to the comment color
@@ -796,7 +687,6 @@
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (toggle-frame-maximized)
-  ;; (exec-path-from-shell-initialize)
   (load-file "~/.emacs.d/local-init.el")
 )
 (add-hook 'window-setup-hook 'post-load-stuff t)
