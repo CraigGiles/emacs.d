@@ -178,14 +178,6 @@
 ;; Create a big horizontal blue bar so i don't keep loosing my cursor
 (global-hl-line-mode 1)
 
-;; Move to the parent directory when in the dired directory listing
-(define-key dired-mode-map "%" 'find-file)
-(define-key dired-mode-map "D" 'dired-create-directory)
-(define-key dired-mode-map "-"
-  (lambda ()
-    (interactive)
-    (find-alternate-file "..")))
-
 ;; ===============================================================
 ;; Custom Functions
 ;; ---------------------------------------------------------------
@@ -234,6 +226,21 @@
 (define-key global-map [f11] 'next-error)
 (define-key global-map "\en" 'next-error)
 (define-key global-map "\eN" 'previous-error)
+
+;; Dired: Keymap
+;;   - : Move to the parent directory
+;;   D : Create directory
+;;   % : Create File
+(eval-after-load "dired" '(progn
+  (define-key dired-mode-map (kbd "M-o") 'other-window) 
+  (define-key dired-mode-map "%" 'find-file)
+  (define-key dired-mode-map "D" 'dired-create-directory)
+  (define-key dired-mode-map "-"
+    (lambda ()
+      (interactive)
+      (find-alternate-file "..")))
+  )
+)
 
 ;; ===============================================================
 ;; C++ Mode Configuration
@@ -690,3 +697,4 @@
   (load-file "~/.emacs.d/local-init.el")
 )
 (add-hook 'window-setup-hook 'post-load-stuff t)
+
