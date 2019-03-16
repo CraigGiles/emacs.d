@@ -52,6 +52,7 @@
   (define-key evil-normal-state-map (kbd "-") 'find-file)
 
   (define-key evil-normal-state-map (kbd "C-p") 'projectile--find-file)
+  (define-key evil-normal-state-map (kbd "C-P") 'projectile-find-file-other-window)
   (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
 
   ;; NOTE(craig) -- i want to get in the habit of <C-w><C-w> to goto other window
