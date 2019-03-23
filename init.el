@@ -630,7 +630,7 @@
 ;; ===============================================================
 ;; Theme Settings
 ;; ---------------------------------------------------------------
-(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode))
+(setq fixme-modes '(c++-mode c-mode markdown-mode emacs-lisp-mode scala-mode sbt-mode))
 (make-face 'font-lock-fixme-face)
 (make-face 'font-lock-study-face)
 (make-face 'font-lock-important-face)
