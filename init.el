@@ -509,6 +509,9 @@
      (upcase-region (mark) (point))
      (pop-mark)
      (insert "_H\n")
+     (insert "\n")
+     (insert "\n")
+     (insert "\n")
      (insert "#endif")
   )
 
@@ -639,6 +642,7 @@
  (font-lock-add-keywords
   mode
   '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
+    ("\\<\\(BUG\\)" 1 'font-lock-fixme-face t)
     ("\\<\\(STUDY\\)" 1 'font-lock-study-face t)
     ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
     ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
@@ -680,15 +684,21 @@
 (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
 (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
 (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
-(set-face-attribute 'font-lock-function-name-face nil :foreground "white")
 (set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
 (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
-(set-face-attribute 'font-lock-type-face nil :foreground "#dcdcdc")
-(set-face-attribute 'font-lock-variable-name-face nil :foreground "#dcdcdc")
+;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "#dcdcdc")
+;; (set-face-attribute 'font-lock-type-face nil :foreground "#dcdcdc")
+(setq foreground-font-color "#debea1")
+;; (setq foreground-font-color "#e4cbb4")
+
+(set-face-attribute 'font-lock-function-name-face nil :foreground foreground-font-color)
+(set-face-attribute 'font-lock-variable-name-face nil :foreground foreground-font-color)
+(set-face-attribute 'font-lock-type-face nil :foreground foreground-font-color)
 
 (set-face-background 'hl-line "midnight blue");; the -always on- horizontal highlight
 (set-background-color "#152426")              ;; something akin to J.Blow's theme
-(set-foreground-color "#dcdcdc")
+;; (set-foreground-color "#dcdcdc")
+(set-foreground-color foreground-font-color)
 (set-cursor-color "#40FF40")
 
 (set-face-attribute 'mode-line nil
