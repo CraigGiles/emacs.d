@@ -30,6 +30,8 @@
 ;; ===============================================================
 ;; Installed Packages
 ;; ---------------------------------------------------------------
+(use-package ido)
+
 (use-package counsel-projectile
   :pin melpa-stable
   :config
@@ -51,16 +53,12 @@
 
   (define-key evil-normal-state-map (kbd "-") 'find-file)
 
-  ;; (define-key evil-normal-state-map (kbd "C-p") 'projectile--find-file)
-  ;; (define-key evil-normal-state-map (kbd "C-P") 'projectile-find-file-other-window)
-
   (define-key evil-normal-state-map (kbd "\ep") 'projectile--find-file)
   (define-key evil-normal-state-map (kbd "\eP") 'projectile-find-file-other-window)
  
  
   (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
 
-  ;; NOTE(craig) -- i want to get in the habit of <C-w><C-w> to goto other window
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-insert-state-map (kbd "C-u")
@@ -98,14 +96,7 @@
     ;; Exit insert mode with 'jj'
     (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
     (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
-    (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state)
-    ;; (key-chord-define evil-normal-state-map "ls" 'buffer-menu)
-
-    ;; TODO(craig) -- move to scala-init.el for scala development
-    ;; Use ensime to get the type at the point
-    (key-chord-define evil-normal-state-map "et" 'ensime-type-at-point)
-    (key-chord-define evil-normal-state-map "ed" 'ensime-edit-definition-other-window)
-    )
+    (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state))
 
   )
 
@@ -137,7 +128,15 @@
 
 (use-package cc-mode)
 (use-package compile)
-(use-package ido)
+
+;; (use-package scala-mode
+;;   :pin melpa-stable
+;;   :interpreter ("scala" . scala-mode)
+;;   :config)
+
+;; (use-package sbt-mode
+;;   :pin melpa-stable
+;;   :commands sbt-start sbt-command)
 
 (use-package 2048-game)
 
