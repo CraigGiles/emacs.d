@@ -693,7 +693,14 @@
 (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
 ;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "#dcdcdc")
 ;; (set-face-attribute 'font-lock-type-face nil :foreground "#dcdcdc")
-(setq foreground-font-color "#debea1")
+;; (setq foreground-font-color "#debea1")
+;; (setq foreground-font-color "#ecdfd4")
+;; (setq foreground-font-color "#dcdcdc")
+;; (setq foreground-font-color "#b0b0b0")
+;; (setq foreground-font-color "#c6c1ba")
+(setq foreground-font-color "#d2cbc0")
+
+
 ;; (setq foreground-font-color "#e4cbb4")
 
 (set-face-attribute 'font-lock-function-name-face nil :foreground foreground-font-color)
