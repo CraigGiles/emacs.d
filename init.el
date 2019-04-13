@@ -412,11 +412,6 @@
 (define-key global-map [C-tab] 'indent-region)
 (define-key global-map "	" 'indent-region)
 
-(defun never-split-a-window ()
-  "Don't want to attempt to split windows if i dont have to"
-  nil)
-(setq split-window-preferred-function 'never-split-a-window)
-
 (defun craig-big-fun-c-style ()
   '((c-electric-pound-behavior   . nil)
     (c-tab-always-indent         . t)
