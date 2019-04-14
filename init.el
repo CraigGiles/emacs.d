@@ -182,6 +182,7 @@
 
 ;; Create a big horizontal blue bar so i don't keep loosing my cursor
 (global-hl-line-mode 1)
+(global-visual-line-mode 1)
 
 ;; ===============================================================
 ;; Custom Functions
@@ -221,6 +222,7 @@
 (define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
 
 (define-key evil-normal-state-map (kbd "C-b") 'imenu)
+(define-key evil-normal-state-map (kbd "C-q") 'evil-window-delete)
 
 (define-key global-map "\ef" 'find-file)
 (define-key global-map "\eF" 'find-file-other-window)
@@ -560,6 +562,7 @@
   (define-key c++-mode-map [f12] 'craig-find-corresponding-file)
   (define-key c++-mode-map [M-f12] 'craig-find-corresponding-file-other-window)
   (define-key c++-mode-map [f5] 'make-without-asking)
+  (define-key c++-mode-map "\em" 'make-without-asking)
 
   ; Alternate bindings for F-keyless setups (ie MacOS X terminal)
   (define-key c++-mode-map "\ec" 'craig-find-corresponding-file)
