@@ -636,6 +636,8 @@
 ;; ---------------------------------------------------------------
 (setq fixme-modes '(c++-mode c-mode markdown-mode emacs-lisp-mode scala-mode sbt-mode))
 (make-face 'font-lock-todo-face)
+(make-face 'font-lock-done-face)
+(make-face 'font-lock-progress-face)
 (make-face 'font-lock-bug-face)
 (make-face 'font-lock-study-face)
 (make-face 'font-lock-important-face)
@@ -644,7 +646,9 @@
  (font-lock-add-keywords
   mode
   '(("\\<\\(TODO\\)" 1 'font-lock-todo-face t)
+    ("\\<\\(DONE\\)" 1 'font-lock-done-face t)
     ("\\<\\(BUG\\)" 1 'font-lock-bug-face t)
+    ("\\<\\(PROGRESS\\)" 1 'font-lock-progress-face t)
     ("\\<\\(STUDY\\)" 1 'font-lock-study-face t)
     ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
     ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
@@ -652,7 +656,9 @@
 (modify-face 'font-lock-todo-face "firebrick3" nil nil t nil t nil nil)
 (modify-face 'font-lock-bug-face "Red" nil nil t nil t nil nil)
 (modify-face 'font-lock-study-face "Yellow" nil nil t nil t nil nil)
+(modify-face 'font-lock-progress-face "Yellow" nil nil t nil t nil nil)
 (modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
+(modify-face 'font-lock-done-face "Green" nil nil t nil t nil nil)
 (modify-face 'font-lock-note-face "CornflowerBlue" nil nil t nil t nil nil)
 
 ;; (modify-face 'font-lock-todo-face "Red" nil nil t nil t nil nil)
