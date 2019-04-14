@@ -222,10 +222,10 @@
 (define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
 
 (define-key evil-normal-state-map (kbd "C-b") 'imenu)
-(define-key evil-normal-state-map (kbd "C-q") 'evil-window-delete)
 
 (define-key global-map "\ef" 'find-file)
 (define-key global-map "\eF" 'find-file-other-window)
+(define-key global-map (kbd "C-q") 'evil-window-delete)
 
 (global-set-key (read-kbd-macro "\eb")  'ido-switch-buffer)
 (global-set-key (read-kbd-macro "\eB")  'ido-switch-buffer-other-window)
