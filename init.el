@@ -88,15 +88,15 @@
     :config
     (global-evil-search-highlight-persist t))
 
-  ;; (use-package use-package-chords
-  ;;   :pin melpa-stable
-  ;;   :config
-  ;;   (key-chord-mode 1)
-  ;;   (setq key-chord-two-keys-delay 0.2)
-  ;;   ;; Exit insert mode with 'jj'
-  ;;   (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
-  ;;   (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
-  ;;   (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state))
+  (use-package use-package-chords
+    :pin melpa-stable
+    :config
+    (key-chord-mode 1)
+    (setq key-chord-two-keys-delay 0.2)
+    ;; Exit insert mode with 'jj'
+    (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+    (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
+    (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state))
 
   )
 
@@ -208,13 +208,8 @@
 ;; ===============================================================
 ;; Keymap
 ;; ---------------------------------------------------------------
-;; (define-key evil-normal-state-map (kbd "C-k") 'previous-blank-line)
-;; (define-key evil-normal-state-map (kbd "C-j") 'next-blank-line)
 (define-key evil-normal-state-map (kbd "C-k") 'evil-backward-paragraph)
 (define-key evil-normal-state-map (kbd "C-j") 'evil-forward-paragraph)
-
-;; (define-key evil-visual-state-map (kbd "C-k") 'previous-blank-line)
-;; (define-key evil-visual-state-map (kbd "C-j") 'next-blank-line)
 (define-key evil-visual-state-map (kbd "C-k") 'evil-backward-paragraph)
 (define-key evil-visual-state-map (kbd "C-j") 'evil-forward-paragraph)
 
@@ -639,23 +634,29 @@
 (make-face 'font-lock-done-face)
 (make-face 'font-lock-progress-face)
 (make-face 'font-lock-bug-face)
-(make-face 'font-lock-study-face)
+(make-face 'font-lock-cleanup-face)
+(make-face 'font-lock-speed-face)
 (make-face 'font-lock-important-face)
 (make-face 'font-lock-note-face)
 (mapc (lambda (mode)
  (font-lock-add-keywords
   mode
-  '(("\\<\\(TODO\\)" 1 'font-lock-todo-face t)
-    ("\\<\\(DONE\\)" 1 'font-lock-done-face t)
-    ("\\<\\(BUG\\)" 1 'font-lock-bug-face t)
-    ("\\<\\(PROGRESS\\)" 1 'font-lock-progress-face t)
-    ("\\<\\(STUDY\\)" 1 'font-lock-study-face t)
-    ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
-    ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
+  '(
+     ("\\<\\(BUG\\)" 1 'font-lock-bug-face t)
+     ("\\<\\(NOTE\\)" 1 'font-lock-note-face t)
+     ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
+     ("\\<\\(CLEANUP\\)" 1 'font-lock-cleanup-face t)
+     ("\\<\\(SPEED\\)" 1 'font-lock-speed-face t)
+
+     ("\\<\\(TODO\\)" 1 'font-lock-todo-face t)
+     ("\\<\\(PROGRESS\\)" 1 'font-lock-progress-face t)
+     ("\\<\\(DONE\\)" 1 'font-lock-done-face t)
+   )))
   fixme-modes)
 (modify-face 'font-lock-todo-face "firebrick3" nil nil t nil t nil nil)
 (modify-face 'font-lock-bug-face "Red" nil nil t nil t nil nil)
-(modify-face 'font-lock-study-face "Yellow" nil nil t nil t nil nil)
+(modify-face 'font-lock-cleanup-face "Yellow" nil nil t nil t nil nil)
+(modify-face 'font-lock-speed-face "Yellow" nil nil t nil t nil nil)
 (modify-face 'font-lock-progress-face "Yellow" nil nil t nil t nil nil)
 (modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
 (modify-face 'font-lock-done-face "Green" nil nil t nil t nil nil)
