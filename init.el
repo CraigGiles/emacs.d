@@ -88,15 +88,15 @@
     :config
     (global-evil-search-highlight-persist t))
 
-  (use-package use-package-chords
-    :pin melpa-stable
-    :config
-    (key-chord-mode 1)
-    (setq key-chord-two-keys-delay 0.2)
-    ;; Exit insert mode with 'jj'
-    (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
-    (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
-    (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state))
+  ;; (use-package use-package-chords
+  ;;   :pin melpa-stable
+  ;;   :config
+  ;;   (key-chord-mode 1)
+  ;;   (setq key-chord-two-keys-delay 0.2)
+  ;;   ;; Exit insert mode with 'jj'
+  ;;   (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+  ;;   (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
+  ;;   (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state))
 
   )
 
