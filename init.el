@@ -112,11 +112,11 @@
         scroll-conservatively 9999
         scroll-step 1))
 
-(use-package fill-column-indicator
-  :pin melpa-stable
-  :init
-  (setq-default fill-column 80)
-  (add-hook 'after-change-major-mode-hook 'fci-mode))
+;; (use-package fill-column-indicator
+;;   :pin melpa-stable
+;;   :init
+;;   (setq-default fill-column 80)
+;;   (add-hook 'after-change-major-mode-hook 'fci-mode))
 
 (with-eval-after-load 'evil
   (defalias #'forward-evil-word #'forward-evil-symbol))
@@ -169,6 +169,9 @@
 (setq mac-command-key-is-meta t)
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier nil)
+
+;; turn on the column numbers in modeline
+(setq column-number-mode 1)
 
 ; Turn off the bell on Mac OS X
 (defun nil-bell ())
