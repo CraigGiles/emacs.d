@@ -129,14 +129,16 @@
 (use-package cc-mode)
 (use-package compile)
 
-;; (use-package scala-mode
-;;   :pin melpa-stable
+(use-package scala-mode
+  :pin melpa-stable
 ;;   :interpreter ("scala" . scala-mode)
-;;   :config)
+  :config
+  (define-key evil-normal-state-map (kbd "C-f") 'sbt-find-usages)
+  (define-key evil-normal-state-map (kbd "C-F") 'sbt-find-definitions))
 
-;; (use-package sbt-mode
-;;   :pin melpa-stable
-;;   :commands sbt-start sbt-command)
+(use-package sbt-mode
+  :pin melpa-stable
+  :commands sbt-start sbt-command)
 
 (use-package 2048-game)
 
