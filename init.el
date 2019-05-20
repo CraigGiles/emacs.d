@@ -134,7 +134,9 @@
 ;;   :interpreter ("scala" . scala-mode)
   :config
   (define-key evil-normal-state-map (kbd "C-f") 'sbt-find-usages)
-  (define-key evil-normal-state-map (kbd "C-F") 'sbt-find-definitions))
+  (define-key evil-normal-state-map (kbd "C-F") 'sbt-find-definitions)
+  (define-key evil-normal-state-map (kbd "\em") 'save-buffer)
+  )
 
 (use-package sbt-mode
   :pin melpa-stable
