@@ -130,6 +130,7 @@
   (remove-hook 'before-save-hook 'fix-format-buffer t))
 
 (use-package cc-mode)
+(use-package markdown-mode)
 (use-package compile)
 
 (use-package scala-mode
