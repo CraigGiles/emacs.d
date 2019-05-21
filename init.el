@@ -37,6 +37,10 @@
   :config
   (counsel-mode))
 
+(use-package ag
+  :pin melpa-stable
+  :init)
+
 (use-package evil-commentary
   :pin melpa-stable
   :init
@@ -55,7 +59,6 @@
 
   (define-key evil-normal-state-map (kbd "\ep") 'projectile--find-file)
   (define-key evil-normal-state-map (kbd "\eP") 'projectile-find-file-other-window)
- 
  
   (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
 
@@ -133,14 +136,7 @@
   :pin melpa-stable
 ;;   :interpreter ("scala" . scala-mode)
   :config
-  (define-key evil-normal-state-map (kbd "C-f") 'sbt-find-usages)
-  (define-key evil-normal-state-map (kbd "C-F") 'sbt-find-definitions)
-  (define-key evil-normal-state-map (kbd "\em") 'save-buffer)
-  )
-
-(use-package sbt-mode
-  :pin melpa-stable
-  :commands sbt-start sbt-command)
+  (define-key scala-mode-map (kbd "\em") 'save-buffer))
 
 (use-package 2048-game)
 
