@@ -191,6 +191,9 @@
 (global-hl-line-mode 1)
 (global-visual-line-mode 1)
 
+;; Auto revert files that change on the hard disk
+(global-auto-revert-mode 1)
+
 ;; ===============================================================
 ;; Custom Functions
 ;; ---------------------------------------------------------------
