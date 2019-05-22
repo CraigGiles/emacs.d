@@ -83,9 +83,6 @@
     :config
     (global-evil-surround-mode))
 
-  (use-package evil-indent-textobject
-    :pin melpa-stable)
-
   (use-package evil-search-highlight-persist
     :pin melpa-stable
     :config
