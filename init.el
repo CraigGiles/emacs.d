@@ -130,15 +130,24 @@
 (use-package markdown-mode)
 (use-package compile)
 
+
 (use-package go-mode
   :pin melpa-stable
   :init)
+
+(defun sbt-save-and-switch ()
+  "Saves the current buffer and switches to the active SBT window."
+  (interactive)
+  (sbt-clear)
+  (save-buffers-without-asking)
+  (sbt-switch-to-active-sbt-buffer)
+  (other-window 1))
 
 (use-package scala-mode
   :pin melpa-stable
 ;;   :interpreter ("scala" . scala-mode)
   :config
-  (define-key scala-mode-map (kbd "\em") 'save-buffer))
+  (define-key scala-mode-map (kbd "\em") 'sbt-save-and-switch))
 
 (use-package 2048-game)
 
