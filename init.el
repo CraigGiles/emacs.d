@@ -130,6 +130,10 @@
 (use-package markdown-mode)
 (use-package compile)
 
+(use-package go-mode
+  :pin melpa-stable
+  :init)
+
 (use-package scala-mode
   :pin melpa-stable
 ;;   :interpreter ("scala" . scala-mode)
@@ -268,6 +272,7 @@
 				    ((and buffer-file-name (eq major-mode 'cc-mode)))
 				    ((and buffer-file-name (eq major-mode 'c++-mode)))
 				    ((and buffer-file-name (eq major-mode 'scala-mode)))
+				    ((and buffer-file-name (eq major-mode 'go-mode)))
 				    ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
 				    ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
@@ -630,6 +635,10 @@
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 (add-hook 'c-mode-common-hook 'craig-big-fun-c-hook)
 
+
+;; Go Mode
+;; ---------------------------------------------------------------
+(define-key go-mode-map "\em" 'make-without-asking)
 
 ;; ===============================================================
 ;; Theme Settings
