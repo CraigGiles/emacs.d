@@ -100,6 +100,12 @@
 
   )
 
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
+
 (use-package autopair
   :pin melpa-stable
   :config
