@@ -139,7 +139,10 @@
 
 (use-package go-mode
   :pin melpa-stable
-  :init)
+  :init
+  :config
+    (setq tab-width 4
+            indent-tabs-mode nil))
 
 (defun sbt-save-and-switch ()
   "Saves the current buffer and switches to the active SBT window."
