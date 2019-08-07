@@ -63,7 +63,6 @@
   (define-key evil-normal-state-map (kbd "\eP") 'projectile-find-file-other-window)
  
   (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
-
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-insert-state-map (kbd "C-u")
@@ -156,9 +155,10 @@
 
 (use-package scala-mode
   :pin melpa-stable
-;;   :interpreter ("scala" . scala-mode)
   :config
-  (define-key scala-mode-map (kbd "\em") 'sbt-save-and-switch))
+  (define-key scala-mode-map (kbd "\em") 'sbt-save-and-switch)
+  (evil-define-key 'normal scala-mode-map (kbd "C-f") 'sbt-find-definitions)
+  )
 
 (use-package 2048-game)
 
