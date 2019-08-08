@@ -658,7 +658,14 @@
 
 ;; Go Mode
 ;; ---------------------------------------------------------------
-(define-key go-mode-map "\em" 'make-without-asking)
+(defun craig-big-fun-golang-hook ()
+  ; 4-space tabs
+  (setq tab-width 4
+        indent-tabs-mode nil)
+
+  (define-key go-mode-map "\em" 'make-without-asking)
+)
+(add-hook 'go-mode-hook 'craig-big-fun-golang-hook)
 
 ;; ===============================================================
 ;; Theme Settings
