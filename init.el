@@ -158,6 +158,7 @@
   :config
   (define-key scala-mode-map (kbd "\em") 'sbt-save-and-switch)
   (evil-define-key 'normal scala-mode-map (kbd "C-f") 'sbt-find-definitions)
+  (evil-define-key 'normal scala-mode-map (kbd "C-S-F") 'sbt-find-usages)
   )
 
 (use-package 2048-game)
