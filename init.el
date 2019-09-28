@@ -101,12 +101,6 @@
 
   )
 
-(use-package evil-collection
-  :after evil
-  :ensure t
-  :config
-  (evil-collection-init))
-
 (use-package autopair
   :pin melpa-stable
   :config
@@ -118,12 +112,6 @@
   (setq scroll-margin 8
         scroll-conservatively 9999
         scroll-step 1))
-
-;; (use-package fill-column-indicator
-;;   :pin melpa-stable
-;;   :init
-;;   (setq-default fill-column 80)
-;;   (add-hook 'after-change-major-mode-hook 'fci-mode))
 
 (with-eval-after-load 'evil
   (defalias #'forward-evil-word #'forward-evil-symbol))
