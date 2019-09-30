@@ -680,6 +680,7 @@
 
      ("\\<\\(TODO\\)" 1 'font-lock-todo-face t)
      ("\\<\\(PROGRESS\\)" 1 'font-lock-progress-face t)
+     ("\\<\\(PROG\\)" 1 'font-lock-progress-face t)
      ("\\<\\(DONE\\)" 1 'font-lock-done-face t)
    )))
   fixme-modes)
