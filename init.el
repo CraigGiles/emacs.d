@@ -147,6 +147,7 @@
   (define-key scala-mode-map (kbd "\em") 'sbt-save-and-switch)
   (evil-define-key 'normal scala-mode-map (kbd "C-f") 'sbt-find-definitions)
   (evil-define-key 'normal scala-mode-map (kbd "C-S-F") 'sbt-find-usages)
+  (setq build-file-name "build.sbt")
   )
 
 (use-package 2048-game)
@@ -288,7 +289,7 @@
 (setq compilation-directory-locked nil)
 
 ;; TODO(craig): if osx or linux, build.sh otherwise build.bat
-(setq makescript-file "build.sh")
+(setq build-file-name "build.sh")
 
 ;; Compile Settings
 (setq compilation-context-lines 0)
@@ -299,7 +300,7 @@
 (defun find-project-directory-recursive ()
   "Recursively search for a makefile."
   (interactive)
-  (if (file-exists-p makescript-file) t
+  (if (file-exists-p build-file-name) t
     (cd "../")
     (find-project-directory-recursive)))
 
@@ -329,7 +330,7 @@
   "Make the current build."
   (interactive)
   (save-buffers-without-asking)
-  (if (find-project-directory) (compile (concat "./" makescript-file)))
+  (if (find-project-directory) (compile (concat "./" build-file-name)))
   (other-window 1))
 
 ;; Add header files to C++ mode
