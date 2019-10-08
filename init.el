@@ -32,8 +32,6 @@
 ;; ---------------------------------------------------------------
 (use-package ido)
 
-(setq evil-want-integration nil)
-
 (use-package counsel-projectile
   :pin melpa-stable
   :config
