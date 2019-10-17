@@ -96,7 +96,6 @@
     (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
     (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
     (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state))
-
   )
 
 (use-package autopair
@@ -134,19 +133,18 @@
 (defun sbt-save-and-switch ()
   "Saves the current buffer and switches to the active SBT window."
   (interactive)
-  (sbt-clear)
   (save-buffers-without-asking)
   (sbt-switch-to-active-sbt-buffer)
+  (sbt-clear)
   (other-window 1))
 
 (use-package scala-mode
   :pin melpa-stable
   :config
   (define-key scala-mode-map (kbd "\em") 'sbt-save-and-switch)
-  (evil-define-key 'normal scala-mode-map (kbd "C-f") 'sbt-find-definitions)
-  (evil-define-key 'normal scala-mode-map (kbd "C-S-F") 'sbt-find-usages)
-  (setq build-file-name "build.sbt")
-  )
+  (evil-define-key 'normal scala-mode-map (kbd "C-S-F") 'sbt-find-definitions)
+  (evil-define-key 'normal scala-mode-map (kbd "C-f") 'sbt-find-usages)
+  (setq build-file-name "build.sbt"))
 
 (use-package 2048-game)
 
