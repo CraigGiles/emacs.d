@@ -68,6 +68,7 @@
       (interactive)
       (evil-delete (point-at-bol) (point))))
 
+  ;; Packages to use while using EVIL
   (use-package evil-leader
     :pin melpa-stable
     :config
@@ -76,11 +77,6 @@
     (evil-leader/set-leader "SPC")
     (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
     (evil-leader/set-key "SPC" 'other-window))
-
-  (use-package evil-surround
-    :pin melpa-stable
-    :config
-    (global-evil-surround-mode))
 
   (use-package evil-search-highlight-persist
     :pin melpa-stable
@@ -121,7 +117,6 @@
 (use-package cc-mode)
 (use-package markdown-mode)
 (use-package compile)
-
 
 (use-package go-mode
   :pin melpa-stable
@@ -185,6 +180,7 @@
 (defun nil-bell ())
 (setq ring-bell-function 'nil-bell)
 
+;; TODO do i need this? seems un-used and needless
 (defun craig-ediff-setup-windows (buffer-A buffer-B buffer-C control-buffer)
   (ediff-setup-windows-plain buffer-A buffer-B buffer-C control-buffer)
 )
@@ -247,6 +243,8 @@
 (define-key global-map [f9] 'first-error)
 (define-key global-map [f10] 'previous-error)
 (define-key global-map [f11] 'next-error)
+ 
+(define-key global-map (kbd "C-S-n") 'first-error)
 (define-key global-map "\en" 'next-error)
 (define-key global-map "\eN" 'previous-error)
 
@@ -269,6 +267,11 @@
 ;; C++ Mode Configuration
 ;; ---------------------------------------------------------------
 (defun save-buffers-without-asking ()
+  "Saves all loaded buffers without prompting.
+
+As all the buffers can be hidden, this is used when you want to save
+every buffer listed prior to doing something like building the
+project."
   (interactive)
   (save-some-buffers 'no-confirm (lambda ()
 				   (cond
@@ -282,12 +285,18 @@
 				    ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
 				    ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
+;; Compile Settings
+;; -------------------------------------------------------
 (setq compilation-directory-locked nil)
 
 ;; TODO(craig): if osx or linux, build.sh otherwise build.bat
+;; NOTE(craig): now that i'm using emacs for more languages, this has
+;;   changed on a per-language basis. IE: scala uses build.sbt In
+;;   order to adjust i need to move this global into each mode, as
+;;   i've already done with scala. Need to figure out which mode c and
+;;   c++ actually use (is it cc or c++)
 (setq build-file-name "build.sh")
 
-;; Compile Settings
 (setq compilation-context-lines 0)
 (setq compilation-error-regexp-alist
       (cons '("^\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:fatal error\\|warnin\\(g\\)\\) C[0-9]+:" 2 3 nil (4))
