@@ -118,6 +118,12 @@
 (use-package markdown-mode)
 (use-package compile)
 
+(use-package magit
+  :pin melpa-stable
+  :config
+    (key-chord-define evil-normal-state-map "ga" 'magit-blame)
+  )
+
 (use-package go-mode
   :pin melpa-stable
   :init
