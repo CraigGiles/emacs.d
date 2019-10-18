@@ -121,7 +121,8 @@
 (use-package magit
   :pin melpa-stable
   :config
-    (key-chord-define evil-normal-state-map "ga" 'magit-blame)
+    (key-chord-define evil-normal-state-map (kbd "g a") 'magit-blame)
+    (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
   )
 
 (use-package go-mode
