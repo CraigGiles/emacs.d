@@ -225,6 +225,8 @@
 ;; ===============================================================
 ;; Keymap
 ;; ---------------------------------------------------------------
+(define-key evil-normal-state-map (kbd "g c c") 'evil-commentary-line)
+
 (define-key evil-normal-state-map (kbd "C-k") 'evil-backward-paragraph)
 (define-key evil-normal-state-map (kbd "C-j") 'evil-forward-paragraph)
 (define-key evil-visual-state-map (kbd "C-k") 'evil-backward-paragraph)
