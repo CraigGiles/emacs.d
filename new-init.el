@@ -2,6 +2,9 @@
 ;; ecosystem and programming environment. Coming from VIM, this could be
 ;; interesting...
 
+;; NOTE to test this config launch emacs using
+;; /Applications/Emacs.app/Contents/MacOS/Emacs -q -l ~/.emacs.d/new-init.el
+
 ;; ===============================================================
 ;; Package Management
 ;; ---------------------------------------------------------------
@@ -48,6 +51,19 @@
 				    ((and buffer-file-name (eq major-mode 'go-mode)))
 				    ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
 				    ((and buffer-file-name (derived-mode-p 'org-mode)))))))
+
+;; TODO(craig): iterate through all modes i'm using and use the iterator to test
+;; (defun testing-save-buffers (modes-list)
+;;   ""
+;;   (interactive)
+
+;;   (loop for mode in modes-list
+;; 	(save-some-buffers 'no-confirm (lambda ()
+;; 					 (cond (and buffer-file-name (eq major-mode mode))))
+;; 	 )
+
+;;   (add-to-list 'mylist added-mode)
+;;   )
 
 (defun save-buffer-untabify ()
   "Save the buffer after untabifying it."
