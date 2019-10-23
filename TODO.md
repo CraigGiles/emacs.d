@@ -1,11 +1,12 @@
 ==================================================
    Current Tasks
 --------------------------------------------------
-TODO(craig): (kbd "g c c") should map to comment the single line
+TODO(craig): create a macro that makes the OTHER window go to previous file
 
 ==================================================
    Completed
 --------------------------------------------------
+DONE(craig): (kbd "g c c") should map to comment the single line
 DONE(craig): enter magit blame mode via 'ga' ... quit via 'q' in insert mode. Make 'q' work in normal mode
 DONE(craig): change C-F in scala mode to be find usages
 DONE(craig): Load emacs with a vertical split
