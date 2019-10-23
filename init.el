@@ -3,7 +3,7 @@
 ;; interesting...
 
 ;; NOTE to test this config launch emacs using
-;; /Applications/Emacs.app/Contents/MacOS/Emacs -q -l ~/.emacs.d/new-init.el
+;; /Applications/Emacs.app/Contents/MacOS/Emacs -q -l ~/.emacs.d/init.el
 
 ;; ===============================================================
 ;; Package Management
@@ -103,17 +103,16 @@
 
   (define-key evil-normal-state-map (kbd "-") 'find-file)
 
-  ;; TODO(craig) -- is counsel-projectile the answer?
   (define-key evil-normal-state-map (kbd "M-p") 'projectile--find-file)
   (define-key evil-normal-state-map (kbd "M-C-p") 'projectile-find-file-other-window)
  
   (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
-  (define-key evil-insert-state-map (kbd "C-u")
-    (lambda ()
-      (interactive)
-      (evil-delete (point-at-bol) (point))))
+  (define-key evil-insert-state-map (kbd "C-u") (lambda ()
+    (interactive)
+    (evil-delete (point-at-bol) (point)))
+  )
 
   ;; Packages to use while using EVIL
   (use-package evil-search-highlight-persist
@@ -191,8 +190,6 @@
   :config
   (remove-hook 'before-save-hook 'fix-format-buffer t)
   )
-
-;; (use-package compile)
 
 (use-package cc-mode
   :pin melpa-stable
