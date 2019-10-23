@@ -40,7 +40,12 @@
     (replace-string FromString ToString))
   )
 
-(define-key global-map [f8] 'replace-string-without-moving)
+(defun switch-other-window-to-last-buffer ()
+  "Switch other window to other window's last open buffer."
+  (interactive)
+  (other-window 1)
+  (evil-switch-to-windows-last-buffer)
+  (other-window 1))
 
 ;; TODO(craig): iterate through all modes i'm using and use the iterator to test
 ;;     (setq loaded-modes '())
@@ -111,15 +116,6 @@
       (evil-delete (point-at-bol) (point))))
 
   ;; Packages to use while using EVIL
-  (use-package evil-leader
-    :pin melpa-stable
-    :config
-    (setq evil-leader/in-all-states 1)
-    (global-evil-leader-mode)
-    (evil-leader/set-leader "SPC")
-    (evil-leader/set-key "n" 'evil-search-highlight-persist-remove-all)
-    (evil-leader/set-key "SPC" 'other-window))
-
   (use-package evil-search-highlight-persist
     :pin melpa-stable
     :config
@@ -278,13 +274,9 @@
 ;; ===============================================================
 ;; keymap key-bindings keybindings
 ;; ---------------------------------------------------------------
-(defun switch-other-window-to-last-buffer ()
-  "Switch other window to other window's last open buffer."
-  (interactive)
-  (other-window 1)
-  (evil-switch-to-windows-last-buffer)
-  (other-window 1))
 
+(define-key evil-normal-state-map (kbd "SPC n") 'evil-search-highlight-persist-remove-all)
+(define-key global-map [f8] 'replace-string-without-moving)
 (define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
 
 (define-key evil-normal-state-map (kbd "g c c") 'evil-commentary-line)
