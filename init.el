@@ -297,10 +297,13 @@
 ;; Navigating windows
 (define-key global-map (kbd "C-q") 'delete-other-windows)
 
-;; TODO(craig) -- Find a good workflow for buffer switching
-(define-key global-map (kbd "M-b" ) 'list-buffers)
-;; (global-set-key (read-kbd-macro "\eb")  'ido-switch-buffer)
-;; (global-set-key (read-kbd-macro "\eB")  'ido-switch-buffer-other-window)
+;; Buffer navigation for the two windows
+(define-key global-map (kbd "M-b" ) 'counsel-ibuffer)
+(define-key global-map (kbd "C-M-b" ) (lambda () ;; Switch buffer other window
+  (interactive)
+  (other-window 1)
+  (counsel-ibuffer))
+)
 
 ;; Navigating errors
 (define-key global-map [f9] 'first-error)
