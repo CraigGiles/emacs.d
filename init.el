@@ -276,8 +276,16 @@
 (add-to-list 'auto-mode-alist '("\\.emacs$" . emacs-lisp-mode))
 
 ;; ===============================================================
-;; Keymap
+;; keymap key-bindings keybindings
 ;; ---------------------------------------------------------------
+(defun switch-other-window-to-last-buffer ()
+  "Switch other window to other window's last open buffer."
+  (interactive)
+  (other-window 1)
+  (evil-switch-to-windows-last-buffer)
+  (other-window 1))
+
+(define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
 
 (define-key evil-normal-state-map (kbd "g c c") 'evil-commentary-line)
 (define-key evil-normal-state-map (kbd "C-b") 'imenu)
