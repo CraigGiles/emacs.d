@@ -211,6 +211,7 @@
   (setq build-file-name "build.sh")
   ) ;; use-package cc-mode
 
+;; TODO(craig) -- re-setup go mode
 ;; (use-package go-mode
 ;;   :pin melpa-stable
 ;;   :init
@@ -218,9 +219,20 @@
 ;;     (setq tab-width 4
 ;;             indent-tabs-mode nil))
 ;; 
+;; (defun craig-big-fun-golang-hook ()
+;;   ; 4-space tabs
+;;   (setq tab-width 4
+;;         indent-tabs-mode nil)
+;; 
+;;   (define-key go-mode-map "\em" 'make-without-asking)
+;; )
+;; (add-hook 'go-mode-hook 'craig-big-fun-golang-hook)
+;; 
 
-;; (use-package ido)
-;; (use-package 2048-game)
+
+;; (use-package 2048-game
+;;   :pin melpa-stable
+;;   :defer t)
 
 ;; ===============================================================
 ;; General Editor Settings
@@ -241,8 +253,7 @@
 (setq-default truncate-lines t)
 (setq truncate-partial-width-windows nil)
 
-;; Stop Emacs from losing undo information by setting very high limits for undo
-;; buffers
+;; Stop Emacs from losing undo information by setting high limits
 (setq undo-limit 20000000)
 (setq undo-strong-limit 40000000)
 
@@ -272,14 +283,13 @@
 ;; keymap key-bindings keybindings
 ;; ---------------------------------------------------------------
 
-(define-key evil-normal-state-map (kbd "SPC n") 'evil-search-highlight-persist-remove-all)
+;; current buffer operations
 (define-key global-map [f8] 'replace-string-without-moving)
-(define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
-
 (define-key evil-normal-state-map (kbd "g c c") 'evil-commentary-line)
 (define-key evil-normal-state-map (kbd "C-b") 'imenu)
+(define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
+(define-key evil-normal-state-map (kbd "SPC n") 'evil-search-highlight-persist-remove-all)
 
-;; Navigating buffers
 (define-key evil-normal-state-map (kbd "C-k") 'evil-backward-paragraph)
 (define-key evil-normal-state-map (kbd "C-j") 'evil-forward-paragraph)
 (define-key evil-visual-state-map (kbd "C-k") 'evil-backward-paragraph)
@@ -294,7 +304,7 @@
 ;; Navigating windows
 (define-key global-map (kbd "C-q") 'delete-other-windows)
 
-;; Buffer navigation for the two windows
+;; Navigating buffers
 (define-key global-map (kbd "M-b" ) 'counsel-ibuffer)
 (define-key global-map (kbd "C-M-b" ) (lambda () ;; Switch buffer other window
   (interactive)
@@ -321,18 +331,6 @@
       (find-alternate-file "..")))
   )
 )
-
-;; ;; Go Mode
-;; ;; ---------------------------------------------------------------
-;; (defun craig-big-fun-golang-hook ()
-;;   ; 4-space tabs
-;;   (setq tab-width 4
-;;         indent-tabs-mode nil)
-;; 
-;;   (define-key go-mode-map "\em" 'make-without-asking)
-;; )
-;; (add-hook 'go-mode-hook 'craig-big-fun-golang-hook)
-;; 
 
 ;; ===============================================================
 ;; Fixme highlights
@@ -429,6 +427,8 @@
 
 ;; ===============================================================
 ;; C++ Mode Configuration
+;; TODO(craig): This is just kind of a dumping ground at this point. I
+;;              should really take the time to clean this up
 ;; ---------------------------------------------------------------
 (defun save-buffers-without-asking ()
   "Saves all loaded buffers without prompting.
