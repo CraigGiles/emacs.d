@@ -361,6 +361,7 @@
 
 	     ("\\<\\(TODO\\)" 1 'font-lock-todo-face t)
 	     ("\\<\\(NEXT\\)" 1 'font-lock-next-face t)
+	     ("\\<\\(HOLD\\)" 1 'font-lock-next-face t)
 	     ("\\<\\(PROGRESS\\)" 1 'font-lock-progress-face t)
 	     ("\\<\\(PROG\\)" 1 'font-lock-progress-face t)
 	     ("\\<\\(DONE\\)" 1 'font-lock-done-face t)
@@ -398,7 +399,7 @@
 (set-face-attribute 'font-lock-type-face nil :foreground foreground-font-color)
 
 (set-face-background 'hl-line "midnight blue");; the -always on- horizontal highlight
-(set-background-color "#152426")              ;; something akin to J.Blow's theme
+(set-background-color "#122A2C")              ;; something akin to J.Blow's theme
 (set-foreground-color foreground-font-color)
 
 (set-cursor-color "#40FF40")                  ;; Green-ish cursor color
