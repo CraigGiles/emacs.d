@@ -391,7 +391,9 @@
 (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
 (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
 (set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
-(set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
+(set-face-attribute 'font-lock-string-face nil :foreground "#65b29e")
+;; (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
+
 (setq foreground-font-color "#d2cbc0")
 
 (set-face-attribute 'font-lock-function-name-face nil :foreground foreground-font-color)
