@@ -125,6 +125,9 @@
     :config
     (key-chord-mode 1)
     (setq key-chord-two-keys-delay 0.2)
+
+    (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line)
+
     ;; Exit insert mode with 'jj'
     (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
     (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
@@ -285,7 +288,6 @@
 
 ;; current buffer operations
 (define-key global-map [f8] 'replace-string-without-moving)
-(define-key evil-normal-state-map (kbd "g c c") 'evil-commentary-line)
 (define-key evil-normal-state-map (kbd "C-b") 'imenu)
 (define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
 (define-key evil-normal-state-map (kbd "SPC n") 'evil-search-highlight-persist-remove-all)
