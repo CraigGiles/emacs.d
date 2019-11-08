@@ -151,7 +151,7 @@
   :pin melpa-stable
   :config
     (use-package evil-magit)
-    (key-chord-define evil-normal-state-map (kbd "g a") 'magit-blame-addition)
+    (key-chord-define evil-normal-state-map "ga" 'magit-blame-addition)
     (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
   )
 
@@ -212,6 +212,18 @@
   (add-to-list 'auto-mode-alist '("\\.mm$"      . objc-mode))
 
   (setq build-file-name "build.sh")
+
+  (setq gdb-many-windows t
+	gdb-use-separate-io-buffer t)
+
+  (key-chord-define evil-normal-state-map "lb" 'gud-break)
+  (key-chord-define evil-normal-state-map "lc" 'gud-cont)
+  (key-chord-define evil-normal-state-map "ln" 'gud-next)
+  (key-chord-define evil-normal-state-map "ls" 'gud-step)
+
+  (load-file "~/.emacs.d/gud-lldb.el")
+
+
   ) ;; use-package cc-mode
 
 ;; TODO(craig) -- re-setup go mode
