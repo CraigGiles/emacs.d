@@ -162,6 +162,7 @@
   :pin melpa-stable
   :defer t
   :config
+
   (defun sbt-save-and-switch ()
     "Saves the current buffer and switches to the active SBT window."
     (interactive)
@@ -293,6 +294,7 @@
 (global-auto-revert-mode 1)
 
 (add-to-list 'auto-mode-alist '("\\.emacs$" . emacs-lisp-mode))
+(add-to-list 'auto-mode-alist '("\\.thrift$". c-mode))
 
 ;; ===============================================================
 ;; keymap key-bindings keybindings
