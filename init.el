@@ -158,6 +158,9 @@
 (with-eval-after-load 'evil
   (defalias #'forward-evil-word #'forward-evil-symbol))
 
+(use-package sbt-mode
+  :pin melpa-stable
+  :defer t)
 (use-package scala-mode
   :pin melpa-stable
   :defer t
@@ -228,23 +231,42 @@
   ) ;; use-package cc-mode
 
 ;; TODO(craig) -- re-setup go mode
-;; (use-package go-mode
-;;   :pin melpa-stable
-;;   :init
-;;   :config
-;;     (setq tab-width 4
-;;             indent-tabs-mode nil))
-;; 
-;; (defun craig-big-fun-golang-hook ()
-;;   ; 4-space tabs
-;;   (setq tab-width 4
-;;         indent-tabs-mode nil)
-;; 
-;;   (define-key go-mode-map "\em" 'make-without-asking)
-;; )
-;; (add-hook 'go-mode-hook 'craig-big-fun-golang-hook)
-;; 
+(use-package go-mode
+  :pin melpa-stable
+  :defer t
+  :init
+  :config
 
+    (setq tab-width 4
+	  indent-tabs-mode nil)
+
+    (setq-default indent-tabs-mode nil)
+    (setq-default tab-width 4)
+    (setq indent-line-function 'insert-tab)
+
+    (define-key go-mode-map "\em" 'make-without-asking)
+
+    ;; File Extensions and which mode they're associated with
+    (add-to-list 'auto-mode-alist '("\\.go$"      . go-mode))
+    (add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
+    (add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
+
+    (setq build-file-name "build.sh")
+
+    (use-package company-go)
+    (evil-define-key 'normal go-mode-map (kbd "C-b") 'godef-jump)
+    ;; (go-eldoc-setup)
+    (add-hook 'before-save-hook 'gofmt-before-save)
+    (add-to-list 'fixme-modes 'go-mode)
+    (initialize-fixme-modes)
+
+    ;; (add-hook 'go-mode-hook (lambda ()
+    ;;                           (set (make-local-variable 'company-backends) '(company-go))
+    ;;                           ;; (local-set-key (kbd "M-.") ')
+    ;;                           (go-eldoc-setup)
+    ;;                                     ; call Gofmt before saving
+    ;;                           (add-hook 'before-save-hook 'gofmt-before-save)))
+) ;; use-package go-mode
 
 ;; (use-package 2048-game
 ;;   :pin melpa-stable
@@ -299,9 +321,14 @@
 ;; ===============================================================
 ;; keymap key-bindings keybindings
 ;; ---------------------------------------------------------------
+(defun open-global-todo-file ()
+  "Opens the global TODO file on the drive. Usually found in ~/Development/notes/todo.md"
+  (interactive)
+  (find-file "~/Development/notes/todo.md"))
 
 ;; current buffer operations
 (define-key global-map [f8] 'replace-string-without-moving)
+(define-key global-map [f5] 'open-global-todo-file)
 (define-key evil-normal-state-map (kbd "C-b") 'imenu)
 (define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
 (define-key evil-normal-state-map (kbd "SPC n") 'evil-search-highlight-persist-remove-all)
