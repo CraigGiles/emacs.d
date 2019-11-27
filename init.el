@@ -329,7 +329,7 @@
 ;; current buffer operations
 (define-key global-map [f8] 'replace-string-without-moving)
 (define-key global-map [f5] 'open-global-todo-file)
-(define-key evil-normal-state-map (kbd "C-b") 'imenu)
+(define-key evil-normal-state-map (kbd "M-j") 'imenu)
 (define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
 (define-key evil-normal-state-map (kbd "SPC n") 'evil-search-highlight-persist-remove-all)
 
@@ -760,7 +760,8 @@ project."
   (define-key c++-mode-map [M-f12] 'craig-find-corresponding-file-other-window)
   (define-key c++-mode-map [f5] 'make-without-asking)
   (define-key c++-mode-map (kbd "M-m") 'make-without-asking)
-  (define-key c++-mode-map "\ej" 'imenu)
+  (define-key c++-mode-map (kbd "M-j") 'imenu)
+  (define-key c++-mode-map "C-j" 'imenu)
 
   ; devenv.com error parsing
   ;; TODO(craig): this still needed?
