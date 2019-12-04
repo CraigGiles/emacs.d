@@ -132,6 +132,13 @@
     (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
     (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
     (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state))
+
+  (use-package evil-tabs
+    :pin melpa
+    :config
+      ;; (global-evil-tabs-mode t)
+    )
+  
   ) ;; (use-package evil)
 
 (use-package smooth-scrolling
