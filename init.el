@@ -92,6 +92,8 @@
   :init
   (evil-commentary-mode t))
 
+;; NOTE: Should look over this config file at some point.
+;;       https://github.com/krisajenkins/EvilBegins/blob/master/.emacs
 (use-package evil
   :pin melpa-stable
   :init
