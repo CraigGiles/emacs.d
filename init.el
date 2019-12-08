@@ -6,7 +6,7 @@
 ;; /Applications/Emacs.app/Contents/MacOS/Emacs -q -l ~/.emacs.d/init.el
 
 ;; ===============================================================
-;; Package Management
+;;   Package Management
 ;; ---------------------------------------------------------------
 (require 'package)
 
@@ -31,14 +31,15 @@
 (setq use-package-always-ensure t)
 
 ;; ===============================================================
-;; General functions
+;;   General functions
 ;; ---------------------------------------------------------------
-(defun replace-string-without-moving (FromString ToString)
-  "Replace a string without moving point."
-  (interactive "sReplace: \nsReplace: %s  With: ")
-  (save-excursion
-    (replace-string FromString ToString))
-  )
+;; NOTE(craig): i dont think i actually use this
+;; (defun replace-string-without-moving (FromString ToString)
+;;   "Replace a string without moving point."
+;;   (interactive "sReplace: \nsReplace: %s  With: ")
+;;   (save-excursion
+;;     (replace-string FromString ToString))
+;;   )
 
 (defun switch-other-window-to-last-buffer ()
   "Switch other window to other window's last open buffer."
@@ -76,12 +77,12 @@
   (save-buffer))
 
 ;; ===============================================================
-;; Installed Packages
+;;   Installed Packages
 ;; ---------------------------------------------------------------
 (use-package counsel-projectile
   :pin melpa-stable
   :config
-  (counsel-mode))
+    (counsel-mode))
 
 (use-package ag
   :pin melpa-stable
@@ -90,156 +91,142 @@
 (use-package evil-commentary
   :pin melpa-stable
   :init
-  (evil-commentary-mode t))
+    (evil-commentary-mode t))
 
 ;; NOTE: Should look over this config file at some point.
 ;;       https://github.com/krisajenkins/EvilBegins/blob/master/.emacs
 (use-package evil
   :pin melpa-stable
   :init
-  (evil-mode t)
+    (evil-mode t)
 
   :config
-  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
-  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+    (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+    (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
 
-  (define-key evil-normal-state-map (kbd "-") 'find-file)
+    (define-key evil-normal-state-map (kbd "-") 'find-file)
 
-  (define-key evil-normal-state-map (kbd "M-p") 'projectile--find-file)
-  (define-key evil-normal-state-map (kbd "M-C-p") 'projectile-find-file-other-window)
+    (define-key evil-normal-state-map (kbd "M-p") 'projectile--find-file)
+    (define-key evil-normal-state-map (kbd "M-C-p") 'projectile-find-file-other-window)
  
-  (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
-  (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
-  (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
-  (define-key evil-insert-state-map (kbd "C-u") (lambda ()
-    (interactive)
-    (evil-delete (point-at-bol) (point)))
-  )
-
-  ;; Packages to use while using EVIL
-  (use-package evil-search-highlight-persist
-    :pin melpa-stable
-    :config
-    (global-evil-search-highlight-persist t))
-
-  (use-package use-package-chords
-    :pin melpa-stable
-    :config
-    (key-chord-mode 1)
-    (setq key-chord-two-keys-delay 0.2)
-
-    (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line)
-
-    ;; Exit insert mode with 'jj'
-    (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
-    (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
-    (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state))
-
-  (use-package evil-tabs
-    :pin melpa
-    :config
-      ;; (global-evil-tabs-mode t)
+    (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
+    (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+    (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
+    (define-key evil-insert-state-map (kbd "C-u") (lambda ()
+      (interactive)
+      (evil-delete (point-at-bol) (point)))
     )
+
+    ;; Packages to use while using EVIL
+    (use-package evil-tabs
+      :pin melpa
+      :config)
+
+    (use-package evil-search-highlight-persist
+      :pin melpa-stable
+      :config
+        (global-evil-search-highlight-persist t))
+
+    (use-package use-package-chords
+      :pin melpa-stable
+      :config
+        (key-chord-mode 1)
+        (setq key-chord-two-keys-delay 0.2)
+
+        (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line)
+
+        ;; Exit insert mode with 'jj'
+        (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+        (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
+        (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state)
+    ) ;; use-package-chords
   
-  ) ;; (use-package evil)
+) ;; evil
 
 (use-package smooth-scrolling
   :pin melpa-stable
   :config
-  (setq scroll-margin 8
-        scroll-conservatively 9999
-        scroll-step 1))
-
-;; (use-package autopair
-;;   :pin melpa-stable
-;;   :config
-;;   (show-paren-mode t)
-;;   (autopair-mode -1))
+    (setq scroll-margin 8
+          scroll-conservatively 9999
+          scroll-step 1))
 
 (use-package magit
   :pin melpa-stable
   :config
     (use-package evil-magit)
     (key-chord-define evil-normal-state-map "ga" 'magit-blame-addition)
-    (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
-  )
-
-(with-eval-after-load 'evil
-  (defalias #'forward-evil-word #'forward-evil-symbol))
+    (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit))
 
 (use-package sbt-mode
   :pin melpa-stable
   :defer t)
+
 (use-package scala-mode
   :pin melpa-stable
   :defer t
   :config
 
-  (defun sbt-save-and-switch ()
-    "Saves the current buffer and switches to the active SBT window."
-    (interactive)
-    (save-buffers-without-asking)
-    (sbt-switch-to-active-sbt-buffer)
-    (sbt-clear)
-    (other-window 1))
+    (defun sbt-save-and-switch ()
+      "Saves the current buffer and switches to the active SBT window."
+      (interactive)
+      (save-buffers-without-asking)
+      (sbt-switch-to-active-sbt-buffer)
+      (sbt-clear)
+      (other-window 1))
 
-  (define-key scala-mode-map (kbd "M-m") 'sbt-save-and-switch)
-  (evil-define-key 'normal scala-mode-map (kbd "C-S-F") 'sbt-find-definitions)
-  (evil-define-key 'normal scala-mode-map (kbd "C-f") 'sbt-find-usages)
-  (setq build-file-name "build.sbt")
+    (define-key scala-mode-map (kbd "M-m") 'sbt-save-and-switch)
+    (evil-define-key 'normal scala-mode-map (kbd "C-S-F") 'sbt-find-definitions)
+    (evil-define-key 'normal scala-mode-map (kbd "C-f") 'sbt-find-usages)
+    (setq build-file-name "build.sbt")
 
-  ;; File Extensions and which mode they're associated with
-  (add-to-list 'auto-mode-alist '("\\.scala$" . scala-mode))
-  (add-to-list 'auto-mode-alist '("\\.sc$" . scala-mode))
-  (add-to-list 'auto-mode-alist '("\\.sbt$" . scala-mode))
+    ;; File Extensions and which mode they're associated with
+    (add-to-list 'auto-mode-alist '("\\.scala$" . scala-mode))
+    (add-to-list 'auto-mode-alist '("\\.sc$" . scala-mode))
+    (add-to-list 'auto-mode-alist '("\\.sbt$" . scala-mode))
 
-  ;; TODO(craig) -- (add-fixme '('scala-mode 'sbt-mode))
-  (add-to-list 'fixme-modes 'scala-mode)
-  (add-to-list 'fixme-modes 'sbt-mode)
-  (initialize-fixme-modes)
+    ;; TODO(craig) -- (add-fixme '('scala-mode 'sbt-mode))
+    (add-to-list 'fixme-modes 'scala-mode)
+    (add-to-list 'fixme-modes 'sbt-mode)
+    (initialize-fixme-modes)
 
-) ; use-package scala-mode
+) ;; scala-mode
 
 (use-package make-mode
   :pin melpa-stable
   :defer t
   :config
-  (remove-hook 'before-save-hook 'fix-format-buffer t)
-  )
+    (remove-hook 'before-save-hook 'fix-format-buffer t))
 
 (use-package cc-mode
   :pin melpa-stable
   :defer t
   :config
-  (add-hook 'before-save-hook 'fix-format-buffer t)
+    (add-hook 'before-save-hook 'fix-format-buffer t)
 
-  ;; File Extensions and which mode they're associated with
-  (add-to-list 'auto-mode-alist '("\\.cpp$"     . c++-mode))
-  (add-to-list 'auto-mode-alist '("\\.h$"       . c++-mode))
-  (add-to-list 'auto-mode-alist '("\\.hpp$"     . c++-mode))
-  (add-to-list 'auto-mode-alist '("\\.c$"       . c++-mode))
-  (add-to-list 'auto-mode-alist '("\\.cc$"      . c++-mode))
-  (add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
-  (add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
-  (add-to-list 'auto-mode-alist '("\\.m$"       . objc-mode))
-  (add-to-list 'auto-mode-alist '("\\.mm$"      . objc-mode))
+    ;; File Extensions and which mode they're associated with
+    (add-to-list 'auto-mode-alist '("\\.cpp$"     . c++-mode))
+    (add-to-list 'auto-mode-alist '("\\.h$"       . c++-mode))
+    (add-to-list 'auto-mode-alist '("\\.hpp$"     . c++-mode))
+    (add-to-list 'auto-mode-alist '("\\.c$"       . c++-mode))
+    (add-to-list 'auto-mode-alist '("\\.cc$"      . c++-mode))
+    (add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
+    (add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
+    (add-to-list 'auto-mode-alist '("\\.m$"       . objc-mode))
+    (add-to-list 'auto-mode-alist '("\\.mm$"      . objc-mode))
 
-  (setq build-file-name "build.sh")
+    (setq build-file-name "build.sh")
 
-  (setq gdb-many-windows t
-	gdb-use-separate-io-buffer t)
+    (setq gdb-many-windows t
+    	  gdb-use-separate-io-buffer t)
 
-  (key-chord-define evil-normal-state-map "lb" 'gud-break)
-  (key-chord-define evil-normal-state-map "lc" 'gud-cont)
-  (key-chord-define evil-normal-state-map "ln" 'gud-next)
-  (key-chord-define evil-normal-state-map "ls" 'gud-step)
+    (key-chord-define evil-normal-state-map "lb" 'gud-break)
+    (key-chord-define evil-normal-state-map "lc" 'gud-cont)
+    (key-chord-define evil-normal-state-map "ln" 'gud-next)
+    (key-chord-define evil-normal-state-map "ls" 'gud-step)
 
-  (load-file "~/.emacs.d/gud-lldb.el")
+    (load-file "~/.emacs.d/gud-lldb.el")
+) ;; use-package cc-mode
 
-
-  ) ;; use-package cc-mode
-
-;; TODO(craig) -- re-setup go mode
 (use-package go-mode
   :pin melpa-stable
   :defer t
@@ -260,30 +247,31 @@
     (add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
     (add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
 
-    (setq build-file-name "build.sh")
-
-    (use-package company-go)
-    (evil-define-key 'normal go-mode-map (kbd "C-b") 'godef-jump)
-    ;; (go-eldoc-setup)
-    (add-hook 'before-save-hook 'gofmt-before-save)
     (add-to-list 'fixme-modes 'go-mode)
     (initialize-fixme-modes)
 
-    ;; (add-hook 'go-mode-hook (lambda ()
-    ;;                           (set (make-local-variable 'company-backends) '(company-go))
-    ;;                           ;; (local-set-key (kbd "M-.") ')
-    ;;                           (go-eldoc-setup)
-    ;;                                     ; call Gofmt before saving
-    ;;                           (add-hook 'before-save-hook 'gofmt-before-save)))
-) ;; use-package go-mode
+    (setq build-file-name "build.sh")
 
-;; (use-package 2048-game
-;;   :pin melpa-stable
-;;   :defer t)
+    (use-package company-go)
+
+    (evil-define-key 'normal go-mode-map (kbd "C-b") 'godef-jump)
+    (add-hook 'before-save-hook 'gofmt-before-save)
+
+) ;; go-mode
 
 ;; ===============================================================
-;; General Editor Settings
+;;   Stupid plugins that i don't need
 ;; ---------------------------------------------------------------
+(use-package 2048-game
+  :pin melpa-stable
+  :defer t)
+
+;; ===============================================================
+;;   General Editor Settings
+;; ---------------------------------------------------------------
+(with-eval-after-load 'evil
+  (defalias #'forward-evil-word #'forward-evil-symbol))
+
 (setq emacs-version-osx (string-equal system-type "darwin"))
 (setq emacs-version-linux (string-equal system-type "gnu/linux"))
 (setq emacs-version-windows (string-equal system-type "windows-nt"))
@@ -328,7 +316,7 @@
 (add-to-list 'auto-mode-alist '("\\.thrift$". c-mode))
 
 ;; ===============================================================
-;; keymap key-bindings keybindings
+;;   keymap key-bindings keybindings
 ;; ---------------------------------------------------------------
 (defun open-global-todo-file ()
   "Opens the global TODO file on the drive. Usually found in ~/Development/notes/todo.md"
@@ -336,7 +324,7 @@
   (find-file "~/Development/notes/todo.md"))
 
 ;; current buffer operations
-(define-key global-map [f8] 'replace-string-without-moving)
+;; (define-key global-map [f8] 'replace-string-without-moving)
 (define-key global-map [f5] 'open-global-todo-file)
 (define-key evil-normal-state-map (kbd "M-j") 'imenu)
 (define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
@@ -385,11 +373,11 @@
 )
 
 ;; ===============================================================
-;; Fixme highlights
+;;   Fixme highlights
 ;; ---------------------------------------------------------------
 (setq fixme-modes '(c++-mode c-mode markdown-mode emacs-lisp-mode))
 (defun initialize-fixme-modes ()
-  ""
+  "Sets the highlighted words like TODO and NOTE and colorschemes for these words"
   (interactive)
   (make-face 'font-lock-todo-face)
   (make-face 'font-lock-done-face)
@@ -431,7 +419,7 @@
   (modify-face 'font-lock-note-face "CornflowerBlue" nil nil t nil t nil nil))
 
 ;; ===============================================================
-;; Theme Settings
+;;   Theme Settings
 ;; ---------------------------------------------------------------
 ;; Font
 (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
@@ -463,7 +451,7 @@
                     :foreground "black")
 
 ;; ===============================================================
-;; Post Load Hook
+;;   Post Load Hook
 ;; ---------------------------------------------------------------
 (defun post-load-stuff ()
   (interactive)
@@ -474,23 +462,24 @@
   (toggle-frame-maximized)
 
   (initialize-fixme-modes)
-
-  (load-file "~/.emacs.d/local-init.el")
 )
 
 (add-hook 'window-setup-hook 'post-load-stuff t)
 
 ;; ===============================================================
-;; C++ Mode Configuration
-;; TODO(craig): This is just kind of a dumping ground at this point. I
-;;              should really take the time to clean this up
+;;   C++ Mode Configuration
+;;   TODO(craig): This is just kind of a dumping ground at this
+;;     point. I should really take the time to clean this up but it
+;;     works and I don't really want to touch it.
+;;   NOTE(craig): Most of this was taken from Casey Muratori, game
+;;     developer at molly rocket and the handmade hero series.
 ;; ---------------------------------------------------------------
 (defun save-buffers-without-asking ()
   "Saves all loaded buffers without prompting.
 
-As all the buffers can be hidden, this is used when you want to save
-every buffer listed prior to doing something like building the
-project."
+   As all the buffers can be hidden, this is used when you want to
+   save every buffer listed prior to doing something like building 
+   the project."
   (interactive)
   (save-some-buffers 'no-confirm (lambda ()
 				   (cond
@@ -610,15 +599,10 @@ project."
   (define-key text-mode-map "\C-m" 'newline-and-indent)
 
   ; Prevent overriding of alt-s
-  (define-key text-mode-map "\es" 'craig-save-buffer))
+  (define-key text-mode-map "\es" 'craig-save-buffer)
+) ;; craig-big-fun-text-hook
 
 (add-hook 'text-mode-hook 'craig-big-fun-text-hook)
-;; (define-key global-map "\t" 'dabbrev-expand)
-;; (define-key global-map [S-tab] 'indent-for-tab-command)
-;; (define-key global-map [backtab] 'indent-for-tab-command)
-;; (define-key global-map "\C-y" 'indent-for-tab-command)
-;; (define-key global-map [C-tab] 'indent-region)
-;; (define-key global-map "	" 'indent-region)
 
 (defun craig-big-fun-c-style ()
   '((c-electric-pound-behavior   . nil)
@@ -663,7 +647,7 @@ project."
                                     (brace-list-intro      .  4)))
     (c-echo-syntactic-information-p . t))
   "Syntax Style for C / C++ code"
-)
+);; craig-big-fun-c-style
 
 (defun craig-big-fun-c-hook ()
   ;; Set my style for the current buffer
@@ -778,7 +762,7 @@ project."
   (add-to-list 'compilation-error-regexp-alist-alist '(craig-devenv
    "*\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:see declaration\\|\\(?:warnin\\(g\\)\\|[a-z ]+\\) C[0-9]+:\\)"
     2 3 nil (4)))
-)
+) ;; craig-big-fun-c-hook
 
 ;; ---------------------------------------------------------------
 
