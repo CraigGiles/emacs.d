@@ -11,6 +11,8 @@
 
 #include <emacs-module.h>
 
+#include "gilesc_types.h"
+
 #include <stdio.h> 
 #include <string.h> 
 #include <ctype.h>
@@ -21,17 +23,23 @@
 #define MODULE_TEST_MAIN(stuff)
 #endif
 
-
 #define EmacsEnv emacs_env
 #define EmacsValue emacs_value
 #define EmacsRuntime emacs_runtime
 
+//
+// Create a function named `name` that can be bound and callable by elisp.
+// Example usage:
+//     EMACS_FUNCTION(my_function)
+//     {
+//         EmacsValue result = env->make_integer(env, 42);
+//         return result;
+//     }
+//
 #define EMACS_FUNCTION(name) \
     internal EmacsValue name(EmacsEnv *env, ptrdiff_t nargs, EmacsValue args[], void *data)
 
 typedef EmacsValue (*EmacsFunctionPointer)(EmacsEnv *env, ptrdiff_t nargs, EmacsValue args[], void *data);
-
-#include "gilesc_types.h"
 
 //
 // call an elisp function named `name` with the specified function arguments
@@ -115,16 +123,20 @@ bind_function(EmacsEnv *env, const char *function_name, EmacsValue fn)
 
 internal void
 bind_function(EmacsEnv *env, const char *function_name, EmacsFunctionPointer function_pointer,
-              s32 argument_count, const char* document, void* data)
+              s32 min_argument_count, s32 max_argument_count, const char* document, void* data)
 {
     // NOTE: The max_arity argument can have the special value emacs_variadic_function
-    EmacsValue fn = env->make_function(env, 0, argument_count, function_pointer, document, data);
+    EmacsValue fn = env->make_function(env, min_argument_count, max_argument_count,
+                                       function_pointer, document, data);
     bind_function(env, function_name, fn);
 }
 
+//
 // IMPORTANT: -----------------------------------------------------
+//
 // TODO(craig) -- below are stuff that i'm just playing around with
 //   and not totally in love with keeping
+//
 #define NonLocalExitEnum emacs_funcall_exit
 
 internal b32
