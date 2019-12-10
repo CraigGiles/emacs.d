@@ -664,7 +664,7 @@
   (c-toggle-auto-hungry-state -1)
 
   ;; Newline indents, semi-colon doesn't
-  (define-key c++-mode-map "\C-m" 'newline-and-indent)
+  ; (define-key c++-mode-map "\C-m" 'newline-and-indent)
   (setq c-hanging-semi&comma-criteria '((lambda () 'stop)))
 
   ;; Handle super-tabbify (TAB completes, shift-TAB actually tabs)
@@ -754,7 +754,6 @@
   (define-key c++-mode-map [f5] 'make-without-asking)
   (define-key c++-mode-map (kbd "M-m") 'make-without-asking)
   (define-key c++-mode-map (kbd "M-j") 'imenu)
-  (define-key c++-mode-map "C-j" 'imenu)
 
   ; devenv.com error parsing
   ;; TODO(craig): this still needed?
