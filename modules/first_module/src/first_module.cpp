@@ -39,7 +39,7 @@ emacs_module_init(struct EmacsRuntime *runtime)
     return 0;
 }
 
-MODULE_TESTING_FUNION(
+MODULE_TEST_MAIN(
     printf("Hello World\n");
     printf("First Module:\n\tVersion:%s, \n\tstrlen(version):%zu\n", FIRST_MODULE_VERSION, strlen(FIRST_MODULE_VERSION))
 )

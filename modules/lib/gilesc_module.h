@@ -16,9 +16,9 @@
 #include <ctype.h>
 
 #if GILESC_DEBUG
-#define MODULE_TESTING_FUNION(stuff) int main() { stuff; return 0; }
+#define MODULE_TEST_MAIN(stuff) int main() { stuff; return 0; }
 #else
-#define MODULE_TESTING_FUNION(stuff)
+#define MODULE_TEST_MAIN(stuff)
 #endif
 
 
