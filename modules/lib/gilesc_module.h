@@ -45,6 +45,21 @@ invoke_elisp_function(EmacsEnv *env, const char* name, u32 arg_count, EmacsValue
 }
 
 //
+// Displays a message at the bottom of the users screen
+//
+internal void
+send_message(EmacsEnv *env, const char* msg)
+{
+    size_t len = strlen(msg);
+
+    if (len)
+    {
+        EmacsValue args = env->make_string(env, msg, len-1 /* cut trailing newline */);
+        invoke_elisp_function(env, "message", 1, &args);
+    }
+}
+
+//
 // Provide a feature to emacs that can be `(require 'feature)` by the
 // end-user. Documentation from gnu.org for `Named-Features`
 //

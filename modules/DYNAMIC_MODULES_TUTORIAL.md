@@ -1,3 +1,6 @@
+==================================================
+   My coding style
+--------------------------------------------------
 Assumptions; my c code style is very different than a lot of other
 engineers that i've met in the field and so I've created some macros
 that will allow me to continue to use that style without changing the
@@ -25,6 +28,9 @@ To support this I've created a few macros which became the start of my
 As I go deeper into modules, no doubt I will need to add more there. But lets move on.
 
 
+==================================================
+   Dynamic Module Basics
+--------------------------------------------------
 
 Writing Dynamic Modules (from GNU):
 https://www.gnu.org/software/emacs/manual/html_node/elisp/Writing-Dynamic-Modules.html
@@ -32,9 +38,36 @@ https://www.gnu.org/software/emacs/manual/html_node/elisp/Writing-Dynamic-Module
 The first crack at this;
 i have my own little helpers with so far, nothing but macros that conver the things to sensible (for me) types. Since my style for coding is 
 
+==================================================
+   Building a hello world
+--------------------------------------------------
+I've been using VIM for many years and recently switched to
+Emacs. Because of this switch I've never actually been fully into
+ELisp or know what all of the terminology and functions are. This
+writing is coming from the point of view of someone who knows to use
+emacs and can fumble through enough elisp to be dangerous.
+
+The basic structure for this first program was taken from two locations an
+The starting point for my learning came from two locations:
+    https://mrosset.github.io/emacs-module/
+    http://diobla.info/blog-archive/modules-tut.html
+
+I was still confused greatly after these because I needed to know more
+detail about what was happening and more details about the
+`emacs-module.h` file we import. (more resources at the end) So after
+writing the hello world from those two resources I opened up the
+header file in one window and my hello world in the other and I did a
+little bit of work to understand what was going on and why things were
+set the way they were.
 
 
-Step 1: Understanding how to build out a hello world
+Understanding how to build out a hello world
+---
+
+Building out my first main module i came to realize that some elisp
+terminology has creeped into the tutorial. I added some comments on
+the `provide` and `fset` since they're elisp functions. My first pass
+looked very similar to what the above blog posts look like:
 
 ```c
     // NOTE: get the emacs runtime environment
@@ -76,6 +109,29 @@ Step 1: Understanding how to build out a hello world
     s32 cmodule_number_of_args = 2;
     env->funcall(env, fset_symbol, cmodule_number_of_args, cmodule_args);
 ```
+
+
+I've always been a kind of programmer who writes the code to get it
+working first and then figure out what needs to be added to make it
+more clear and maintainable later. Because of this style I write only
+the code needed to do the exact thing I'm trying to do, nothing
+more. But as you see now I have two use cases that need to invoke
+`fset`, so I started to create some abstractions for my
+`gilesc_module.h` file.
+
+The first abstraction is just a typedef that allows me to pass all the
+information necessary to invoke a function but keeping the
+glancability and reduce the noise:
+
+```c
+typedef EmacsValue (*EmacsFunctionPointer)(EmacsEnv *env, ptrdiff_t nargs, EmacsValue args[], void *data);
+```
+
+Having this type allowed me to refactor the code slightly and
+introduce `bind_function`: A function that takes in the data needed to
+bind the name of the function with the function_pointer that is going
+to be invoked when calling that name. To do this I've extracted out
+the `fset` call and re-worked the main file:
 
 First extranction for bind_function
 ```c

@@ -2,21 +2,7 @@
 
 int plugin_is_GPL_compatible;
 
-
-//
-// Displays a message at the bottom of the users screen
-//
-internal void
-send_message(EmacsEnv *env, const char* msg)
-{
-    size_t len = strlen(msg);
-
-    if (len)
-    {
-        EmacsValue args = env->make_string(env, msg, len-1 /* cut trailing newline */);
-        invoke_elisp_function(env, "message", 1, &args);
-    }
-}
+#define FIRST_MODULE_VERSION "v0.0.1"
 
 EMACS_FUNCTION(meaning_of_life)
 {
@@ -27,7 +13,7 @@ EMACS_FUNCTION(meaning_of_life)
 
 EMACS_FUNCTION(first_module_version)
 {
-    EmacsValue result = env->make_string(env, "0.1", 3);
+    EmacsValue result = env->make_string(env, FIRST_MODULE_VERSION, strlen(FIRST_MODULE_VERSION));
     return result;
 }
 
@@ -47,7 +33,7 @@ emacs_module_init(struct EmacsRuntime *runtime)
     EmacsValue fn_first_module = env->make_function(env, 0, 0, first_module_version, "Returns first_module version", 0);
     EmacsValue fn_meaning_of_life = env->make_function(env, 0, 0, meaning_of_life, "Returns the meaning of life", 0);
 
-    bind_function(env, "first_module-version", fn_first_module);
+    bind_function(env, "first-module-version", fn_first_module);
     bind_function(env, "meaning-of-life", fn_meaning_of_life);
 
     return 0;
@@ -55,4 +41,5 @@ emacs_module_init(struct EmacsRuntime *runtime)
 
 MODULE_TESTING_FUNION(
     printf("Hello World\n");
+    printf("First Module:\n\tVersion:%s, \n\tstrlen(version):%zu\n", FIRST_MODULE_VERSION, strlen(FIRST_MODULE_VERSION))
 )
