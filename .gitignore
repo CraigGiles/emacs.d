@@ -7,5 +7,6 @@ recentf
 projectile-bookmarks.eld
 auto-save-list/
 auto-saves/
+target/
 local-init.el
 custom.el
