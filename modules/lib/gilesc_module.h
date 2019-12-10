@@ -17,7 +17,10 @@
 
 #if GILESC_DEBUG
 #define MODULE_TESTING_FUNION(stuff) int main() { stuff; return 0; }
+#else
+#define MODULE_TESTING_FUNION(stuff)
 #endif
+
 
 #define EmacsEnv emacs_env
 #define EmacsValue emacs_value

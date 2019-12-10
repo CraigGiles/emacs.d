@@ -2,23 +2,30 @@
 #define GILESC_TYPES_H
 
 #if GILESC_DEBUG
-#define AssertWithMessage(expression, msg) if(!(expression)) {\
-printf("===============================================\n");\
-printf("--              Assertion Failed             --\n");\
-printf("-----------------------------------------------\n");\
-printf("File:%s\n", __FILE__);\
-printf("Line:%i\n", __LINE__);\
-printf("Message:\n%s\n", msg);\
-printf("-----------------------------------------------\n");\
-__builtin_trap();\
-}
+
+#define AssertWithMessage(expression, msg) if(!(expression)) {          \
+        printf("===============================================\n");    \
+        printf("--              Assertion Failed             --\n");    \
+        printf("-----------------------------------------------\n");    \
+        printf("File:%s\n", __FILE__);                                  \
+        printf("Line:%i\n", __LINE__);                                  \
+        printf("Message:\n%s\n", msg);                                  \
+        printf("-----------------------------------------------\n");    \
+        __builtin_trap();                                               \
+    }
+
 #define Assert(expression) AssertWithMessage(expression, "")
-#else
-#define Assert(...)
-#endif
 
 #define InvalidCodePath AssertWithMessage(false, "InvalidCodePath")
 #define InvalidDefaultCase default: {InvalidCodePath;} break
+#else
+
+#define Assert(...)
+#define InvalidCodePath
+#define InvalidDefaultCase
+
+#endif
+
 
 #define ArrayCount(ary) (sizeof(ary) / sizeof((ary)[0]))
 
