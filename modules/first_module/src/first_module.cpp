@@ -1,4 +1,4 @@
-#include "gilesc_module.h"
+#include <gilesc_module.h>
 
 int plugin_is_GPL_compatible;
 
