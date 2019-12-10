@@ -67,8 +67,7 @@ else
     echo ""
     echo "Starting Build"
     echo "--------------"
-    release_module
-    # clean_target_directory
-    # build_module
-    # test_module
+    clean_target_directory
+    build_module
+    test_module
 fi
