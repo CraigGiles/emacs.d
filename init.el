@@ -432,6 +432,7 @@
 (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
 (set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
 (set-face-attribute 'font-lock-string-face nil :foreground "#65b29e")
+(set-face-attribute 'dired-directory nil :foreground "#65b29e")
 ;; (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
 
 (setq foreground-font-color "#d2cbc0")
