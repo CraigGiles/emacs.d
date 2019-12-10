@@ -57,6 +57,7 @@ function test_module {
 function release_module {
     echo "compiling module"
     g++ $RELEASE_FLAGS $EXE_HEADER_INCLUDES  -shared ./src/$MAIN_FILE -o $RELEASE_PATH.so
+    rm -rf $RELEASE_PATH.so.dSYM
 }
 
 if [ "$1" = "release" ]

@@ -25,7 +25,7 @@ EMACS_FUNCTION(meaning_of_life)
     return result;
 }
 
-EMACS_FUNCTION(cmodule_version)
+EMACS_FUNCTION(first_module_version)
 {
     EmacsValue result = env->make_string(env, "0.1", 3);
     return result;
@@ -39,15 +39,15 @@ emacs_module_init(struct EmacsRuntime *runtime)
 
     // NOTE: convert our feature string into quoted emacs symbols for
     // the elisp functions
-    provide(env, "cmodule");
+    provide(env, "first_module");
 
     // NOTE: make a function callable by elisp. When elisp
-    // `(cmodule-version)` is evaluated, call the cmodule_version
+    // `(first_module-version)` is evaluated, call the first_module_version
     // function above.
-    EmacsValue fn_cmodule = env->make_function(env, 0, 0, cmodule_version, "Returns cmodule version", 0);
+    EmacsValue fn_first_module = env->make_function(env, 0, 0, first_module_version, "Returns first_module version", 0);
     EmacsValue fn_meaning_of_life = env->make_function(env, 0, 0, meaning_of_life, "Returns the meaning of life", 0);
 
-    bind_function(env, "cmodule-version", fn_cmodule);
+    bind_function(env, "first_module-version", fn_first_module);
     bind_function(env, "meaning-of-life", fn_meaning_of_life);
 
     return 0;
