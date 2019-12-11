@@ -7,6 +7,20 @@ int plugin_is_GPL_compatible;
 
 EMACS_FUNCTION(scala_insert_inline_package_statement)
 {
+    // (save-excursion
+    //   (beginning-of-buffer)
+    //   (insert "package ")
+    // )
+    EmacsValue beginning_of_buffer_symbol = env->intern(env, "beginning-of-buffer");
+    EmacsValue insert_package_symbol = env->intern(env, "insert");
+
+    EmacsValue args_excursion[] = {
+        beginning_of_buffer_symbol,
+        insert_package_symbol
+    };
+
+    invoke_elisp_function(env, "save-excursion", 2, args_excursion);
+
     EmacsValue goto_args = env->make_integer(env, 1);
     EmacsValue insert_args = env->make_string(env, "package ", strlen("package "));
 
