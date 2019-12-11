@@ -150,10 +150,11 @@ MODULE_TEST_MAIN(
 
     // NOTE: this is how you would create an initialize a memory arena
     MemoryArena arena = {};
-    create_memory_arena(&arena);
+    initialize_memory_arena(&arena);
 
     char *expected = "package com.mycomp.myproject.mypackage";
     char *path = "/Users/gilesc/Development/myproject/src/main/scala/com/mycomp/myproject/mypackage/myfile.scala";
+
     char *result = convert_path_to_package_statement(&arena, path);
 
     Assert(strcmp(result, expected) == 0)
