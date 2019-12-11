@@ -108,6 +108,8 @@
 
     (define-key evil-normal-state-map (kbd "M-p") 'projectile--find-file)
     (define-key evil-normal-state-map (kbd "M-C-p") 'projectile-find-file-other-window)
+
+    (define-key evil-normal-state-map (kbd "C-c C-c") 'eval-buffer)
  
     (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
     (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)

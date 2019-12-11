@@ -1,5 +1,5 @@
 MAIN_FILE=scala_package.cpp
-EXE_NAME=first_module
+EXE_NAME=scala-package
 RELEASE_PATH=../releases/$EXE_NAME
 
 COMPILE_FLAGS="-g \

@@ -44,12 +44,13 @@ typedef EmacsValue (*EmacsFunctionPointer)(EmacsEnv *env, ptrdiff_t nargs, Emacs
 //
 // call an elisp function named `name` with the specified function arguments
 //
-internal void
+internal EmacsValue
 invoke_elisp_function(EmacsEnv *env, const char* name, u32 arg_count, EmacsValue *args)
 {
     // TODO(craig): handle any errors with emacs either before or after these function calls
     EmacsValue fn = env->intern(env, name);
-    env->funcall(env, fn, arg_count, args);
+    EmacsValue result = env->funcall(env, fn, arg_count, args);
+    return result;
 }
 
 //
