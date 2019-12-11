@@ -5,6 +5,75 @@ int plugin_is_GPL_compatible;
 #define MODULE_NAME "scala-package"
 #define MODULE_VERSION "v0.0.1"
 
+internal u32
+string_last_index_of(char* str, char value)
+{
+    u32 result = 1;
+    // TODO
+    return result;
+}
+
+internal char*
+string_substring(MemoryArena *arena, char* str, u32 start, u32 end)
+{
+    char* result = str;
+    // TODO
+    return result;
+}
+
+internal char*
+string_replace_all(MemoryArena *arena, char* str, char* from, char* to)
+{
+    char* result = str;
+    // TODO
+    return result;
+}
+
+internal char*
+string_replace_all(char* str, char from, char to)
+{
+    char* result = str;
+    // TODO
+    return result;
+}
+
+internal char*
+string_prepend(MemoryArena *arena, char* str, char* value)
+{
+    char* result = str;
+    // TODO
+    return result;
+}
+
+internal char*
+remove_file_from_string(MemoryArena *arena, char* value)
+{
+    u32 last_slash_index = string_last_index_of(value, '/');
+    Assert(last_slash_index > 0);
+
+    printf("Last Slash Index = %u\n", last_slash_index);
+    char* result = ReserveMemoryForString(arena, last_slash_index);
+    result = string_substring(arena, value, 0, last_slash_index);
+
+    return result;
+}
+
+internal char*
+convert_path_to_package_statement(MemoryArena *arena, char* path)
+{
+    // char buffer[1024] = {};
+    char* result = ReserveMemoryForString(arena, strlen(path));
+
+    path = remove_file_from_string(arena, path);
+    path = eat_string_including(path, "src/main/scala/");
+    // path = string_replace_all(arena, path, "/", "."); // TODO do i want this one or the char one?
+    path = string_replace_all(path, '/', '.');
+    path = string_prepend(arena, path, "package ");
+    printf("Got result %s\n", path);
+
+    return result;
+}
+
 EMACS_FUNCTION(scala_insert_inline_package_statement)
 {
     // (save-excursion
@@ -77,9 +146,16 @@ emacs_module_init(struct EmacsRuntime *runtime)
 }
 
 MODULE_TEST_MAIN(
+    printf("%s -- Version: %s\n", MODULE_NAME, MODULE_VERSION);
+
     // NOTE: this is how you would create an initialize a memory arena
     MemoryArena arena = {};
     create_memory_arena(&arena);
 
-    printf("%s -- Version: %s\n", MODULE_NAME, MODULE_VERSION);
+    char *expected = "package com.mycomp.myproject.mypackage";
+    char *path = "/Users/gilesc/Development/myproject/src/main/scala/com/mycomp/myproject/mypackage/myfile.scala";
+    char *result = convert_path_to_package_statement(&arena, path);
+
+    Assert(strcmp(result, expected) == 0)
+    printf("%s\n", result);
 )

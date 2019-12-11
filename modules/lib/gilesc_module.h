@@ -18,6 +18,7 @@
 #include <ctype.h>
 
 #include "gilesc_memory.h"
+#include "gilesc_string.h"
 
 #if GILESC_DEBUG
 #define MODULE_TEST_MAIN(stuff) int main() { stuff; return 0; }

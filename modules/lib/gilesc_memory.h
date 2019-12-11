@@ -34,7 +34,7 @@ bytes_to_megabytes(u32 bytes)
 #define ReserveMemoryForStruct(Arena, type) (type *)reserve_memory_(Arena, sizeof(type))
 #define ReserveMemoryForArray(Arena, Count, type) (type *)reserve_memory_(Arena, (Count)*sizeof(type))
 #define ReserveMemoryForSize(Arena, Size) reserve_memory_(Arena, Size)
-#define ReserveMemoryForString(Arena, Length) reserve_memory_(Arena, sizeof(char) * Length)
+#define ReserveMemoryForString(Arena, Length) (char*)reserve_memory_(Arena, sizeof(char) * Length)
 
 internal void *
 reserve_memory_(MemoryArena *arena, size_t size, size_t alignment = 4)
