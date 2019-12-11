@@ -9,7 +9,21 @@ internal u32
 string_last_index_of(char* str, char value)
 {
     u32 result = 1;
-    // TODO
+
+    u32 string_length = strlen(str) - 1;
+    for (u32 index = string_length;
+         index > 0;
+         --index)
+    {
+        // TODO
+        if (str[index] == value)
+        {
+            result = index;
+            break;
+        }
+    }
+
+    printf("We found %c at index %u\n", value, result);
     return result;
 }
 
