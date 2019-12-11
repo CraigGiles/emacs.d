@@ -63,6 +63,9 @@ emacs_module_init(struct EmacsRuntime *runtime)
 }
 
 MODULE_TEST_MAIN(
-    printf("%s:\n\tVersion:%s, \n\tstrlen(version):%zu\n",
-           MODULE_NAME, MODULE_VERSION, strlen(MODULE_VERSION))
+    // NOTE: this is how you would create an initialize a memory arena
+    MemoryArena arena = {};
+    create_memory_arena(&arena);
+
+    printf("%s -- Version: %s\n", MODULE_NAME, MODULE_VERSION);
 )
