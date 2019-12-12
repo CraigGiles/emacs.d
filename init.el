@@ -168,6 +168,18 @@
   :defer t
   :config
 
+    ;; NOTE: My first scala-module plugin
+    (require 'scala-package)
+    (defun scala-insert-package-statement ()
+      "Insert the scala package statement at the top of your source file"
+        (interactive)
+        (save-excursion
+            (beginning-of-buffer)
+            (insert (scala-create-package-statement (buffer-file-name)))
+            (insert "\n")
+        )
+    )
+
     (defun sbt-save-and-switch ()
       "Saves the current buffer and switches to the active SBT window."
       (interactive)
@@ -799,3 +811,4 @@
 
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 (add-hook 'c-mode-common-hook 'craig-big-fun-c-hook)
+

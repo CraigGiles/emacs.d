@@ -110,5 +110,68 @@ replace_all(char* str, char* old, char* value)
     return str;
 }
 
+internal u32
+string_last_index_of(char* str, char value)
+{
+    u32 result = 1;
+
+    u32 string_length = strlen(str) - 1;
+    for (u32 index = string_length;
+         index > 0;
+         --index)
+    {
+        if (str[index] == value)
+        {
+            result = index;
+            break;
+        }
+    }
+
+    return result;
+}
+
+internal char*
+string_substring(MemoryArena *arena, char* str, u32 start, u32 end = 0)
+{
+    if (end == 0)
+    {
+        end = strlen(str);
+    }
+    
+    u32 length = end - start;
+    char* result = ReserveMemoryForString(arena, length);
+    char* at = str + start;
+    stpncpy(result, at, length);
+    return result;
+}
+
+internal char*
+string_replace_all(char* str, char from, char to)
+{
+    char* at = str;
+
+    while (!string_is_empty(at))
+    {
+        if (*at == from)
+        {
+            *at = to;
+        }
+            
+        ++at;
+    }
+
+    return str;
+}
+
+internal char*
+string_prepend(MemoryArena *arena, char* str, char* value)
+{
+    u32 length = strlen(str) + strlen(value);
+    char* result = ReserveMemoryForString(arena, length);
+    sprintf(result, "%s%s", value, str);
+    result = string_substring(arena, result, 0, length); // TODO piggy
+
+    return result;
+}
 
 #endif
