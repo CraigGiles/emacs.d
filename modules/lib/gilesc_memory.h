@@ -54,7 +54,7 @@ initialize_memory_arena_(MemoryArena *arena, size_t size, void *base)
     arena->used = 0;
 }
 
-#define initialize_memory_arena(name) { \
+#define STACK_MEMORY_ARENA(name) { \
     u8 block[MEMORY_ARENA_BLOCK_SIZE] = {}; \
     initialize_memory_arena_(name, MEMORY_ARENA_BLOCK_SIZE, &block); \
 }\
