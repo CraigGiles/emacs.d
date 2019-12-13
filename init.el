@@ -549,7 +549,6 @@
   (if (find-project-directory) (compile (concat "./" build-file-name)))
   (other-window 1))
 
-
 ;; C++ indentation style
 (defconst craig-big-fun-c-style
   '((c-electric-pound-behavior   . nil)
