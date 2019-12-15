@@ -158,6 +158,7 @@
     (use-package evil-magit)
     (key-chord-define evil-normal-state-map "ga" 'magit-blame-addition)
     (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit))
+    (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status))
 
 (use-package sbt-mode
   :pin melpa-stable
