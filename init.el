@@ -341,6 +341,7 @@
 ;; current buffer operations
 ;; (define-key global-map [f8] 'replace-string-without-moving)
 (define-key global-map [f5] 'open-global-todo-file)
+(define-key evil-normal-state-map [tab] 'evil-toggle-fold)
 (define-key evil-normal-state-map (kbd "M-j") 'imenu)
 (define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
 (define-key evil-normal-state-map (kbd "SPC n") 'evil-search-highlight-persist-remove-all)
