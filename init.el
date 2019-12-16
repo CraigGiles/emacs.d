@@ -88,6 +88,10 @@
   :pin melpa-stable
   :init)
 
+(use-package markdown-mode
+  :pin melpa-stable
+  :init)
+
 (use-package evil-commentary
   :pin melpa-stable
   :init
@@ -330,6 +334,7 @@
 (global-auto-revert-mode 1)
 
 (add-to-list 'auto-mode-alist '("\\.emacs$" . emacs-lisp-mode))
+(add-to-list 'auto-mode-alist '("\\.md$"     . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.thrift$". c-mode))
 
 ;; ===============================================================
@@ -393,7 +398,7 @@
 ;; ===============================================================
 ;;   Fixme highlights
 ;; ---------------------------------------------------------------
-(setq fixme-modes '(c++-mode c-mode markdown-mode emacs-lisp-mode))
+(setq fixme-modes '(c++-mode c-mode cc-mode markdown-mode emacs-lisp-mode fundamental-mode))
 (defun initialize-fixme-modes ()
   "Sets the highlighted words like TODO and NOTE and colorschemes for these words"
   (interactive)
