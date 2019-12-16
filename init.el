@@ -156,6 +156,7 @@
   :pin melpa-stable
   :config
     (use-package evil-magit)
+    (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
     (key-chord-define evil-normal-state-map "ga" 'magit-blame-addition)
     (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
     (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
@@ -279,7 +280,7 @@
 ;;   Stupid plugins that i don't need
 ;; ---------------------------------------------------------------
 (use-package 2048-game
-  :pin melpa-stable
+  :pin melpa
   :defer t)
 
 ;; ===============================================================
