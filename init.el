@@ -41,6 +41,20 @@
 ;;     (replace-string FromString ToString))
 ;;   )
 
+;; TODO this is an interesting idea, but i dont have enough time to get it to work
+;; (defun word-document-mode ()
+;;   "Set up a writing 'word document mode' that can be used to edit the given path"
+;;   (interactive)
+;;   (find-file (buffer-name "."))
+;;   (split-window-right)
+;;   (evil-window-right 1)
+;;   (find-file "~/.tmp/EmptyBuffer")
+;;   (split-window-right)
+;;   (find-file "~/.tmp/EmptyBuffer")
+;;   (evil-window-right 1)
+;;   (split-window-right)
+;; )
+
 (defun switch-other-window-to-last-buffer ()
   "Switch other window to other window's last open buffer."
   (interactive)
@@ -464,7 +478,7 @@
 (set-face-attribute 'font-lock-variable-name-face nil :foreground foreground-font-color)
 (set-face-attribute 'font-lock-type-face nil :foreground foreground-font-color)
 
-(set-face-background 'hl-line "midnight blue");; the -always on- horizontal highlight
+(set-face-background 'hl-line "#191970");; the -always on- horizontal highlight
 (set-background-color "#122A2C")              ;; something akin to J.Blow's theme
 (set-foreground-color foreground-font-color)
 
