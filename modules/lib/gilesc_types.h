@@ -1,42 +1,20 @@
 #if !defined(GILESC_TYPES_H)
+/* ========================================================================
+   Types
+
+   Version: v1.0.0
+   Maintainer: Craig Giles
+   License:	This file is placed in the public domain.
+   ======================================================================== */
 #define GILESC_TYPES_H
 
-#if GILESC_DEBUG
+#if USE_GILESC_TYPES
 
-#define AssertWithMessage(expression, msg) if(!(expression)) {          \
-        printf("===============================================\n");    \
-        printf("--              Assertion Failed             --\n");    \
-        printf("-----------------------------------------------\n");    \
-        printf("File:%s\n", __FILE__);                                  \
-        printf("Line:%i\n", __LINE__);                                  \
-        printf("Message:\n%s\n", msg);                                  \
-        printf("-----------------------------------------------\n");    \
-        __builtin_trap();                                               \
-    }
+#include <x86intrin.h>
 
-#define Assert(expression) AssertWithMessage(expression, "")
-
-#define InvalidCodePath AssertWithMessage(false, "InvalidCodePath")
-#define InvalidDefaultCase default: {InvalidCodePath;} break
-#else
-
-#define Assert(...)
-#define InvalidCodePath
-#define InvalidDefaultCase
-
-#endif
-
-
-#define ArrayCount(ary) (sizeof(ary) / sizeof((ary)[0]))
-
-#define internal static
-#define local_persist static
-#define global_variable static
-
-#define Kilobytes(value) ((value)*1024LL)
-#define Megabytes(value) (Kilobytes(value)*1024LL)
-#define Gigabytes(value) (Megabytes(value)*1024LL)
-#define Terabytes(value) (Gigabytes(value)*1024LL)
+#define internal          static
+#define local_persist     static
+#define global_variable   static
 
 typedef int8_t   s8;
 typedef int16_t  s16; // int
@@ -58,7 +36,8 @@ typedef double   f64;
 #define U32_MIN  0
 #define U32_MAX  ((u32)-1)
 #define U64_MAX  ((u64)-1)
-#define F32_MAX  FLT_MAX
-#define F32_MIN  -FLT_MAX
+#define F32_MAX  3.402823E+38f
+#define F32_MIN  -3.402823E+38f
 
+#endif // USE_GILESC_TYPES
 #endif

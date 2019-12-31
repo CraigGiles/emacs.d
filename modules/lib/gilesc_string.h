@@ -1,23 +1,41 @@
 #if !defined(GILESC_STRING_H)
 /* ========================================================================
-   $File: $
-   $Date: $
-   $Revision: $
-   $Creator: Craig Giles $
-   $Notice: (C) Copyright 2019 by Craig Giles. All Rights Reserved. $
-   ======================================================================== */
+   String
 
+   Version: v1.0.0
+   Maintainer: Craig Giles
+   License:	This file is placed in the public domain.
+   ======================================================================== */
 #define GILESC_STRING_H
 
+internal b32 string_begins_with(char *str, char *value);
+internal char* eat_spaces(char* str);
+internal char* trim(char *str);
+internal b32 string_is_empty(char *str);
+internal char* eat_string_including(char* str, char* value);
+internal u32 string_last_index_of(char* str, char value);
+internal char* string_substring(MemoryArena *arena, char* str, u32 start, u32 end = 0);
+internal char* string_replace_all(char* str, char from, char to);
+internal char* string_prepend(MemoryArena *arena, char* str, char* value);
+
+#if USE_GILESC_STRING
 #include <ctype.h>
+
+#include "gilesc_types.h"
+#define USE_GILESC_MEMORY 1
+#include "gilesc_memory.h"
+
+#include <string.h>
 
 internal b32
 string_begins_with(char *str, char *value)
 {
-    size_t lenpre = strlen(value),
-           lenstr = strlen(str);
+    size_t lenpre = strlen(value);
+    size_t lenstr = strlen(str);
 
-    b32 result = lenstr < lenpre ? false : strncmp(value, str, lenpre) == 0;
+    b32 result = lenstr < lenpre ?
+                          false :
+                          strncmp(value, str, lenpre) == 0;
 
     return result;
 }
@@ -39,15 +57,20 @@ trim(char *str)
     char *end;
 
     // Trim leading space
-    while(isspace((unsigned char)*str)) str++;
+    while(isspace((unsigned char)*str)) {
+        str++;
+    }
 
-    if(*str == 0)  // All spaces?
+    if (*str == 0) {  // All spaces?
         return str;
+    }
 
     // Trim trailing space
     b32 modified = false;
     end = str + strlen(str) - 1;
-    while(end > str && isspace((unsigned char)*end)) {
+    while(end > str &&
+          isspace((unsigned char)*end))
+    {
         modified = true;
         end--;
     }
@@ -99,17 +122,6 @@ eat_string_including(char* str, char* value)
     return str;
 }
 
-internal char*
-replace_all(char* str, char* old, char* value)
-{
-    char* at = str;
-    // while (strcmp(at, "") != 0) {
-    //     if (!string_begins_with(at, old)) at++;
-    // }
-
-    return str;
-}
-
 internal u32
 string_last_index_of(char* str, char value)
 {
@@ -139,6 +151,7 @@ string_substring(MemoryArena *arena, char* str, u32 start, u32 end = 0)
     }
     
     u32 length = end - start;
+
     char* result = ReserveMemoryForString(arena, length);
     char* at = str + start;
     stpncpy(result, at, length);
@@ -173,5 +186,5 @@ string_prepend(MemoryArena *arena, char* str, char* value)
 
     return result;
 }
-
+#endif
 #endif
