@@ -444,6 +444,8 @@
 ;; ===============================================================
 ;;   Theme Settings
 ;; ---------------------------------------------------------------
+(setq foreground-font-color "#D2CBC0")
+
 ;; Font
 (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
 (set-face-attribute 'default t :font "Liberation Mono-12")
@@ -451,14 +453,15 @@
 ;; Colors
 (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
 (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
-(set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
+;; (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
 (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
-(set-face-attribute 'font-lock-string-face nil :foreground "#65b29e")
+;; (set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
+(set-face-attribute 'font-lock-string-face nil :foreground "#65B29E")
 (set-face-attribute 'dired-directory nil :foreground "#65b29e")
-;; (set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
 
-(setq foreground-font-color "#d2cbc0")
+(set-face-attribute 'font-lock-keyword-face nil :foreground foreground-font-color)
+(set-face-attribute 'font-lock-constant-face nil :foreground foreground-font-color)
+
 
 (set-face-attribute 'font-lock-function-name-face nil :foreground foreground-font-color)
 (set-face-attribute 'font-lock-variable-name-face nil :foreground foreground-font-color)
