@@ -93,6 +93,9 @@
 ;; ===============================================================
 ;;   Installed Packages
 ;; ---------------------------------------------------------------
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+(load "jai-mode")
+
 (use-package counsel-projectile
   :pin melpa-stable
   :config
@@ -259,7 +262,7 @@
     (key-chord-define evil-normal-state-map "ln" 'gud-next)
     (key-chord-define evil-normal-state-map "ls" 'gud-step)
 
-    (load-file "~/.emacs.d/gud-lldb.el")
+    (load "gud-lldb")
 ) ;; use-package cc-mode
 
 (use-package go-mode
@@ -350,6 +353,9 @@
 (add-to-list 'auto-mode-alist '("\\.emacs$" . emacs-lisp-mode))
 (add-to-list 'auto-mode-alist '("\\.md$"     . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.thrift$". c-mode))
+(add-to-list 'auto-mode-alist '("\\.gl$". c-mode))
+(add-to-list 'auto-mode-alist '("\\.fs$". c-mode))
+(add-to-list 'auto-mode-alist '("\\.vs$". c-mode))
 
 ;; ===============================================================
 ;;   keymap key-bindings keybindings
@@ -467,15 +473,15 @@
 ;; Colors
 (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
 (set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
-;; (set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
 (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
-;; (set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
 (set-face-attribute 'font-lock-string-face nil :foreground "#65B29E")
 (set-face-attribute 'dired-directory nil :foreground "#65b29e")
 
-(set-face-attribute 'font-lock-keyword-face nil :foreground foreground-font-color)
-(set-face-attribute 'font-lock-constant-face nil :foreground foreground-font-color)
+;; (set-face-attribute 'font-lock-keyword-face nil :foreground foreground-font-color)
+;; (set-face-attribute 'font-lock-constant-face nil :foreground foreground-font-color)
 
+(set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
+(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
 
 (set-face-attribute 'font-lock-function-name-face nil :foreground foreground-font-color)
 (set-face-attribute 'font-lock-variable-name-face nil :foreground foreground-font-color)
