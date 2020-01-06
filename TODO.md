@@ -3,6 +3,8 @@
 --------------------------------------------------
 TODO(craig): open split should park the cursor on that split (this is starting to get annoying)
 TODO(craig): change C-j / C-k to a new function for next / previous blank line
+TODO(craig): open split should park the cursor on that split
+TODO(craig): scala -- have C-m load sbt-start if it doesn't already exist
 
 ==================================================
    Completed
