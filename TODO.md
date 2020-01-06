@@ -1,8 +1,8 @@
 ==================================================
    Current Tasks
 --------------------------------------------------
+TODO(craig): open split should park the cursor on that split (this is starting to get annoying)
 TODO(craig): change C-j / C-k to a new function for next / previous blank line
-TODO(craig): open split should park the cursor on that split
 
 ==================================================
    Completed
