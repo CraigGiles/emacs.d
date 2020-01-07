@@ -122,6 +122,9 @@
     (evil-mode t)
 
   :config
+    (setq evil-vsplit-window-right t)
+    (setq evil-split-window-below t)
+
     (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
     (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
 
