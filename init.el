@@ -94,7 +94,8 @@
 ;;   Installed Packages
 ;; ---------------------------------------------------------------
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-(load "jai-mode")
+(load "jai-mode-new")
+;; (load "jai-mode")
 
 (use-package counsel-projectile
   :pin melpa-stable
@@ -479,22 +480,17 @@
 (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
 (set-face-attribute 'font-lock-string-face nil :foreground "#65B29E")
 (set-face-attribute 'dired-directory nil :foreground "#65b29e")
-
-;; (set-face-attribute 'font-lock-keyword-face nil :foreground foreground-font-color)
-;; (set-face-attribute 'font-lock-constant-face nil :foreground foreground-font-color)
-
-(set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
-
+(set-face-attribute 'font-lock-keyword-face nil :foreground "#CD950C") ; DarkGoldenRod3
+(set-face-attribute 'font-lock-constant-face nil :foreground foreground-font-color)
 (set-face-attribute 'font-lock-function-name-face nil :foreground foreground-font-color)
 (set-face-attribute 'font-lock-variable-name-face nil :foreground foreground-font-color)
 (set-face-attribute 'font-lock-type-face nil :foreground foreground-font-color)
 
-(set-face-background 'hl-line "#191970");; the -always on- horizontal highlight
-(set-background-color "#122A2C")              ;; something akin to J.Blow's theme
+(set-face-background 'hl-line "#191970")     ;; the -always on- horizontal highlight
+(set-background-color "#122A2C")             ;; something akin to J.Blow's theme
 (set-foreground-color foreground-font-color)
 
-(set-cursor-color "#40FF40")                  ;; Green-ish cursor color
+(set-cursor-color "#40FF40")                 ;; Green-ish cursor color
 
 (set-face-attribute 'mode-line nil
                     :background "burlywood3"

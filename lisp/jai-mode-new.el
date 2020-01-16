@@ -1,17 +1,19 @@
-;; jai-mode.el --- Major mode for the Jai programming language
-;; Maintainer:	Craig Giles
-;; License:	This file is placed in the public domain.
+;; jai-mode.el ---- Major mode for the Jai programming language
+;; Original Author: Kristoffer Grönlund - https://github.com/krig
+;; Updated By:      Craig Giles - https://github.com/craiggiles
+;; License:         This file is placed in the public domain.
 
 (require 'cl-lib)
 (require 'compile)
-(require 'scala-mode-indent)
-(require 'scala-mode-map)
 
-(defvar jai-mode-syntax-table
+;; TODO the only reason this is being imported is because of its
+;;   indentation rules. Re-write to use custom indent rules when the
+;;   language becomes a little more defined
+(require 'js)
+
+(defconst jai-mode-syntax-table
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?\" "\"" table)
-    (modify-syntax-entry ?\' "\"" table)
-    (modify-syntax-entry ?`  "\"" table)
     (modify-syntax-entry ?\\ "\\" table)
 
     ;; additional symbols
@@ -62,46 +64,45 @@
     "bool"))
 
 (defconst jai-func-regexp "^\\(.*\\)::")
-(defconst jai-type-regexp "\\(.*\\):\\(.*\\)")
+(defconst jai-type-regexp "\\(.*\\):\\ *")
 (defconst jai-undef-regexp "\\(---\\)")
 (defconst jai-directive-regexp "\\([#@]\\w+\\)")
-(defconst go-identifier-regexp "[[:word:][:multibyte:]]+")
-(defconst go-label-regexp go-identifier-regexp)
-;; (defconst jai-parameter-type-regexp ":\\( *[ *$\\)]\\w+\\)")
+
+(defconst jai-number-regexp
+  (rx (and
+       symbol-start
+       (or (and (+ digit) (opt (and (any "eE") (opt (any "-+")) (+ digit))))
+           (and "0" (any "xX") (+ hex-digit)))
+       (opt (and (any "_" "A-Z" "a-z") (* (any "_" "A-Z" "a-z" "0-9"))))
+       symbol-end)))
 
 ;; TODO so many bugs... This doesn't match array syntax (either [] or
 ;;   [..]) and has issues with various pointer types and default
 ;;   parameters as well.
 (defconst jai-parameter-type-regexp ": *\\([\$*]?\\w+\\)") ;; matches T, $T, or *T 
 
-(defun jai-wrap-word-rx (s)
-  (concat "\\<" s "\\>"))
-
-(defun jai-keywords-rx (keywords)
-  "build keyword regexp"
-  (jai-wrap-word-rx (regexp-opt keywords t)))
-
-(defconst jai-pointer-type-rx (rx (group (and "*" (1+ word)))))
-(defconst jai-dollar-type-rx (rx (group "$" (or (1+ word) (opt "$")))))
+(defconst jai-pointer-type-regexp (rx (group (and "*" (1+ word)))))
+(defconst jai-dollar-type-regexp (rx (group "$" (or (1+ word) (opt "$")))))
 
 (defun jai--build-font-lock-keywords ()
-
   (append
    `(
       (,(concat "\\_<" (regexp-opt jai-mode-keywords t) "\\_>") . font-lock-keyword-face)
       (,(concat "\\(\\_<" (regexp-opt jai-builtins t) "\\_>\\)[[:space:]]*(") 1 font-lock-builtin-face)
       (,(concat "\\_<" (regexp-opt jai-constants t) "\\_>") . font-lock-constant-face)
+
       (,jai-func-regexp 1 font-lock-function-name-face)
       (,jai-undef-regexp 1 font-lock-constant-face)
       (,jai-directive-regexp 1 font-lock-preprocessor-face)
-      (,jai-parameter-type-regexp 1 font-lock-preprocessor-face)
 
       ;; Types
-      (,(jai-keywords-rx jai-typenames) 1 font-lock-type-face)
-      (,jai-pointer-type-rx 1 font-lock-type-face)
-      (,jai-dollar-type-rx 1 font-lock-type-face)
+      (,(concat "\\_<" (regexp-opt jai-typenames t) "\\_>") . font-lock-type-face)
+      (,jai-parameter-type-regexp 1 font-lock-type-face)
+      (,jai-pointer-type-regexp 1 font-lock-type-face)
+      (,jai-dollar-type-regexp 1 font-lock-type-face)
+      (,jai-type-regexp 1 font-lock-type-face)
+      (,(concat "\\<" jai-number-regexp "\\>" ) . font-lock-constant-face)
     )
-
   )
 )
 
@@ -127,27 +128,77 @@
           '(
             ("type" "^\\(.*:*.*\\) : " 1)
 	    ("function" "^\\(.*\\) :: " 1)
-	    ("struct" "^\\(.*\\) :: \\(struct\\)\\(.*\\){" 1)
+	    ("struct" "^\\(.*\\) *:: *\\(struct\\) *{" 1)
 	    )
         )
       )
 )
 
-(defun scala-mode-map:add-self-insert-hooks ()
+;; NOTE: taken from the scala-indent package and modified for Jai.
+;;   Still uses the js-indent-line as a base, which will have to be
+;;   replaced when the language is more mature.
+(defun jai--indent-on-parentheses ()
+  (when (and (= (char-syntax (char-before)) ?\))
+             (= (save-excursion (back-to-indentation) (point)) (1- (point))))
+    (js-indent-line)))
+
+(defun jai--add-self-insert-hooks ()
   (add-hook 'post-self-insert-hook
-            'scala-indent:indent-on-parentheses)
-  (add-hook 'post-self-insert-hook
-            'scala-indent:indent-on-special-words)
-  (add-hook 'post-self-insert-hook
-            'scala-indent:indent-on-scaladoc-asterisk)
-  (add-hook 'post-self-insert-hook
-            'scala-indent:fix-scaladoc-close))
+            'jai--indent-on-parentheses)
+  )
+
+(defconst jai--defun-rx "\(.*\).*\{")
+
+(defmacro jai-paren-level ()
+  `(car (syntax-ppss)))
+
+(defun jai-line-is-defun ()
+  "return t if current line begins a procedure"
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (let (found)
+      (while (and (not (eolp)) (not found))
+        (if (looking-at jai--defun-rx)
+            (setq found t)
+          (forward-char 1)))
+      found)))
+
+(defun jai-beginning-of-defun (&optional count)
+  "Go to line on which current function starts."
+  (interactive)
+  (let ((orig-level (jai-paren-level)))
+    (while (and
+            (not (jai-line-is-defun))
+            (not (bobp))
+            (> orig-level 0))
+      (setq orig-level (jai-paren-level))
+      (while (>= (jai-paren-level) orig-level)
+        (skip-chars-backward "^{")
+        (backward-char))))
+  (if (jai-line-is-defun)
+      (beginning-of-line)))
+
+(defun jai-end-of-defun ()
+  "Go to line on which current function ends."
+  (interactive)
+  (let ((orig-level (jai-paren-level)))
+    (when (> orig-level 0)
+      (jai-beginning-of-defun)
+      (end-of-line)
+      (setq orig-level (jai-paren-level))
+      (skip-chars-forward "^}")
+      (while (>= (jai-paren-level) orig-level)
+        (skip-chars-forward "^}")
+        (forward-char)))))
 
 ;;;###autoload
 (define-derived-mode jai-mode prog-mode "Jai"
   "Major mode for editing Jai source text
 
 This mode provides the basics.. VERY basics for editing Jai code."
+ :syntax-table jai-mode-syntax-table
+ :group 'jai
 
   ;; Jai style
   (setq indent-tabs-mode nil)
@@ -161,27 +212,20 @@ This mode provides the basics.. VERY basics for editing Jai code."
   (set (make-local-variable 'comment-end)   "")
   (set (make-local-variable 'comment-use-syntax) t)
   (set (make-local-variable 'comment-start-skip) "\\(//+\\|/\\*+\\)\\s *")
+  (set (make-local-variable 'comment-column) 0)
+  (set (make-local-variable 'comment-multi-line) t)
 
   ;; Indentation
-  ;; (set (make-local-variable 'indent-line-function) #'js-indent-line)
-  (set (make-local-variable 'indent-line-function) #'scala-indent:indent-line)
+  (set (make-local-variable 'indent-line-function) #'js-indent-line)
 
   ;; add indent functionality to some characters
-  (scala-mode-map:add-remove-indent-hook)
-  (scala-mode-map:add-self-insert-hooks)
+  (jai--add-self-insert-hooks)
 
- ;; :syntax-table jai-mode-syntax-table
- ;; :group 'jai
- ;; (setq bidi-paragraph-direction 'left-to-right)
- ;; (setq-local require-final-newline mode-require-final-newline)
- ;; (setq-local parse-sexp-ignore-comments t)
- ;; (setq-local comment-start-skip "\\(//+\\|/\\*+\\)\\s *")
- ;; (setq-local comment-start "/*")
- ;; (setq-local comment-end "*/")
- ;; (setq-local indent-line-function 'js-indent-line)
- ;; (setq-local font-lock-defaults '(jai-font-lock-defaults))
- ;; (setq-local beginning-of-defun-function 'jai-beginning-of-defun)
- ;; (setq-local end-of-defun-function 'jai-end-of-defun)
+ (setq bidi-paragraph-direction 'left-to-right)
+ (setq-local require-final-newline mode-require-final-newline)
+ (setq-local parse-sexp-ignore-comments t)
+ (setq-local beginning-of-defun-function 'jai-beginning-of-defun)
+ (setq-local end-of-defun-function 'jai-end-of-defun)
 
   (font-lock-fontify-buffer)
 )
