@@ -78,6 +78,7 @@
 				    ((and buffer-file-name (eq major-mode 'c++-mode)))
 				    ((and buffer-file-name (eq major-mode 'scala-mode)))
 				    ((and buffer-file-name (eq major-mode 'go-mode)))
+				    ((and buffer-file-name (eq major-mode 'jai-mode)))
 				    ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
 				    ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
@@ -216,7 +217,7 @@
       (other-window 1))
 
     (define-key scala-mode-map (kbd "M-m") 'sbt-save-and-switch)
-    (evil-define-key 'normal scala-mode-map (kbd "C-S-F") 'sbt-find-definitions)
+    (evil-define-key 'normal scala-mode-map (kbd "C-b") 'sbt-find-definitions)
     (evil-define-key 'normal scala-mode-map (kbd "C-f") 'sbt-find-usages)
     (setq build-file-name "build.sbt")
 
