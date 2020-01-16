@@ -1,14 +1,13 @@
 ==================================================
    Current Tasks
 --------------------------------------------------
-TODO(craig): open split should park the cursor on that split (this is starting to get annoying)
 TODO(craig): change C-j / C-k to a new function for next / previous blank line
-TODO(craig): open split should park the cursor on that split
 TODO(craig): scala -- have C-m load sbt-start if it doesn't already exist
 
 ==================================================
    Completed
 --------------------------------------------------
+DONE(craig): open split should park the cursor on that split (this is starting to get annoying)
 DONE(craig): bind C-S-r in magit buffer to refresh (call :magit again)
 DONE(craig): create a macro that makes the OTHER window go to previous file
 DONE(craig): (kbd "g c c") should map to comment the single line

@@ -1,5 +1,0 @@
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(toggle-frame-maximized)
-(set-face-attribute 'default t :font "Liberation Mono-12")

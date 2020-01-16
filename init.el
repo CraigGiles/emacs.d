@@ -94,8 +94,7 @@
 ;;   Installed Packages
 ;; ---------------------------------------------------------------
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-(load "jai-mode-new")
-;; (load "jai-mode")
+(load "jai-mode")
 
 (use-package counsel-projectile
   :pin melpa-stable
