@@ -422,7 +422,7 @@
 ;; ===============================================================
 ;;   Fixme highlights
 ;; ---------------------------------------------------------------
-(setq fixme-modes '(c++-mode c-mode cc-mode markdown-mode emacs-lisp-mode fundamental-mode))
+(setq fixme-modes '(jai-mode c++-mode c-mode cc-mode markdown-mode emacs-lisp-mode prog-mode fundamental-mode))
 (defun initialize-fixme-modes ()
   "Sets the highlighted words like TODO and NOTE and colorschemes for these words"
   (interactive)
@@ -480,7 +480,7 @@
 (set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
 (set-face-attribute 'font-lock-string-face nil :foreground "#65B29E")
 (set-face-attribute 'dired-directory nil :foreground "#65b29e")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "#CD950C") ; DarkGoldenRod3
+(set-face-attribute 'font-lock-keyword-face nil :foreground "#DAB98F") ; DarkGoldenRod3
 (set-face-attribute 'font-lock-constant-face nil :foreground foreground-font-color)
 (set-face-attribute 'font-lock-function-name-face nil :foreground foreground-font-color)
 (set-face-attribute 'font-lock-variable-name-face nil :foreground foreground-font-color)
