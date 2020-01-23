@@ -131,7 +131,7 @@
 
     (define-key evil-normal-state-map (kbd "-") 'find-file)
 
-    (define-key evil-normal-state-map (kbd "M-p") 'projectile--find-file)
+    (define-key evil-normal-state-map (kbd "M-p") 'find-name-dired)
     (define-key evil-normal-state-map (kbd "M-C-p") 'projectile-find-file-other-window)
 
     (define-key evil-normal-state-map (kbd "C-c C-c") 'eval-buffer)
@@ -468,33 +468,27 @@
 ;; ===============================================================
 ;;   Theme Settings
 ;; ---------------------------------------------------------------
-(setq foreground-font-color "#D2CBC0")
-
 ;; Font
 (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
 (set-face-attribute 'default t :font "Liberation Mono-12")
 
 ;; Colors
-(set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
-(set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
-(set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
-(set-face-attribute 'font-lock-string-face nil :foreground "#65B29E")
-(set-face-attribute 'dired-directory nil :foreground "#65b29e")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "#DAB98F") ; DarkGoldenRod3
-(set-face-attribute 'font-lock-constant-face nil :foreground foreground-font-color)
+(setq foreground-font-color                                       "#D2CBC0")
+(set-face-attribute 'font-lock-builtin-face nil       :foreground "#DAB98F")
+(set-face-attribute 'font-lock-comment-face nil       :foreground "#7F7F7F") ;; grey50
+(set-face-attribute 'font-lock-doc-face nil           :foreground "#7F7F7F") ;; grey50
+(set-face-attribute 'font-lock-string-face nil        :foreground "#65B29E") ;; maybe #458B74
+(set-face-attribute 'font-lock-keyword-face nil       :foreground "#DAB98F") ;; DarkGoldenRod3
+(set-face-attribute 'font-lock-constant-face nil      :foreground foreground-font-color)
 (set-face-attribute 'font-lock-function-name-face nil :foreground foreground-font-color)
 (set-face-attribute 'font-lock-variable-name-face nil :foreground foreground-font-color)
-(set-face-attribute 'font-lock-type-face nil :foreground foreground-font-color)
-
-(set-face-background 'hl-line "#191970")     ;; the -always on- horizontal highlight
-(set-background-color "#122A2C")             ;; something akin to J.Blow's theme
-(set-foreground-color foreground-font-color)
-
-(set-cursor-color "#40FF40")                 ;; Green-ish cursor color
-
-(set-face-attribute 'mode-line nil
-                    :background "burlywood3"
-                    :foreground "black")
+(set-face-attribute 'font-lock-type-face nil          :foreground foreground-font-color)
+(set-foreground-color                                             foreground-font-color)
+(set-background-color                                             "#122A2C") ;; something akin to J.Blow's theme
+(set-face-background 'hl-line                                     "#191970") ;; the -always on- horizontal highlight
+(set-cursor-color                                                 "#40FF40") ;; Green-ish cursor color
+(set-face-attribute 'mode-line nil                    :background "#CDAA7D" ;; "burlywood3"
+                                                      :foreground "#000000")
 
 ;; ===============================================================
 ;;   Post Load Hook
