@@ -131,7 +131,7 @@
 
     (define-key evil-normal-state-map (kbd "-") 'find-file)
 
-    (define-key evil-normal-state-map (kbd "M-p") 'find-name-dired)
+    (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
     (define-key evil-normal-state-map (kbd "M-C-p") 'projectile-find-file-other-window)
 
     (define-key evil-normal-state-map (kbd "C-c C-c") 'eval-buffer)
