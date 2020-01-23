@@ -33,27 +33,6 @@
 ;; ===============================================================
 ;;   General functions
 ;; ---------------------------------------------------------------
-;; NOTE(craig): i dont think i actually use this
-;; (defun replace-string-without-moving (FromString ToString)
-;;   "Replace a string without moving point."
-;;   (interactive "sReplace: \nsReplace: %s  With: ")
-;;   (save-excursion
-;;     (replace-string FromString ToString))
-;;   )
-
-;; TODO this is an interesting idea, but i dont have enough time to get it to work
-;; (defun word-document-mode ()
-;;   "Set up a writing 'word document mode' that can be used to edit the given path"
-;;   (interactive)
-;;   (find-file (buffer-name "."))
-;;   (split-window-right)
-;;   (evil-window-right 1)
-;;   (find-file "~/.tmp/EmptyBuffer")
-;;   (split-window-right)
-;;   (find-file "~/.tmp/EmptyBuffer")
-;;   (evil-window-right 1)
-;;   (split-window-right)
-;; )
 
 (defun switch-other-window-to-last-buffer ()
   "Switch other window to other window's last open buffer."
@@ -132,7 +111,6 @@
     (define-key evil-normal-state-map (kbd "-") 'find-file)
 
     (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
-    (define-key evil-normal-state-map (kbd "M-C-p") 'projectile-find-file-other-window)
 
     (define-key evil-normal-state-map (kbd "C-c C-c") 'eval-buffer)
  
@@ -143,11 +121,6 @@
       (interactive)
       (evil-delete (point-at-bol) (point)))
     )
-
-    ;; Packages to use while using EVIL
-    (use-package evil-tabs
-      :pin melpa
-      :config)
 
     (use-package evil-search-highlight-persist
       :pin melpa-stable
@@ -167,7 +140,6 @@
         (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
         (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state)
     ) ;; use-package-chords
-  
 ) ;; evil
 
 (use-package smooth-scrolling
