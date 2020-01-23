@@ -253,8 +253,8 @@
     (add-to-list 'auto-mode-alist '("\\.cc$"      . c++-mode))
     (add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
     (add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
-    (add-to-list 'auto-mode-alist '("\\.m$"       . objc-mode))
-    (add-to-list 'auto-mode-alist '("\\.mm$"      . objc-mode))
+    (add-to-list 'auto-mode-alist '("\\.m$"       . c++-mode))
+    (add-to-list 'auto-mode-alist '("\\.mm$"      . c++-mode))
 
     (setq build-file-name "build.sh")
 
