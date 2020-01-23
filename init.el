@@ -354,6 +354,9 @@
 ;; Auto revert files that change on the hard disk
 (global-auto-revert-mode 1)
 
+;; When i say kill a buffer, i want you to kill 'this' buffer
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
+
 (add-to-list 'auto-mode-alist '("\\.emacs$" . emacs-lisp-mode))
 (add-to-list 'auto-mode-alist '("\\.md$"     . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.thrift$". c-mode))
