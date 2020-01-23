@@ -113,6 +113,9 @@
     (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
 
     (define-key evil-normal-state-map (kbd "C-c C-c") 'eval-buffer)
+
+    ;; NOTE: This is the way to re-bind an ex command if i ever need it
+    ;; (define-key evil-ex-map "e" 'counsel-fzf)
  
     (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
     (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
@@ -154,7 +157,7 @@
   :config
     (use-package evil-magit)
     (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
-    (key-chord-define evil-normal-state-map "ga" 'magit-blame-addition)
+    (key-chord-define evil-normal-state-map "ga" 'vc-annotate)
     (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
     (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
 )
@@ -362,6 +365,10 @@
 ;; Navigating files
 (define-key global-map (kbd "M-f" ) 'find-file)
 (define-key global-map (kbd "M-F" ) 'find-file-other-window)
+
+;; Changing some default bindings for special mode
+(define-key special-mode-map (kbd "C-k") 'scroll-up-command)
+(define-key special-mode-map (kbd "C-j") 'scroll-down-command)
 
 ;; Navigating windows
 (define-key global-map (kbd "C-q") 'delete-other-windows)
