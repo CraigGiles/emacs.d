@@ -10,13 +10,12 @@
 ;; ---------------------------------------------------------------
 (require 'package)
 
-;; find packages in melpa, melpa stable, or for org mode, orgmode over elpa (or
-;; marmalade for that matter)
+;; find packages in melpa or for org mode, orgmode over elpa
+;; (or marmalade for that matter)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (setq package-archive-priorities
-      '(("melpa-stable" . 1)
+      '(("melpa" . 1)
         ("org" . 2)))
 
 (package-initialize)
@@ -77,27 +76,27 @@
 (load "jai-mode")
 
 (use-package counsel-projectile
-  :pin melpa-stable
+  :pin melpa
   :config
     (counsel-mode))
 
 (use-package ag
-  :pin melpa-stable
+  :pin melpa
   :init)
 
 (use-package markdown-mode
-  :pin melpa-stable
+  :pin melpa
   :init)
 
 (use-package evil-commentary
-  :pin melpa-stable
+  :pin melpa
   :init
     (evil-commentary-mode t))
 
 ;; NOTE: Should look over this config file at some point.
 ;;       https://github.com/krisajenkins/EvilBegins/blob/master/.emacs
 (use-package evil
-  :pin melpa-stable
+  :pin melpa
   :init
     (evil-mode t)
 
@@ -126,12 +125,12 @@
     )
 
     (use-package evil-search-highlight-persist
-      :pin melpa-stable
+      :pin melpa
       :config
         (global-evil-search-highlight-persist t))
 
     (use-package use-package-chords
-      :pin melpa-stable
+      :pin melpa
       :config
         (key-chord-mode 1)
         (setq key-chord-two-keys-delay 0.2)
@@ -146,14 +145,14 @@
 ) ;; evil
 
 (use-package smooth-scrolling
-  :pin melpa-stable
+  :pin melpa
   :config
     (setq scroll-margin 8
           scroll-conservatively 9999
           scroll-step 1))
 
 (use-package magit
-  :pin melpa-stable
+  :pin melpa
   :config
     (use-package evil-magit)
     (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
@@ -163,11 +162,11 @@
 )
 
 (use-package sbt-mode
-  :pin melpa-stable
+  :pin melpa
   :defer t)
 
 (use-package scala-mode
-  :pin melpa-stable
+  :pin melpa
   :defer t
   :config
 
@@ -209,13 +208,13 @@
 ) ;; scala-mode
 
 (use-package make-mode
-  :pin melpa-stable
+  :pin melpa
   :defer t
   :config
     (remove-hook 'before-save-hook 'fix-format-buffer t))
 
 (use-package cc-mode
-  :pin melpa-stable
+  :pin melpa
   :defer t
   :config
     (add-hook 'before-save-hook 'fix-format-buffer t)
@@ -245,7 +244,7 @@
 ) ;; use-package cc-mode
 
 (use-package go-mode
-  :pin melpa-stable
+  :pin melpa
   :defer t
   :init
   :config
