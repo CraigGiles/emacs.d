@@ -69,6 +69,57 @@
       (untabify (point-min) (point-max))))
   (save-buffer))
 
+(defun craig-find-corresponding-file ()
+  "Find the file that corresponds to this one."
+  (interactive)
+  (setq CorrespondingFileName nil)
+  (setq BaseFileName (file-name-sans-extension buffer-file-name))
+  (if (string-match "\\.c" buffer-file-name)
+      (setq CorrespondingFileName (concat BaseFileName ".h")))
+  (if (string-match "\\.h" buffer-file-name)
+      (if (file-exists-p (concat BaseFileName ".c")) (setq CorrespondingFileName (concat BaseFileName ".c"))
+	(setq CorrespondingFileName (concat BaseFileName ".cpp"))))
+  (if (string-match "\\.hin" buffer-file-name)
+      (setq CorrespondingFileName (concat BaseFileName ".cin")))
+  (if (string-match "\\.cin" buffer-file-name)
+      (setq CorrespondingFileName (concat BaseFileName ".hin")))
+  (if (string-match "\\.cpp" buffer-file-name)
+      (setq CorrespondingFileName (concat BaseFileName ".h")))
+  (if CorrespondingFileName (find-file CorrespondingFileName)
+    (error "Unable to find a corresponding file")))
+
+(defun craig-find-corresponding-file-other-window ()
+  "Find the file that corresponds to this one."
+  (interactive)
+  (find-file-other-window buffer-file-name)
+  (craig-find-corresponding-file)
+  (other-window -1))
+
+;; All code within an #if 0 block should be set to the comment color
+(defun my-c-mode-font-lock-if0 (limit)
+  (save-restriction
+    (widen)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((depth 0) str start start-depth)
+        (while (re-search-forward "^\\s-*#\\s-*\\(if\\|else\\|endif\\)" limit 'move)
+          (setq str (match-string 1))
+          (if (string= str "if")
+              (progn
+                (setq depth (1+ depth))
+                (when (and (null start) (looking-at "\\s-+0"))
+                  (setq start (match-end 0)
+                        start-depth depth)))
+            (when (and start (= depth start-depth))
+              (c-put-font-lock-face start (match-beginning 0) 'font-lock-comment-face)
+              (setq start nil))
+            (when (string= str "endif")
+              (setq depth (1- depth)))))
+        (when (and start (> depth 0))
+          (c-put-font-lock-face start (point) 'font-lock-comment-face)))))
+  nil)
+
+
 ;; ===============================================================
 ;;   Installed Packages
 ;; ---------------------------------------------------------------
@@ -110,6 +161,7 @@
     (define-key evil-normal-state-map (kbd "-") 'find-file)
 
     (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
+    (define-key evil-normal-state-map (kbd "C-p") 'counsel-fzf)
 
     (define-key evil-normal-state-map (kbd "C-c C-c") 'eval-buffer)
 
@@ -241,6 +293,55 @@
     (key-chord-define evil-normal-state-map "ls" 'gud-step)
 
     (load "gud-lldb")
+
+    (setq c-default-style "ellemtel"
+          c-basic-offset 4)
+    
+    (defun my-c-mode-common-hook ()
+      (font-lock-add-keywords
+       nil
+       '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
+
+    (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+
+    (define-key c++-mode-map [f12] 'craig-find-corresponding-file)
+    (define-key c++-mode-map [M-f12] 'craig-find-corresponding-file-other-window)
+    (define-key c++-mode-map (kbd "M-m") 'make-without-asking)
+    (define-key c++-mode-map (kbd "M-j") 'imenu)
+
+    (defun file-exists-hooks ()
+      
+	(defun c-header-format ()
+	    "Format the given file as a header file."
+	    (interactive)
+	    (setq BaseFileName (file-name-sans-extension (file-name-nondirectory buffer-file-name)))
+	    (insert "#if !defined(")
+	    (push-mark)
+	    (insert BaseFileName)
+	    (upcase-region (mark) (point))
+	    (pop-mark)
+	    (insert "_H)\n")
+	    (insert "\n")
+	    (insert "#define ")
+	    (push-mark)
+	    (insert BaseFileName)
+	    (upcase-region (mark) (point))
+	    (pop-mark)
+	    (insert "_H\n")
+	    (insert "\n")
+	    (insert "\n")
+	    (insert "\n")
+	    (insert "#endif")
+	)
+
+	(cond ((file-exists-p buffer-file-name) t)
+	    ((string-match "[.]hpp" buffer-file-name) (c-header-format))
+	    ((string-match "[.]h" buffer-file-name) (c-header-format))
+	)
+    )
+
+    (add-hook 'c-mode-common-hook 'file-exists-hooks)
+
 ) ;; use-package cc-mode
 
 (use-package go-mode
@@ -277,6 +378,7 @@
 
 (use-package vimrc-mode
   :pin melpa
+  :defer t
   :init)
 
 ;; ===============================================================
@@ -557,267 +659,3 @@
   (save-buffers-without-asking)
   (if (find-project-directory) (compile (concat "./" build-file-name)))
   (other-window 1))
-
-;; C++ indentation style
-(defconst craig-big-fun-c-style
-  '((c-electric-pound-behavior   . nil)
-    (c-tab-always-indent         . t)
-    (c-comment-only-line-offset  . 0)
-    (c-hanging-braces-alist      . ((class-open)
-                                    (class-close)
-                                    (defun-open)
-                                    (defun-close)
-                                    (inline-open)
-                                    (inline-close)
-                                    (brace-list-open)
-                                    (brace-list-close)
-                                    (brace-list-intro)
-                                    (brace-list-entry)
-                                    (block-open)
-                                    (block-close)
-                                    (substatement-open)
-                                    (statement-case-open)
-                                    (class-open)))
-    (c-hanging-colons-alist      . ((inher-intro)
-                                    (case-label)
-                                    (label)
-                                    (access-label)
-                                    (access-key)
-                                    (member-init-intro)))
-    (c-cleanup-list              . (scope-operator
-                                    list-close-comma
-                                    defun-close-semi))
-    (c-offsets-alist             . ((arglist-close         .  c-lineup-arglist)
-                                    (label                 . -4)
-                                    (access-label          . -4)
-                                    (substatement-open     .  0)
-                                    (statement-case-intro  .  4)
-                                    (statement-block-intro .  c-lineup-for)
-                                    (case-label            .  4)
-                                    (block-open            .  0)
-                                    (inline-open           .  0)
-                                    (topmost-intro-cont    .  0)
-                                    (knr-argdecl-intro     . -4)
-                                    (brace-list-open       .  0)
-                                    (brace-list-intro      .  4)))
-    (c-echo-syntactic-information-p . t))
-    "Craig's Big Fun C++ Style")
-
-; CC++ mode handling
-(defun craig-save-buffer ()
-  "Save the buffer after untabifying it."
-  (interactive)
-  (save-excursion
-    (save-restriction
-      (widen)
-      (untabify (point-min) (point-max))))
-  (save-buffer))
-
-; TXT mode handling
-(defun craig-big-fun-text-hook ()
-  ; 4-space tabs
-  (setq tab-width 4
-        indent-tabs-mode nil)
-
-  ; Newline indents, semi-colon doesn't
-  (define-key text-mode-map "\C-m" 'newline-and-indent)
-
-  ; Prevent overriding of alt-s
-  (define-key text-mode-map "\es" 'craig-save-buffer)
-) ;; craig-big-fun-text-hook
-
-(add-hook 'text-mode-hook 'craig-big-fun-text-hook)
-
-(defun craig-big-fun-c-style ()
-  '((c-electric-pound-behavior   . nil)
-    (c-tab-always-indent         . t)
-    (c-comment-only-line-offset  . 0)
-    (c-hanging-braces-alist      . ((class-open)
-                                    (class-close)
-                                    (defun-open)
-                                    (defun-close)
-                                    (inline-open)
-                                    (inline-close)
-                                    (brace-list-open)
-                                    (brace-list-close)
-                                    (brace-list-intro)
-                                    (brace-list-entry)
-                                    (block-open)
-                                    (block-close)
-                                    (substatement-open)
-                                    (statement-case-open)
-                                    (class-open)))
-    (c-hanging-colons-alist      . ((inher-intro)
-                                    (case-label)
-                                    (label)
-                                    (access-label)
-                                    (access-key)
-                                    (member-init-intro)))
-    (c-cleanup-list              . (scope-operator
-                                    list-close-comma
-                                    defun-close-semi))
-    (c-offsets-alist             . ((arglist-close         .  c-lineup-arglist)
-                                    (label                 . -4)
-                                    (access-label          . -4)
-                                    (substatement-open     .  0)
-                                    (statement-case-intro  .  4)
-                                    (statement-block-intro .  c-lineup-for)
-                                    (case-label            .  4)
-                                    (block-open            .  0)
-                                    (inline-open           .  0)
-                                    (topmost-intro-cont    .  0)
-                                    (knr-argdecl-intro     . -4)
-                                    (brace-list-open       .  0)
-                                    (brace-list-intro      .  4)))
-    (c-echo-syntactic-information-p . t))
-  "Syntax Style for C / C++ code"
-);; craig-big-fun-c-style
-
-(defun craig-big-fun-c-hook ()
-  ;; Set my style for the current buffer
-  (c-add-style "BigFun" craig-big-fun-c-style t)
-
-  ;; 4-space tabs
-  (setq tab-width 4
-        indent-tabs-mode nil)
-
-  ;; Additional style stuff
-  (c-set-offset 'member-init-intro '++)
-
-  ;; No hungry backspace
-  (c-toggle-auto-hungry-state -1)
-
-  ;; Newline indents, semi-colon doesn't
-  ; (define-key c++-mode-map "\C-m" 'newline-and-indent)
-  (setq c-hanging-semi&comma-criteria '((lambda () 'stop)))
-
-  ;; Handle super-tabbify (TAB completes, shift-TAB actually tabs)
-  (setq dabbrev-case-replace t)
-  (setq dabbrev-case-fold-search t)
-  (setq dabbrev-upcase-means-case-search t)
-
-  ;; Abbrevation expansion
-  (abbrev-mode 1)
-
-  (defun craig-header-format ()
-     "Format the given file as a header file."
-     (interactive)
-     (setq BaseFileName (file-name-sans-extension (file-name-nondirectory buffer-file-name)))
-     (insert "#if !defined(")
-     (push-mark)
-     (insert BaseFileName)
-     (upcase-region (mark) (point))
-     (pop-mark)
-     (insert "_H)\n")
-     (insert "/* ========================================================================\n")
-     (insert "   $File: $\n")
-     (insert "   $Date: $\n")
-     (insert "   $Revision: $\n")
-     (insert "   $Creator: Craig Giles $\n")
-     (insert "   $Notice: (C) Copyright 2019 by Craig Giles. All Rights Reserved. $\n")
-     (insert "   ======================================================================== */\n")
-     (insert "\n")
-     (insert "#define ")
-     (push-mark)
-     (insert BaseFileName)
-     (upcase-region (mark) (point))
-     (pop-mark)
-     (insert "_H\n")
-     (insert "\n")
-     (insert "\n")
-     (insert "\n")
-     (insert "#endif")
-  )
-
-  (defun craig-source-format ()
-     "Format the given file as a source file."
-     (interactive)
-     (setq BaseFileName (file-name-sans-extension (file-name-nondirectory buffer-file-name)))
-     (insert "/* ========================================================================\n")
-     (insert "   $File: $\n")
-     (insert "   $Date: $\n")
-     (insert "   $Revision: $\n")
-     (insert "   $Creator: Craig Giles $\n")
-     (insert "   $Notice: (C) Copyright 2019 by Craig Giles. All Rights Reserved. $\n")
-     (insert "   ======================================================================== */\n")
-  )
-
-  (cond ((file-exists-p buffer-file-name) t)
-        ((string-match "[.]hin" buffer-file-name) (craig-source-format))
-        ((string-match "[.]cin" buffer-file-name) (craig-source-format))
-        ((string-match "[.]h" buffer-file-name) (craig-header-format))
-        ((string-match "[.]cpp" buffer-file-name) (craig-source-format)))
-
-  (defun craig-find-corresponding-file ()
-    "Find the file that corresponds to this one."
-    (interactive)
-    (setq CorrespondingFileName nil)
-    (setq BaseFileName (file-name-sans-extension buffer-file-name))
-    (if (string-match "\\.c" buffer-file-name)
-       (setq CorrespondingFileName (concat BaseFileName ".h")))
-    (if (string-match "\\.h" buffer-file-name)
-       (if (file-exists-p (concat BaseFileName ".c")) (setq CorrespondingFileName (concat BaseFileName ".c"))
-	   (setq CorrespondingFileName (concat BaseFileName ".cpp"))))
-    (if (string-match "\\.hin" buffer-file-name)
-       (setq CorrespondingFileName (concat BaseFileName ".cin")))
-    (if (string-match "\\.cin" buffer-file-name)
-       (setq CorrespondingFileName (concat BaseFileName ".hin")))
-    (if (string-match "\\.cpp" buffer-file-name)
-       (setq CorrespondingFileName (concat BaseFileName ".h")))
-    (if CorrespondingFileName (find-file CorrespondingFileName)
-       (error "Unable to find a corresponding file")))
-  (defun craig-find-corresponding-file-other-window ()
-    "Find the file that corresponds to this one."
-    (interactive)
-    (find-file-other-window buffer-file-name)
-    (craig-find-corresponding-file)
-    (other-window -1))
-
-  (define-key c++-mode-map [f12] 'craig-find-corresponding-file)
-  (define-key c++-mode-map [M-f12] 'craig-find-corresponding-file-other-window)
-  (define-key c++-mode-map [f5] 'make-without-asking)
-  (define-key c++-mode-map (kbd "M-m") 'make-without-asking)
-  (define-key c++-mode-map (kbd "M-j") 'imenu)
-
-  ; devenv.com error parsing
-  ;; TODO(craig): this still needed?
-  (add-to-list 'compilation-error-regexp-alist 'craig-devenv)
-  (add-to-list 'compilation-error-regexp-alist-alist '(craig-devenv
-   "*\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:see declaration\\|\\(?:warnin\\(g\\)\\|[a-z ]+\\) C[0-9]+:\\)"
-    2 3 nil (4)))
-) ;; craig-big-fun-c-hook
-
-;; ---------------------------------------------------------------
-
-;; All code within an #if 0 block should be set to the comment color
-(defun my-c-mode-font-lock-if0 (limit)
-  (save-restriction
-    (widen)
-    (save-excursion
-      (goto-char (point-min))
-      (let ((depth 0) str start start-depth)
-        (while (re-search-forward "^\\s-*#\\s-*\\(if\\|else\\|endif\\)" limit 'move)
-          (setq str (match-string 1))
-          (if (string= str "if")
-              (progn
-                (setq depth (1+ depth))
-                (when (and (null start) (looking-at "\\s-+0"))
-                  (setq start (match-end 0)
-                        start-depth depth)))
-            (when (and start (= depth start-depth))
-              (c-put-font-lock-face start (match-beginning 0) 'font-lock-comment-face)
-              (setq start nil))
-            (when (string= str "endif")
-              (setq depth (1- depth)))))
-        (when (and start (> depth 0))
-          (c-put-font-lock-face start (point) 'font-lock-comment-face)))))
-  nil)
-
-(defun my-c-mode-common-hook ()
-  (font-lock-add-keywords
-   nil
-   '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
-
-(add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
-(add-hook 'c-mode-common-hook 'craig-big-fun-c-hook)
-
