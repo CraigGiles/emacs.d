@@ -2,6 +2,7 @@
 ;; ecosystem and programming environment. Coming from VIM, this could be
 ;; interesting...
 
+
 ;; NOTE to test this config launch emacs using
 ;; /Applications/Emacs.app/Contents/MacOS/Emacs -q -l ~/.emacs.d/init.el
 
@@ -557,6 +558,8 @@
 ;; ---------------------------------------------------------------
 ;; Font
 (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
+(add-to-list 'default-frame-alist '(width . 165))
+(add-to-list 'default-frame-alist '(height . 60))
 (set-face-attribute 'default t :font "Liberation Mono-12")
 
 ;; Colors
@@ -580,18 +583,12 @@
 ;; ===============================================================
 ;;   Post Load Hook
 ;; ---------------------------------------------------------------
-(defun post-load-stuff ()
-  (interactive)
-  "Load all the things that I want loaded, AFTER emacs is up and running"
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
-  (toggle-frame-maximized)
-
   (initialize-fixme-modes)
-)
 
-(add-hook 'window-setup-hook 'post-load-stuff t)
+;; (add-hook 'window-setup-hook 'post-load-stuff t)
 
 ;; ===============================================================
 ;;   C++ Mode Configuration
@@ -659,3 +656,4 @@
   (save-buffers-without-asking)
   (if (find-project-directory) (compile (concat "./" build-file-name)))
   (other-window 1))
+

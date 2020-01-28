@@ -9,3 +9,4 @@ auto-saves/
 target/
 local-init.el
 custom.el
+transient/
