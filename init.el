@@ -583,12 +583,16 @@
 ;; ===============================================================
 ;;   Post Load Hook
 ;; ---------------------------------------------------------------
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1)
-  (tool-bar-mode -1)
-  (initialize-fixme-modes)
+;; initial window
+(setq default-frame-alist '(
+    (width . 120) ; character
+    (height . 65) ; lines
+  )
+)
 
-;; (add-hook 'window-setup-hook 'post-load-stuff t)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(initialize-fixme-modes)
 
 ;; ===============================================================
 ;;   C++ Mode Configuration
