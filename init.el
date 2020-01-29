@@ -585,7 +585,7 @@
 ;; ---------------------------------------------------------------
 ;; initial window
 (setq default-frame-alist '(
-    (width . 120) ; character
+    (width . 165) ; character
     (height . 65) ; lines
   )
 )
