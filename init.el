@@ -437,6 +437,7 @@
 
 ;; When i say kill a buffer, i want you to kill 'this' buffer
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
+(global-set-key (kbd "M-m") 'make-without-asking)
 
 (add-to-list 'auto-mode-alist '("\\.emacs$" . emacs-lisp-mode))
 (add-to-list 'auto-mode-alist '("\\.md$"     . markdown-mode))
