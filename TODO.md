@@ -1,13 +1,13 @@
 ==================================================
    Current Tasks
 --------------------------------------------------
-TODO(craig): shift up / down arrow in normal mode to insert line above / below
 TODO(craig): change C-j / C-k to a new function for next / previous blank line
 TODO(craig): scala -- have C-m load sbt-start if it doesn't already exist
 
 ==================================================
    Completed
 --------------------------------------------------
+DONE(craig): shift up / down arrow in normal mode to insert line above / below
 DONE(craig): open split should park the cursor on that split (this is starting to get annoying)
 DONE(craig): bind C-S-r in magit buffer to refresh (call :magit again)
 DONE(craig): create a macro that makes the OTHER window go to previous file
