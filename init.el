@@ -454,6 +454,23 @@
   (interactive)
   (find-file "~/Development/notes/todo.md"))
 
+(defun insert-line-above ()
+  "Insert a new line above the current line"
+  (interactive)
+  (beginning-of-line)
+  (newline)
+  (previous-line)
+)
+
+(defun insert-line-below ()
+  "Insert a new line below the current line"
+  (interactive)
+  (beginning-of-line)
+  (next-line)
+  (newline)
+  (previous-line)
+)
+
 ;; current buffer operations
 ;; (define-key global-map [f8] 'replace-string-without-moving)
 (define-key global-map [f5] 'open-global-todo-file)
@@ -468,6 +485,8 @@
 (define-key evil-visual-state-map (kbd "C-j") 'evil-forward-paragraph)
 (define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
 (define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
+(define-key evil-normal-state-map (kbd "M-<up>") 'insert-line-above)
+(define-key evil-normal-state-map (kbd "M-<down>") 'insert-line-below)
 
 ;; Navigating files
 (define-key global-map (kbd "M-f" ) 'find-file)
