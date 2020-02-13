@@ -1,6 +1,7 @@
 ==================================================
    Current Tasks
 --------------------------------------------------
+TODO(craig): shift up / down arrow in normal mode to insert line above / below
 TODO(craig): change C-j / C-k to a new function for next / previous blank line
 TODO(craig): scala -- have C-m load sbt-start if it doesn't already exist
 
