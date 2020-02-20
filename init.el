@@ -359,6 +359,7 @@
     (setq indent-line-function 'insert-tab)
 
     (define-key go-mode-map "\em" 'make-without-asking)
+    (define-key go-mode-map (kbd "C-M-m") 'test-without-asking)
 
     ;; File Extensions and which mode they're associated with
     (add-to-list 'auto-mode-alist '("\\.go$"      . go-mode))
@@ -679,5 +680,13 @@
   (interactive)
   (save-buffers-without-asking)
   (if (find-project-directory) (compile (concat "./" build-file-name)))
+  (other-window 1))
+
+;; TODO: convert this to be '(make-without-asking "test")
+(defun test-without-asking ()
+  "Make the current build."
+  (interactive)
+  (save-buffers-without-asking)
+  (if (find-project-directory) (compile (concat "./" build-file-name " test")))
   (other-window 1))
 
