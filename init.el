@@ -169,6 +169,8 @@
     ;; NOTE: This is the way to re-bind an ex command if i ever need it
     ;; (define-key evil-ex-map "e" 'counsel-fzf)
  
+    (define-key evil-normal-state-map (kbd "g c c") 'evil-commentary-line)
+
     (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
     (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
     (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
@@ -176,6 +178,13 @@
       (interactive)
       (evil-delete (point-at-bol) (point)))
     )
+
+    (use-package evil-escape
+      :pin melpa
+      :config
+        (evil-escape-mode)
+	(setq-default evil-escape-key-sequence "jj")
+	(setq-default evil-escape-delay 0.2))
 
     (use-package evil-search-highlight-persist
       :pin melpa
@@ -188,12 +197,7 @@
         (key-chord-mode 1)
         (setq key-chord-two-keys-delay 0.2)
 
-        (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line)
-
-        ;; Exit insert mode with 'jj'
-        (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
-        (key-chord-define evil-insert-state-map "Jj" 'evil-normal-state)
-        (key-chord-define evil-insert-state-map "JJ" 'evil-normal-state)
+        ;; (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line)
     ) ;; use-package-chords
 ) ;; evil
 
