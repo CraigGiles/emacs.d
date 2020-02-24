@@ -177,12 +177,13 @@
       (evil-delete (point-at-bol) (point)))
     )
 
-    ;; (use-package evil-escape
-    ;;   :pin melpa
-    ;;   :config
-    ;;     (evil-escape-mode)
-	;; (setq-default evil-escape-key-sequence "jj")
-	;; (setq-default evil-escape-delay 0.2))
+    (use-package evil-escape
+      :pin melpa
+      :config
+	(setq-default evil-escape-delay 0.2)
+        (define-key evil-insert-state-map (kbd "j j") 'evil-escape)
+        (evil-escape-mode)
+      ) 
 
     (use-package evil-search-highlight-persist
       :pin melpa
@@ -193,8 +194,7 @@
       :pin melpa
       :config
         (key-chord-mode 1)
-        (setq key-chord-two-keys-delay 0.2)
-
+        (setq key-chord-two-keys-delay 0.1)
         (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line)
     ) ;; use-package-chords
 ) ;; evil
