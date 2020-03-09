@@ -2,7 +2,6 @@
 ;; ecosystem and programming environment. Coming from VIM, this could be
 ;; interesting...
 
-
 ;; NOTE to test this config launch emacs using
 ;; /Applications/Emacs.app/Contents/MacOS/Emacs -q -l ~/.emacs.d/init.el
 
@@ -193,6 +192,8 @@
       :config
         (key-chord-mode 1)
         (setq key-chord-two-keys-delay 0.1)
+        (key-chord-define evil-insert-state-map "Jj" 'evil-escape)
+        (key-chord-define evil-insert-state-map "JJ" 'evil-escape)
         (key-chord-define evil-insert-state-map "jj" 'evil-escape)
         (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line)
     ) ;; use-package-chords

@@ -7,6 +7,7 @@ TODO(craig): scala -- have C-m load sbt-start if it doesn't already exist
 ==================================================
    Completed
 --------------------------------------------------
+DONE(craig): make Jj exit normal mode (as well as jj)
 DONE(craig): shift up / down arrow in normal mode to insert line above / below
 DONE(craig): open split should park the cursor on that split (this is starting to get annoying)
 DONE(craig): bind C-S-r in magit buffer to refresh (call :magit again)
