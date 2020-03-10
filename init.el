@@ -598,6 +598,7 @@
 (set-face-attribute 'font-lock-type-face nil          :foreground foreground-font-color)
 (set-foreground-color                                             foreground-font-color)
 (set-background-color                                             "#122A2C") ;; something akin to J.Blow's theme
+;; (set-background-color                                             "#072626") ;; Actually J.Blow's theme
 (set-face-background 'hl-line                                     "#191970") ;; the -always on- horizontal highlight
 (set-cursor-color                                                 "#40FF40") ;; Green-ish cursor color
 (set-face-attribute 'mode-line nil                    :background "#CDAA7D" ;; "burlywood3"
