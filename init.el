@@ -405,6 +405,9 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
+(setq-default indent-tabs-mode nil)
+(setq require-final-newline t)
+
 ;; Put all the backup files in an ~/.emacs.d/backup dir
 (setq backup-directory-alist '(("." . "~/.emacs.d/auto-saves")))
 (setq create-lockfiles nil)
@@ -481,6 +484,9 @@
 (define-key evil-normal-state-map (kbd "M-j") 'imenu)
 (define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
 (define-key evil-normal-state-map (kbd "SPC n") 'evil-search-highlight-persist-remove-all)
+
+(define-key evil-normal-state-map (kbd "C-w C-h") 'evil-window-left)
+(define-key evil-normal-state-map (kbd "C-w C-l") 'evil-window-right)
 
 (define-key evil-normal-state-map (kbd "C-k") 'evil-backward-paragraph)
 (define-key evil-normal-state-map (kbd "C-j") 'evil-forward-paragraph)
