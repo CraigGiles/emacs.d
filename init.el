@@ -447,7 +447,10 @@
 
 ;; Never split the window horizontally. When a new window pops up I
 ;; always want that window to be side by side with the current window
-(setq split-width-threshold 0)
+(defun never-split-a-window ()
+    "Never, ever split a window."
+    nil)
+(setq split-window-preferred-function 'never-split-a-window)
 
 (add-to-list 'auto-mode-alist '("\\.emacs$" . emacs-lisp-mode))
 (add-to-list 'auto-mode-alist '("\\.md$"     . markdown-mode))
@@ -621,7 +624,7 @@
 ;; ---------------------------------------------------------------
 ;; initial window
 (setq default-frame-alist '(
-    (width . 120) ; character
+    (width . 200) ; character
     (height . 65) ; lines
   )
 )
@@ -629,6 +632,7 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (initialize-fixme-modes)
+(split-window-horizontally)
 
 ;; ===============================================================
 ;;   C++ Mode Configuration
@@ -704,4 +708,3 @@
   (save-buffers-without-asking)
   (if (find-project-directory) (compile (concat "./" build-file-name " test")))
   (other-window 1))
-
