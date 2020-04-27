@@ -445,6 +445,10 @@
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "M-m") 'make-without-asking)
 
+;; Never split the window horizontally. When a new window pops up I
+;; always want that window to be side by side with the current window
+(setq split-width-threshold 0)
+
 (add-to-list 'auto-mode-alist '("\\.emacs$" . emacs-lisp-mode))
 (add-to-list 'auto-mode-alist '("\\.md$"     . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.thrift$". c-mode))
