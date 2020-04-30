@@ -309,6 +309,7 @@
 
     (define-key c++-mode-map [f12] 'craig-find-corresponding-file)
     (define-key c++-mode-map [M-f12] 'craig-find-corresponding-file-other-window)
+    (define-key c++-mode-map [f7] 'make-without-asking)
     (define-key c++-mode-map (kbd "M-m") 'make-without-asking)
     (define-key c++-mode-map (kbd "M-j") 'imenu)
 
@@ -445,8 +446,9 @@
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "M-m") 'make-without-asking)
 
-;; Never split the window horizontally. When a new window pops up I
-;; always want that window to be side by side with the current window
+;; TODO create a function that asks if a vertical split exists (or if
+;; there is only one window) if one window then split vertically and
+;; use that new vertical split
 (defun never-split-a-window ()
     "Never, ever split a window."
     nil)
@@ -598,7 +600,7 @@
 ;; (add-to-list 'default-frame-alist '(width . 165))
 ;; (add-to-list 'default-frame-alist '(height . 60))
 ;; (set-face-attribute 'default t :font "Liberation Mono-24")
-(set-frame-font "Liberation Mono-19" nil t)
+(set-frame-font "Liberation Mono-16" nil t)
 
 ;; Colors
 (setq foreground-font-color                                       "#D2CBC0")
