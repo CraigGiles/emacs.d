@@ -630,7 +630,7 @@
 ;; ---------------------------------------------------------------
 ;; initial window
 (setq default-frame-alist '(
-    (width . 200) ; character
+    (width . 120) ; character
     (height . 65) ; lines
   )
 )
@@ -638,7 +638,6 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (initialize-fixme-modes)
-(split-window-horizontally)
 
 ;; ===============================================================
 ;;   C++ Mode Configuration
