@@ -452,7 +452,10 @@
 (defun never-split-a-window ()
     "Never, ever split a window."
     nil)
-(setq split-window-preferred-function 'never-split-a-window)
+;; (setq split-window-preferred-function 'never-split-a-window)
+(setq split-width-threshold 1 )
+(setq split-window-preferred-function 'split-window-horizontally)
+
 
 (add-to-list 'auto-mode-alist '("\\.emacs$" . emacs-lisp-mode))
 (add-to-list 'auto-mode-alist '("\\.md$"     . markdown-mode))
@@ -697,9 +700,16 @@
     (find-project-directory-recursive)
     (setq last-compilation-directory default-directory)))
 
+;; split right if only one window exists
+(defun split-window-right-if-single-window ()
+  "Test something"
+  (interactive)
+  (if (= (length (window-list)) 1) (split-window-right) nil))
+  
 (defun make-without-asking ()
   "Make the current build."
   (interactive)
+  (split-window-right-if-single-window)
   (save-buffers-without-asking)
   (if (find-project-directory) (compile (concat "./" build-file-name)))
   (other-window 1))
