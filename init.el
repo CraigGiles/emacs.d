@@ -463,8 +463,7 @@
 (setq split-width-threshold 80)
 (setq split-height-threshold 160)
 ;; (setq split-window-preferred-function 'split-window-horizontally)
-;; (setq split-window-preferred-function 'split-window-right-if-single-window)
-
+;; (setq split-window-preferred-function 'never-split-a-window)
 
 
 (add-to-list 'auto-mode-alist '("\\.emacs$" . emacs-lisp-mode))
