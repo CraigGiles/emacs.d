@@ -452,7 +452,7 @@
 (defun never-split-a-window ()
     "Never, ever split a window."
     nil)
-;; (setq split-window-preferred-function 'never-split-a-window)
+(setq split-window-preferred-function 'never-split-a-window)
 
 ;; split right if only one window exists
 (defun split-window-right-if-single-window ()
@@ -460,8 +460,8 @@
   (interactive)
   (if (= (length (window-list)) 1) (split-window-right) nil))
   
-(setq split-width-threshold 80)
-(setq split-height-threshold 160)
+;; (setq split-width-threshold 80)
+;; (setq split-height-threshold 160)
 ;; (setq split-window-preferred-function 'split-window-horizontally)
 ;; (setq split-window-preferred-function 'never-split-a-window)
 
