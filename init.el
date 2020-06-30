@@ -612,14 +612,15 @@
 ;; (add-to-list 'default-frame-alist '(width . 165))
 ;; (add-to-list 'default-frame-alist '(height . 60))
 ;; (set-face-attribute 'default t :font "Liberation Mono-24")
-;; (set-frame-font "Liberation Mono-16" nil t)
+(set-frame-font "Liberation Mono-16" nil t)
 ;; (set-frame-font "Liberation Mono-12" nil t)
-(set-frame-font "Liberation Mono-10" nil t)
+;; (set-frame-font "Liberation Mono-10" nil t)
 
 ;; Colors
 (setq foreground-font-color                                       "#D2CBC0")
 (set-face-attribute 'font-lock-builtin-face nil       :foreground "#DAB98F")
-(set-face-attribute 'font-lock-comment-face nil       :foreground "#7F7F7F") ;; grey50
+;; (set-face-attribute 'font-lock-comment-face nil       :foreground "#7F7F7F") ;; grey50
+(set-face-attribute 'font-lock-comment-face nil       :foreground "#53A347") ;; green-ish
 (set-face-attribute 'font-lock-doc-face nil           :foreground "#7F7F7F") ;; grey50
 (set-face-attribute 'font-lock-string-face nil        :foreground "#65B29E") ;; maybe #458B74
 (set-face-attribute 'font-lock-keyword-face nil       :foreground "#DAB98F") ;; DarkGoldenRod3
