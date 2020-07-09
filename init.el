@@ -612,9 +612,9 @@
 ;; (add-to-list 'default-frame-alist '(width . 165))
 ;; (add-to-list 'default-frame-alist '(height . 60))
 ;; (set-face-attribute 'default t :font "Liberation Mono-24")
-(set-frame-font "Liberation Mono-16" nil t)
+;; (set-frame-font "Liberation Mono-16" nil t)
 ;; (set-frame-font "Liberation Mono-12" nil t)
-;; (set-frame-font "Liberation Mono-10" nil t)
+(set-frame-font "Liberation Mono-10" nil t)
 
 ;; Colors
 (setq foreground-font-color                                       "#D2CBC0")
@@ -641,14 +641,18 @@
 ;; ---------------------------------------------------------------
 ;; initial window
 (setq default-frame-alist '(
-    (width . 120) ; character
-    (height . 65) ; lines
+    ;; (width . 120) ; character
+    ;; (height . 65) ; lines
+
   )
 )
 
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (initialize-fixme-modes)
+(toggle-frame-maximized)
+(split-window-horizontally)
+
 
 ;; ===============================================================
 ;;   C++ Mode Configuration
@@ -725,3 +729,4 @@
   (save-buffers-without-asking)
   (if (find-project-directory) (compile (concat "./" build-file-name " test")))
   (other-window 1))
+
