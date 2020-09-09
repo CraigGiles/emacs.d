@@ -616,6 +616,32 @@
 ;; (set-frame-font "Liberation Mono-12" nil t)
 (set-frame-font "Liberation Mono-10" nil t)
 
+(defun set-font-at-size (s)
+  "Set the font size for emacs"
+  (interactive)
+  (message (concat "Setting font size to " (number-to-string s)))
+  (set-frame-font (concat "Liberation Mono-" (number-to-string s)) nil t)
+)
+
+(defun set-font-size-huge ()
+  "Set the font size for emacs"
+  (interactive)
+  (set-font-at-size 24)
+)
+
+(defun set-font-size-big ()
+  "Set the font size for emacs"
+  (interactive)
+  (set-font-at-size 16)
+)
+
+(defun set-font-size-small ()
+  "Set the font size for emacs"
+  (interactive)
+  (set-font-at-size 10)
+)
+;; (set-frame-font (concat "Liberation Mono-" (number-to-string fs)) nil t)
+
 ;; Colors
 (setq foreground-font-color                                       "#D2CBC0")
 (set-face-attribute 'font-lock-builtin-face nil       :foreground "#DAB98F")
