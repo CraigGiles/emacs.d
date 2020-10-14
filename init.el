@@ -792,7 +792,7 @@
   "Runs the current build."
   (interactive)
   (if (find-project-directory) (compile (concat "./" build-file-name " run")))
-  )
+  (other-window 1))
 
 ;; TODO: convert this to be '(make-without-asking "test")
 (defun test-without-asking ()
