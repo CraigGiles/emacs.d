@@ -311,6 +311,7 @@
     (define-key c++-mode-map [M-f12] 'craig-find-corresponding-file-other-window)
     (define-key c++-mode-map [f7] 'make-without-asking)
     (define-key c++-mode-map (kbd "M-m") 'make-without-asking)
+    (define-key c++-mode-map (kbd "M-M") 'run-without-asking)
     (define-key c++-mode-map (kbd "M-j") 'imenu)
 
     (defun file-exists-hooks ()
@@ -445,6 +446,7 @@
 ;; When i say kill a buffer, i want you to kill 'this' buffer
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "M-m") 'make-without-asking)
+(global-set-key (kbd "M-M") 'run-without-asking)
 
 ;; TODO create a function that asks if a vertical split exists (or if
 ;; there is only one window) if one window then split vertically and
@@ -662,6 +664,43 @@
 (set-face-attribute 'mode-line nil                    :background "#CDAA7D" ;; "burlywood3"
                                                       :foreground "#000000")
 
+;;
+;;  -- J.Blow Theme --
+;;
+;; (custom-set-faces
+;;   ;; custom-set-faces was added by Custom.
+;;   ;; If you edit it by hand, you could mess it up, so be careful.
+;;   ;; Your init file should contain only one such instance.
+;;   ;; If there is more than one, they won't work right.
+;;  '(default ((t (:foreground "#d3b58d" :background "#041818"))))
+;;  '(custom-group-tag-face ((t (:underline t :foreground "lightblue"))) t)
+;;  '(custom-variable-tag-face ((t (:underline t :foreground "lightblue"))) t)
+;;  '(font-lock-builtin-face ((t nil)))
+;;  ; '(font-lock-comment-face ((t (:foreground "yellow"))))
+;;  '(font-lock-comment-face ((t (:foreground "#3fdflf"))))
+;;  '(font-lock-function-name-face ((((class color) (background dark)) (:foreground "white")))) 
+;;  '(font-lock-keyword-face ((t (:foreground "white" ))))
+;;  ; '(font-lock-string-face ((t (:foreground "gray160" :background "gray16"))))
+;;  '(font-lock-string-face ((t (:foreground "#0fdfaf"))))
+;;  '(font-lock-variable-name-face ((((class color) (background dark)) (:foreground "#c8d4ec"))))  
+;; ; '(font-lock-warning-face ((t (:foreground "#695a46"))))
+;;  '(font-lock-warning-face ((t (:foreground "#504038"))))
+;;  '(highlight ((t (:foreground "navyblue" :background "darkseagreen2"))))
+;;  '(mode-line ((t (:inverse-video t))))
+;;  '(region ((t (:background "blue"))))
+;;  '(widget-field-face ((t (:foreground "white"))) t)
+;;  '(widget-single-line-field-face ((t (:background "darkgray"))) t))
+;; 
+;; (global-font-lock-mode 1)
+;; (set-cursor-color "lightgreen")
+;; (set-background-color "#072626")
+;; (global-set-key [C-return] 'save-buffer)
+;; 
+;; ;(set-face-attribute 'default nil :font "Anonymous Pro-14")
+;; (set-face-attribute 'default nil :font "Consolas-174")
+;; 
+;; (set-face-foreground 'font-lock-builtin-face         "lightgreen")
+
 ;; ===============================================================
 ;;   Post Load Hook
 ;; ---------------------------------------------------------------
@@ -747,6 +786,13 @@
   (save-buffers-without-asking)
   (if (find-project-directory) (compile (concat "./" build-file-name)))
   (other-window 1))
+
+;; TODO: convert this to be '(make-without-asking "run")
+(defun run-without-asking ()
+  "Runs the current build."
+  (interactive)
+  (if (find-project-directory) (compile (concat "./" build-file-name " run")))
+  )
 
 ;; TODO: convert this to be '(make-without-asking "test")
 (defun test-without-asking ()
