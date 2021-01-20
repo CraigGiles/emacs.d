@@ -29,6 +29,19 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
 ;; ===============================================================
 ;;   General functions
 ;; ---------------------------------------------------------------
@@ -125,6 +138,16 @@
 ;; ---------------------------------------------------------------
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 (load "jai-mode")
+
+(use-package gdscript-mode
+    :straight (gdscript-mode
+               :type git
+               :host github
+               :repo "GDQuest/emacs-gdscript-mode"))
+
+(use-package cmake-mode
+  :pin melpa
+  :init)
 
 (use-package counsel-projectile
   :pin melpa
@@ -637,11 +660,23 @@
   (set-font-at-size 16)
 )
 
+(defun set-font-size-medium ()
+  "Set the font size for emacs"
+  (interactive)
+  (set-font-at-size 14)
+)
+
 (defun set-font-size-small ()
   "Set the font size for emacs"
   (interactive)
   (set-font-at-size 10)
 )
+
+;; (defun set-font-size-default ()
+;;   "Set the font size for emacs"
+;;   (interactive)
+;;   (set-font-at-size 10)
+;; )
 ;; (set-frame-font (concat "Liberation Mono-" (number-to-string fs)) nil t)
 
 ;; Colors
