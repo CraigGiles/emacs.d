@@ -663,13 +663,13 @@
 (defun set-font-size-big ()
   "Set the font size for emacs"
   (interactive)
-  (set-font-at-size 16)
+  (set-font-at-size 14)
 )
 
 (defun set-font-size-medium ()
   "Set the font size for emacs"
   (interactive)
-  (set-font-at-size 14)
+  (set-font-at-size 12)
 )
 
 (defun set-font-size-small ()
