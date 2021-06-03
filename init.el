@@ -145,10 +145,6 @@
                :host github
                :repo "GDQuest/emacs-gdscript-mode"))
 
-(use-package cmake-mode
-  :pin melpa
-  :init)
-
 (use-package counsel-projectile
   :pin melpa
   :config
