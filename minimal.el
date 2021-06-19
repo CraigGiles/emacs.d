@@ -47,7 +47,7 @@
 ;; Colors
 (setq foreground-font-color                                       "#D2CBC0")
 (set-face-attribute 'font-lock-builtin-face nil       :foreground "#DAB98F")
-(set-face-attribute 'font-lock-comment-face nil       :foreground "#7F7F7F") ;; grey50
+(set-face-attribute 'font-lock-comment-face nil       :foreground "#53A347") ;; green-ish
 (set-face-attribute 'font-lock-doc-face nil           :foreground "#7F7F7F") ;; grey50
 (set-face-attribute 'font-lock-string-face nil        :foreground "#65B29E") ;; maybe #458B74
 (set-face-attribute 'font-lock-keyword-face nil       :foreground "#DAB98F") ;; DarkGoldenRod3
@@ -56,9 +56,8 @@
 (set-face-attribute 'font-lock-variable-name-face nil :foreground foreground-font-color)
 (set-face-attribute 'font-lock-type-face nil          :foreground foreground-font-color)
 (set-foreground-color                                             foreground-font-color)
-(set-background-color                                             "#122A2C") ;; something akin to J.Blow's theme
+(set-background-color                                             "#072626") ;; Actually J.Blow's theme
 (set-face-background 'hl-line                                     "#191970") ;; the -always on- horizontal highlight
 (set-cursor-color                                                 "#40FF40") ;; Green-ish cursor color
 (set-face-attribute 'mode-line nil                    :background "#CDAA7D" ;; "burlywood3"
                                                       :foreground "#000000")
-

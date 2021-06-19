@@ -70,6 +70,7 @@
 				    ((and buffer-file-name (eq major-mode 'scala-mode)))
 				    ((and buffer-file-name (eq major-mode 'go-mode)))
 				    ((and buffer-file-name (eq major-mode 'jai-mode)))
+				    ((and buffer-file-name (eq major-mode 'php-mode)))
 				    ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
 				    ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
@@ -400,13 +401,21 @@
 
     (setq build-file-name "build.sh")
 
-    (use-package company-go)
-
     (evil-define-key 'normal go-mode-map (kbd "C-b") 'godef-jump)
     (add-hook 'before-save-hook 'gofmt-before-save)
 
 ) ;; go-mode
 
+;; (use-package php-mode
+;;   :pin melpa
+;;   :defer t
+;;   :config
+;;     (add-to-list 'fixme-modes 'php-mode)
+;;   )
+
+(use-package php-mode
+  :config
+  )
 (use-package vimrc-mode
   :pin melpa
   :defer t
