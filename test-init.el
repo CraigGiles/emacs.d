@@ -106,6 +106,29 @@
     ) ;; use-package-chords
 ) ;; evil
 
+;; All code within an #if 0 block should be set to the comment color
+(defun if0-font-lock (limit)
+  (save-restriction
+    (widen)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((depth 0) str start start-depth)
+        (while (re-search-forward "^\\s-*#\\s-*\\(if\\|else\\|endif\\)" limit 'move)
+          (setq str (match-string 1))
+          (if (string= str "if")
+              (progn
+                (setq depth (1+ depth))
+                (when (and (null start) (looking-at "\\s-+0"))
+                  (setq start (match-end 0)
+                        start-depth depth)))
+            (when (and start (= depth start-depth))
+              (c-put-font-lock-face start (match-beginning 0) 'font-lock-comment-face)
+              (setq start nil))
+            (when (string= str "endif")
+              (setq depth (1- depth)))))
+        (when (and start (> depth 0))
+          (c-put-font-lock-face start (point) 'font-lock-comment-face)))))
+  nil)
 (use-package cc-mode
   :pin melpa
   :defer t
@@ -123,6 +146,12 @@
     (add-to-list 'auto-mode-alist '("\\.m$"       . c++-mode))
     (add-to-list 'auto-mode-alist '("\\.mm$"      . c++-mode))
 
+    (add-to-list 'fixme-modes 'make-mode)
+    (add-to-list 'fixme-modes 'c++-mode)
+    (add-to-list 'fixme-modes 'cc-mode)
+    (add-to-list 'fixme-modes 'c-mode)
+    (initialize-fixme-modes)
+
     (setq build-file-name "Makefile")
     (setq compile-command "make")
 
@@ -131,11 +160,18 @@
 
     (setq c-default-style "ellemtel"
           c-basic-offset 4)
+
+    (defun my-c-mode-common-hook ()
+      (font-lock-add-keywords
+       nil
+       '((if0-font-lock (0 font-lock-comment-face prepend))) 'add-to-end))
+
+    (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
     
     (defun my-c-mode-common-hook ()
       (font-lock-add-keywords
        nil
-       '((my-c-mode-font-lock-if0 (0 font-lock-comment-face prepend))) 'add-to-end))
+       '((if0-font-lock (0 font-lock-comment-face prepend))) 'add-to-end))
 
     (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
@@ -168,8 +204,8 @@
     (add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
     (add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
 
-    ;; (add-to-list 'fixme-modes 'go-mode)
-    ;; (initialize-fixme-modes)
+    (add-to-list 'fixme-modes 'go-mode)
+    (initialize-fixme-modes)
 
     (setq build-file-name "build.sh")
     (setq compile-command "make")
@@ -378,6 +414,10 @@
 ;; Auto revert files that change on the hard disk
 (global-auto-revert-mode 1)
 
+;; Treat emacs 'symbol' as a word
+(with-eval-after-load 'evil
+  (defalias #'forward-evil-word #'forward-evil-symbol))
+
 ;; Font
 (set-face-attribute 'default t       :font "Liberation Mono-12")
 (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
@@ -401,3 +441,46 @@
 (set-cursor-color                                                 "#40FF40") ;; Green-ish cursor color
 (set-face-attribute 'mode-line nil                    :background "#CDAA7D" ;; "burlywood3"
                                                       :foreground "#000000")
+
+(setq fixme-modes '(markdown-mode emacs-lisp-mode prog-mode fundamental-mode))
+(defun initialize-fixme-modes ()
+  "Sets the highlighted words like TODO and NOTE and colorschemes for these words"
+  (interactive)
+  (make-face 'font-lock-todo-face)
+  (make-face 'font-lock-done-face)
+  (make-face 'font-lock-next-face)
+  (make-face 'font-lock-progress-face)
+  (make-face 'font-lock-bug-face)
+  (make-face 'font-lock-cleanup-face)
+  (make-face 'font-lock-speed-face)
+  (make-face 'font-lock-important-face)
+  (make-face 'font-lock-note-face)
+
+  (mapc (lambda (mode)
+	  (font-lock-add-keywords
+	   mode
+	   '(
+	     ("\\<\\(BUG\\)" 1 'font-lock-bug-face t)
+	     ("\\<\\(NOTE\\)" 1 'font-lock-note-face t)
+	     ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
+	     ("\\<\\(CLEANUP\\)" 1 'font-lock-cleanup-face t)
+	     ("\\<\\(SPEED\\)" 1 'font-lock-speed-face t)
+
+	     ("\\<\\(TODO\\)" 1 'font-lock-todo-face t)
+	     ("\\<\\(NEXT\\)" 1 'font-lock-next-face t)
+	     ("\\<\\(HOLD\\)" 1 'font-lock-next-face t)
+	     ("\\<\\(PROGRESS\\)" 1 'font-lock-progress-face t)
+	     ("\\<\\(PROG\\)" 1 'font-lock-progress-face t)
+	     ("\\<\\(DONE\\)" 1 'font-lock-done-face t)
+	     )))
+	fixme-modes)
+
+  (modify-face 'font-lock-todo-face "firebrick3" nil nil t nil t nil nil)
+  (modify-face 'font-lock-bug-face "Red" nil nil t nil t nil nil)
+  (modify-face 'font-lock-cleanup-face "Yellow" nil nil t nil t nil nil)
+  (modify-face 'font-lock-speed-face "Yellow" nil nil t nil t nil nil)
+  (modify-face 'font-lock-next-face "CornflowerBlue" nil nil t nil t nil nil)
+  (modify-face 'font-lock-progress-face "Yellow" nil nil t nil t nil nil)
+  (modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
+  (modify-face 'font-lock-done-face "Green" nil nil t nil t nil nil)
+  (modify-face 'font-lock-note-face "CornflowerBlue" nil nil t nil t nil nil))
