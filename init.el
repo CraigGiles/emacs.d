@@ -46,6 +46,9 @@
 ;; ===============================================================
 ;;   Installed Packages
 ;; ---------------------------------------------------------------
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+(load "kotlin-mode")
+
 (use-package evil-commentary
   :pin melpa
   :init
