@@ -223,6 +223,23 @@
 
 ) ;; go-mode
 
+;;   --- Kotlin Mode ---
+;; ---------------------------------------------------------------
+(defun my-kotlin-mode-hook ()
+    (add-to-list 'auto-mode-alist '("\\.kt$" . kotlin-mode))
+    (add-to-list 'fixme-modes 'kotlin-mode)
+    (initialize-fixme-modes)
+
+    (define-key kotlin-mode-map "\em" 'make-without-asking)
+    (define-key kotlin-mode-map (kbd "C-M-m") 'test-without-asking)
+
+    (setq build-file-name "build.gradle.kts")
+    (setq compile-command "gradle compileKotlin")
+    (message "Kotlin hook added")
+)
+
+(add-hook 'kotlin-mode-hook 'my-kotlin-mode-hook)
+
 (use-package magit
   :pin melpa
   :config
