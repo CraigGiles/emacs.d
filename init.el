@@ -230,6 +230,9 @@
     (add-to-list 'fixme-modes 'kotlin-mode)
     (initialize-fixme-modes)
 
+    (setq tab-stop 4)
+    (setq indent-tabs-mode nil)
+
     (define-key kotlin-mode-map "\em" 'make-without-asking)
     (define-key kotlin-mode-map (kbd "C-M-m") 'test-without-asking)
 
@@ -248,6 +251,10 @@
     (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
     (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
 ) ;; magit
+
+(use-package markdown-mode
+  :pin melpa
+  :init)
 
 ;; ===============================================================
 ;;   keymap key-bindings keybindings
