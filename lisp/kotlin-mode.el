@@ -33,6 +33,7 @@
 (require 'eieio)
 
 (require 'kotlin-mode-lexer)
+(require 'kotlin-imenu)
 
 (defgroup kotlin nil
   "A Kotlin major mode."
