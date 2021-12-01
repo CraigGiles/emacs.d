@@ -6,6 +6,9 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 
+(add-hook 'before-save-hook
+          'delete-trailing-whitespace)
+
 ;; ===============================================================
 ;;   Package Management
 ;; ---------------------------------------------------------------
@@ -95,7 +98,7 @@
        :pin melpa
        :config
          (evil-escape-mode)
-     ) 
+     )
 
     (use-package evil-search-highlight-persist
       :pin melpa
@@ -175,7 +178,7 @@
        '((if0-font-lock (0 font-lock-comment-face prepend))) 'add-to-end))
 
     (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
-    
+
     (defun my-c-mode-common-hook ()
       (font-lock-add-keywords
        nil
@@ -294,7 +297,7 @@
 ;;   S-D : Create directory
 ;;   %   : Create File
 (eval-after-load "dired" '(progn
-  (define-key dired-mode-map (kbd "M-o") 'other-window) 
+  (define-key dired-mode-map (kbd "M-o") 'other-window)
   (define-key dired-mode-map "%" 'find-file)
   (define-key dired-mode-map "D" 'dired-create-directory)
   (define-key dired-mode-map "-"
@@ -319,6 +322,7 @@
 				    ((and buffer-file-name (eq major-mode 'c-mode)))
 				    ((and buffer-file-name (eq major-mode 'cc-mode)))
 				    ((and buffer-file-name (eq major-mode 'c++-mode)))
+				    ((and buffer-file-name (eq major-mode 'kotlin-mode)))
 				    ((and buffer-file-name (eq major-mode 'scala-mode)))
 				    ((and buffer-file-name (eq major-mode 'go-mode)))
 				    ((and buffer-file-name (eq major-mode 'jai-mode)))
