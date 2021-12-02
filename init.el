@@ -243,7 +243,7 @@
     (define-key kotlin-mode-map (kbd "C-M-m") 'test-without-asking)
 
     (setq build-file-name "build.gradle.kts")
-    (setq compile-command "gradle compileKotlin")
+    (setq compile-command "./gradlew compileKotlin")
     (message "Kotlin hook added")
 )
 
@@ -476,7 +476,7 @@
 (set-face-attribute 'font-lock-type-face nil          :foreground foreground-font-color)
 (set-foreground-color                                             foreground-font-color)
 (set-background-color                                             "#072626") ;; Actually J.Blow's theme
-(set-face-background 'hl-line                                     "#191970") ;; the -always on- horizontal highlight
+(set-face-background 'hl-line                                     "#191970") ;; The -always on- horizontal highlight
 (set-cursor-color                                                 "#40FF40") ;; Green-ish cursor color
 (set-face-attribute 'mode-line nil                    :background "#CDAA7D" ;; "burlywood3"
                                                       :foreground "#000000")
