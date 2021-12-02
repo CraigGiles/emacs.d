@@ -166,6 +166,9 @@
     (setq build-file-name "Makefile")
     (setq compile-command "make")
 
+    (setq tab-width 4
+	  indent-tabs-mode nil)
+
     (setq gdb-many-windows t
     	  gdb-use-separate-io-buffer t)
 
