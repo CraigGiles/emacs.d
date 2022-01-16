@@ -6,8 +6,29 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 
-(add-hook 'before-save-hook
-          'delete-trailing-whitespace)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; (add-hook 'before-save-hook 'untabify)
+
+;; Special values:
+;;   `gnu'         compiled for a GNU Hurd system.
+;;   `gnu/linux'   compiled for a GNU/Linux system.
+;;   `darwin'      compiled for Darwin (GNU-Darwin, Mac OS X, ...).
+;;   `ms-dos'      compiled as an MS-DOS application.
+;;   `windows-nt'  compiled as a native W32 application.
+;;   `cygwin'      compiled using the Cygwin library.
+;; Anything else indicates some sort of Unix system.
+;;
+;; Example Usage:
+;; (with-system gnu/linux
+;;   (message "Free as in Beer")
+;;   (message "Free as in Freedom!"))
+
+(defmacro with-system (type &rest body)
+  "Evaluate BODY if `system-type' equals TYPE."
+  (declare (indent defun))
+  `(when (eq system-type ',type)
+     ,@body))
+
 
 ;; ===============================================================
 ;;   Package Management
@@ -73,13 +94,17 @@
 
     (define-key evil-normal-state-map (kbd "-") 'find-file)
 
-    ;; (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
-    ;; (define-key evil-normal-state-map (kbd "C-p") 'counsel-fzf)
-
-    (projectile-mode)
     (counsel-mode)
-    (define-key evil-normal-state-map (kbd "M-p") 'counsel-projectile-find-file)
-    (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file)
+
+    (with-system darwin
+		 (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
+		 (define-key evil-normal-state-map (kbd "C-p") 'counsel-fzf))
+
+    (with-system windows-nt
+		 (projectile-mode)
+		 (define-key evil-normal-state-map (kbd "M-p") 'counsel-projectile-find-file)
+		 (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file))
+
 
     (define-key evil-normal-state-map (kbd "C-c C-c") 'eval-buffer)
 
@@ -154,6 +179,7 @@
     (add-to-list 'auto-mode-alist '("\\.cc$"      . c++-mode))
     (add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
     (add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
+    (add-to-list 'auto-mode-alist '("\\*"         . markdown-mode))
     (add-to-list 'auto-mode-alist '("\\.m$"       . c++-mode))
     (add-to-list 'auto-mode-alist '("\\.mm$"      . c++-mode))
 
@@ -163,8 +189,13 @@
     (add-to-list 'fixme-modes 'c-mode)
     (initialize-fixme-modes)
 
-    (setq build-file-name "Makefile")
-    (setq compile-command "make")
+    (with-system darwin
+		 (setq build-file-name "build.sh")
+		 (setq compile-command "build.sh"))
+
+    (with-system windows-nt
+		 (setq build-file-name "build.bat")
+		 (setq compile-command "build.bat"))
 
     (setq tab-width 4
 	  indent-tabs-mode nil)
