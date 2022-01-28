@@ -100,16 +100,16 @@
 
     (define-key evil-normal-state-map (kbd "-") 'find-file)
 
-    (counsel-mode)
+    ;; (counsel-mode)
 
     (with-system darwin
-		 (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
-		 (define-key evil-normal-state-map (kbd "C-p") 'counsel-fzf))
+                 (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
+                 (define-key evil-normal-state-map (kbd "C-p") 'counsel-fzf))
 
     (with-system windows-nt
-		 (projectile-mode)
-		 (define-key evil-normal-state-map (kbd "M-p") 'counsel-projectile-find-file)
-		 (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file))
+                 (projectile-mode)
+                 (define-key evil-normal-state-map (kbd "M-p") 'counsel-projectile-find-file)
+                 (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file))
 
 
     (define-key evil-normal-state-map (kbd "C-c C-c") 'eval-buffer)
@@ -196,18 +196,18 @@
     (initialize-fixme-modes)
 
     (with-system darwin
-		 (setq build-file-name "build.sh")
-		 (setq compile-command "build.sh"))
+                 (setq build-file-name "build.sh")
+                 (setq compile-command "build.sh"))
 
     (with-system windows-nt
-		 (setq build-file-name "build.bat")
-		 (setq compile-command "build.bat"))
+                 (setq build-file-name "build.bat")
+                 (setq compile-command "build.bat"))
 
     (setq tab-width 4
-	  indent-tabs-mode nil)
+          indent-tabs-mode nil)
 
     (setq gdb-many-windows t
-    	  gdb-use-separate-io-buffer t)
+          gdb-use-separate-io-buffer t)
 
     (setq c-default-style "ellemtel"
           c-basic-offset 4)
@@ -241,7 +241,7 @@
   :config
 
     (setq tab-width 4
-	  indent-tabs-mode nil)
+          indent-tabs-mode nil)
 
     (setq-default indent-tabs-mode nil)
     (setq-default tab-width 4)
@@ -356,19 +356,19 @@
   "Saves all loaded buffers without prompting."
   (interactive)
   (save-some-buffers 'no-confirm (lambda ()
-				   (cond
-				    ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
-				    ((and buffer-file-name (eq major-mode 'markdown-mode)))
-				    ((and buffer-file-name (eq major-mode 'c-mode)))
-				    ((and buffer-file-name (eq major-mode 'cc-mode)))
-				    ((and buffer-file-name (eq major-mode 'c++-mode)))
-				    ((and buffer-file-name (eq major-mode 'kotlin-mode)))
-				    ((and buffer-file-name (eq major-mode 'scala-mode)))
-				    ((and buffer-file-name (eq major-mode 'go-mode)))
-				    ((and buffer-file-name (eq major-mode 'jai-mode)))
-				    ((and buffer-file-name (eq major-mode 'php-mode)))
-				    ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
-				    ((and buffer-file-name (derived-mode-p 'org-mode)))))))
+                                   (cond
+                                    ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
+                                    ((and buffer-file-name (eq major-mode 'markdown-mode)))
+                                    ((and buffer-file-name (eq major-mode 'c-mode)))
+                                    ((and buffer-file-name (eq major-mode 'cc-mode)))
+                                    ((and buffer-file-name (eq major-mode 'c++-mode)))
+                                    ((and buffer-file-name (eq major-mode 'kotlin-mode)))
+                                    ((and buffer-file-name (eq major-mode 'scala-mode)))
+                                    ((and buffer-file-name (eq major-mode 'go-mode)))
+                                    ((and buffer-file-name (eq major-mode 'jai-mode)))
+                                    ((and buffer-file-name (eq major-mode 'php-mode)))
+                                    ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+                                    ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
 ;; TODO create a function that asks if a vertical split exists (or if
 ;; there is only one window) if one window then split vertically and
@@ -434,7 +434,7 @@
       (setq CorrespondingFileName (concat BaseFileName ".h")))
   (if (string-match "\\.h" buffer-file-name)
       (if (file-exists-p (concat BaseFileName ".c")) (setq CorrespondingFileName (concat BaseFileName ".c"))
-	(setq CorrespondingFileName (concat BaseFileName ".cpp"))))
+        (setq CorrespondingFileName (concat BaseFileName ".cpp"))))
   (if (string-match "\\.hin" buffer-file-name)
       (setq CorrespondingFileName (concat BaseFileName ".cin")))
   (if (string-match "\\.cin" buffer-file-name)
@@ -533,23 +533,23 @@
   (make-face 'font-lock-note-face)
 
   (mapc (lambda (mode)
-	  (font-lock-add-keywords
-	   mode
-	   '(
-	     ("\\<\\(BUG\\)" 1 'font-lock-bug-face t)
-	     ("\\<\\(NOTE\\)" 1 'font-lock-note-face t)
-	     ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
-	     ("\\<\\(CLEANUP\\)" 1 'font-lock-cleanup-face t)
-	     ("\\<\\(SPEED\\)" 1 'font-lock-speed-face t)
+          (font-lock-add-keywords
+           mode
+           '(
+             ("\\<\\(BUG\\)" 1 'font-lock-bug-face t)
+             ("\\<\\(NOTE\\)" 1 'font-lock-note-face t)
+             ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
+             ("\\<\\(CLEANUP\\)" 1 'font-lock-cleanup-face t)
+             ("\\<\\(SPEED\\)" 1 'font-lock-speed-face t)
 
-	     ("\\<\\(TODO\\)" 1 'font-lock-todo-face t)
-	     ("\\<\\(NEXT\\)" 1 'font-lock-next-face t)
-	     ("\\<\\(HOLD\\)" 1 'font-lock-next-face t)
-	     ("\\<\\(PROGRESS\\)" 1 'font-lock-progress-face t)
-	     ("\\<\\(PROG\\)" 1 'font-lock-progress-face t)
-	     ("\\<\\(DONE\\)" 1 'font-lock-done-face t)
-	     )))
-	fixme-modes)
+             ("\\<\\(TODO\\)" 1 'font-lock-todo-face t)
+             ("\\<\\(NEXT\\)" 1 'font-lock-next-face t)
+             ("\\<\\(HOLD\\)" 1 'font-lock-next-face t)
+             ("\\<\\(PROGRESS\\)" 1 'font-lock-progress-face t)
+             ("\\<\\(PROG\\)" 1 'font-lock-progress-face t)
+             ("\\<\\(DONE\\)" 1 'font-lock-done-face t)
+             )))
+        fixme-modes)
 
   (modify-face 'font-lock-todo-face "firebrick3" nil nil t nil t nil nil)
   (modify-face 'font-lock-bug-face "Red" nil nil t nil t nil nil)
