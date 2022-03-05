@@ -198,7 +198,7 @@
 
     (with-system darwin
                  (setq build-file-name "build.sh")
-                 (setq compile-command "build.sh"))
+                 (setq compile-command "./build.sh"))
 
     (with-system windows-nt
                  (setq build-file-name "build.bat")
