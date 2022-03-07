@@ -272,6 +272,7 @@
     (add-to-list 'auto-mode-alist '("\\.kt$" . kotlin-mode))
     (add-to-list 'fixme-modes 'kotlin-mode)
     (initialize-fixme-modes)
+    (projectile-mode)
 
     (setq tab-stop 4)
     (setq indent-tabs-mode nil)
@@ -302,6 +303,20 @@
 ;; ===============================================================
 ;;   keymap key-bindings keybindings
 ;; ---------------------------------------------------------------
+
+(with-system darwin
+    (setq notes-directory "~/Development/notes/")
+)
+
+(with-system windows-nt
+    (setq notes-directory "w:/notes")
+)
+
+(defun load-notes-directory ()
+    (interactive)
+    (find-file notes-directory)
+)
+
 (define-key evil-normal-state-map [tab] 'evil-toggle-fold)
 (define-key evil-normal-state-map (kbd "M-j") 'counsel-imenu)
 (define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
@@ -314,6 +329,7 @@
 (define-key evil-visual-state-map (kbd "C-j") 'evil-forward-paragraph)
 (define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
 (define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
+(define-key evil-normal-state-map (kbd "<f5>") 'load-notes-directory)
 
 ;; Changing some default bindings for special mode
 (define-key special-mode-map (kbd "C-k") 'scroll-up-command)
