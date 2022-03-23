@@ -46,6 +46,10 @@
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
                          ("elpa" . "https://elpa.gnu.org/packages/")))
+
+(setq package-archive-priorities '(("melpa" . 1)
+				   ("elpa" . 2)
+				   ("org" . 3)))
 (package-initialize)
 (unless package-archive-contents
         (package-refresh-contents))
@@ -76,6 +80,7 @@
 )
 
 (use-package evil
+  :ensure t
   :bind (:map evil-normal-state-map
 	      ("j" . 'evil-next-visual-line)
 	      ("k" . 'evil-previous-visual-line)
@@ -101,6 +106,9 @@
 			 (evil-delete (point-at-bol) (point))))
 	      )
   :init
+    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+    (setq evil-want-keybinding nil)
+
     (evil-mode t)
 
   :config
@@ -133,17 +141,31 @@
   (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line))
 
 (use-package magit
-  :pin melpa
   :config
-    (use-package evil-magit)
     (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
     (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
     (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status))
 
-;; (use-package evil-collection
-  ;; :diminish
-  ;; :after evil
-  ;; :custom
-  ;; (evil-collection-outline-bind-tab-p nil)
-  ;; :config
-  ;; (evil-collection-init))
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
+
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config (setq which-key-idle-delay 0.3))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(evil-magit which-key use-package-chords magit ivy evil-search-highlight-persist evil-escape)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
