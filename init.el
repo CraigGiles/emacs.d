@@ -269,9 +269,9 @@
 
     (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
-    (define-key c++-mode-map [f12] 'craig-find-corresponding-file)
-    (define-key c++-mode-map [M-f12] 'craig-find-corresponding-file-other-window)
-    (define-key c++-mode-map (kbd "M-m") 'make-without-asking)
+    (define-key c++-mode-map [f12] 'corresponding-file)
+    (define-key c++-mode-map [M-f12] 'corresponding-file-other-window)
+    (define-key c++-mode-map (kbd "M-m") 'compile)
     (define-key c++-mode-map (kbd "M-M") 'run-without-asking)
     (define-key c++-mode-map (kbd "M-j") 'counsel-imenu)
 
@@ -290,7 +290,7 @@
     (setq-default tab-width 4)
     (setq indent-line-function 'insert-tab)
 
-    (define-key go-mode-map "\em" 'make-without-asking)
+    (define-key go-mode-map "\em" 'compile)
     (define-key go-mode-map (kbd "C-M-m") 'test-without-asking)
 
     ;; File Extensions and which mode they're associated with
@@ -321,7 +321,7 @@
     (setq tab-stop 4)
     (setq indent-tabs-mode nil)
 
-    (define-key kotlin-mode-map "\em" 'make-without-asking)
+    (define-key kotlin-mode-map "\em" 'compile)
     (define-key kotlin-mode-map (kbd "C-M-m") 'test-without-asking)
 
     (setq build-file-name "build.gradle.kts")
@@ -423,7 +423,7 @@
     (find-project-directory-recursive)
     (setq last-compilation-directory default-directory)))
 
-(defun make-without-asking ()
+(defun compile ()
   "Make the current build."
   (interactive)
   (split-window-right-if-single-window)
@@ -431,7 +431,7 @@
   (if (find-project-directory) (compile compile-command))
   (other-window 1))
 
-(defun craig-find-corresponding-file ()
+(defun corresponding-file ()
   "Find the file that corresponds to this one."
   (interactive)
   (setq CorrespondingFileName nil)
@@ -452,11 +452,11 @@
   (if CorrespondingFileName (find-file CorrespondingFileName)
     (error "Unable to find a corresponding file")))
 
-(defun craig-find-corresponding-file-other-window ()
+(defun corresponding-file-other-window ()
   "Find the file that corresponds to this one."
   (interactive)
   (find-file-other-window buffer-file-name)
-  (craig-find-corresponding-file)
+  (corresponding-file)
   (other-window -1))
 
 ;; ===============================================================
@@ -477,10 +477,12 @@
 (setq undo-strong-limit 40000000)
 
 ;; Set the OSX's CMD key as the meta key
-(setq mac-option-key-is-meta nil)
-(setq mac-command-key-is-meta t)
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier nil)
+;; TODO does this need to be enabled
+;; (if-system darwin
+;;   (setq mac-option-key-is-meta nil)
+;;   (setq mac-command-key-is-meta t)
+;;   (setq mac-command-modifier 'meta)
+;;   (setq mac-option-modifier nil))
 
 ;; turn on the column numbers in modeline
 (setq column-number-mode 1)

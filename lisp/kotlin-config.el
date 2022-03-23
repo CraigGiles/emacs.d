@@ -11,7 +11,7 @@
     (setq tab-stop 4)
     (setq indent-tabs-mode nil)
 
-    (define-key kotlin-mode-map "\em" 'make-without-asking)
+    (define-key kotlin-mode-map "\em" 'compile)
 
     (setq build-file-name "build.gradle.kts")
     (setq compile-command "./gradlew compileKotlin")

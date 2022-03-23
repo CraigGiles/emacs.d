@@ -191,11 +191,12 @@
 (setq undo-strong-limit 40000000)
 
 ;; Set the OSX's CMD key as the meta key
-(if-system darwin
-  (setq mac-option-key-is-meta nil)
-  (setq mac-command-key-is-meta t)
-  (setq mac-command-modifier 'meta)
-  (setq mac-option-modifier nil))
+;; TODO does this need to be enabled
+;; (if-system darwin
+;;   (setq mac-option-key-is-meta nil)
+;;   (setq mac-command-key-is-meta t)
+;;   (setq mac-command-modifier 'meta)
+;;   (setq mac-option-modifier nil))
 
 ;; turn on the column numbers in modeline
 (setq column-number-mode 1)
