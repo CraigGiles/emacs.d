@@ -77,13 +77,9 @@
 ;;   Installed Packages
 ;; ---------------------------------------------------------------
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-(load "kotlin-mode")
-(load "jai-mode")
-
-(use-package evil-commentary
-  :pin melpa
-  :init
-    (evil-commentary-mode t))
+(load "gilesc-theme")
+(load "kotlin-config")
+(load "jai-config")
 
 ;; NOTE: Should look over this config file at some point.
 ;;       https://github.com/krisajenkins/EvilBegins/blob/master/.emacs
@@ -125,29 +121,55 @@
       (interactive)
       (evil-delete (point-at-bol) (point)))
     )
+)
 
-     (use-package evil-escape
-       :pin melpa
-       :config
-         (evil-escape-mode)
-     )
+;; Treat emacs 'symbol' as a word
+(with-eval-after-load 'evil
+  (defalias #'forward-evil-word #'forward-evil-symbol))
 
-    (use-package evil-search-highlight-persist
-      :pin melpa
-      :config
-        (global-evil-search-highlight-persist t))
+(use-package evil-commentary
+  :pin melpa
+  :init
+    (evil-commentary-mode t))
 
-    (use-package use-package-chords
-      :pin melpa
-      :config
+(use-package evil-escape
+  :after evil
+  :pin melpa
+  :config
+    (evil-escape-mode)
+)
+
+(use-package evil-search-highlight-persist
+  :after evil
+  :pin melpa
+  :init
+    (global-evil-search-highlight-persist t))
+
+(use-package use-package-chords
+    :pin melpa
+    :after evil
+    :config
         (key-chord-mode 1)
         (setq key-chord-two-keys-delay 0.1)
         (key-chord-define evil-insert-state-map "Jj" 'evil-escape)
         (key-chord-define evil-insert-state-map "JJ" 'evil-escape)
         (key-chord-define evil-insert-state-map "jj" 'evil-escape)
         (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line)
-    ) ;; use-package-chords
-) ;; evil
+)
+
+(use-package magit
+  :pin melpa
+  :config
+    (use-package evil-magit)
+    (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
+    (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
+    (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
+) ;; magit
+
+(use-package markdown-mode
+  :pin melpa
+  :init)
+
 
 ;; All code within an #if 0 block should be set to the comment color
 (defun if0-font-lock (limit)
@@ -267,25 +289,6 @@
 
 ) ;; go-mode
 
-;;   --- Jai Mode ---
-;; ---------------------------------------------------------------
-(defun my-jai-mode-hook ()
-    (add-to-list 'auto-mode-alist '("\\.kt$" . jai-mode))
-    (add-to-list 'fixme-modes 'jai-mode)
-    (initialize-fixme-modes)
-
-    (setq tab-stop 4)
-    (setq indent-tabs-mode nil)
-
-    (define-key jai-mode-map "\em" 'make-without-asking)
-    (define-key jai-mode-map (kbd "C-M-m") 'test-without-asking)
-
-    (setq build-file-name "build.bat")
-    (setq compile-command "call build.bat")
-    (message "Jai hook added")
-)
-
-(add-hook 'jai-mode-hook 'my-jai-mode-hook)
 
 ;;   --- Kotlin Mode ---
 ;; ---------------------------------------------------------------
@@ -307,19 +310,6 @@
 )
 
 (add-hook 'kotlin-mode-hook 'my-kotlin-mode-hook)
-
-(use-package magit
-  :pin melpa
-  :config
-    (use-package evil-magit)
-    (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
-    (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
-    (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
-) ;; magit
-
-(use-package markdown-mode
-  :pin melpa
-  :init)
 
 ;; ===============================================================
 ;;   keymap key-bindings keybindings
@@ -526,74 +516,3 @@
 
 ;; Auto revert files that change on the hard disk
 (global-auto-revert-mode 1)
-
-;; Treat emacs 'symbol' as a word
-(with-eval-after-load 'evil
-  (defalias #'forward-evil-word #'forward-evil-symbol))
-
-;; Font
-(set-face-attribute 'default t       :font "Liberation Mono-12")
-(add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
-(add-to-list 'default-frame-alist '(width . 165))
-(add-to-list 'default-frame-alist '(height . 60))
-
-;; Colors
-(setq foreground-font-color                                       "#D2CBC0")
-(set-face-attribute 'font-lock-builtin-face nil       :foreground "#DAB98F")
-(set-face-attribute 'font-lock-comment-face nil       :foreground "#53A347") ;; green-ish
-(set-face-attribute 'font-lock-doc-face nil           :foreground "#7F7F7F") ;; grey50
-(set-face-attribute 'font-lock-string-face nil        :foreground "#65B29E") ;; maybe #458B74
-(set-face-attribute 'font-lock-keyword-face nil       :foreground "#DAB98F") ;; DarkGoldenRod3
-(set-face-attribute 'font-lock-constant-face nil      :foreground foreground-font-color)
-(set-face-attribute 'font-lock-function-name-face nil :foreground foreground-font-color)
-(set-face-attribute 'font-lock-variable-name-face nil :foreground foreground-font-color)
-(set-face-attribute 'font-lock-type-face nil          :foreground foreground-font-color)
-(set-foreground-color                                             foreground-font-color)
-(set-background-color                                             "#072626") ;; Actually J.Blow's theme
-(set-face-background 'hl-line                                     "#191970") ;; The -always on- horizontal highlight
-(set-cursor-color                                                 "#40FF40") ;; Green-ish cursor color
-(set-face-attribute 'mode-line nil                    :background "#CDAA7D" ;; "burlywood3"
-                                                      :foreground "#000000")
-
-(setq fixme-modes '(markdown-mode emacs-lisp-mode prog-mode fundamental-mode))
-(defun initialize-fixme-modes ()
-  "Sets the highlighted words like TODO and NOTE and colorschemes for these words"
-  (interactive)
-  (make-face 'font-lock-todo-face)
-  (make-face 'font-lock-done-face)
-  (make-face 'font-lock-next-face)
-  (make-face 'font-lock-progress-face)
-  (make-face 'font-lock-bug-face)
-  (make-face 'font-lock-cleanup-face)
-  (make-face 'font-lock-speed-face)
-  (make-face 'font-lock-important-face)
-  (make-face 'font-lock-note-face)
-
-  (mapc (lambda (mode)
-          (font-lock-add-keywords
-           mode
-           '(
-             ("\\<\\(BUG\\)" 1 'font-lock-bug-face t)
-             ("\\<\\(NOTE\\)" 1 'font-lock-note-face t)
-             ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
-             ("\\<\\(CLEANUP\\)" 1 'font-lock-cleanup-face t)
-             ("\\<\\(SPEED\\)" 1 'font-lock-speed-face t)
-
-             ("\\<\\(TODO\\)" 1 'font-lock-todo-face t)
-             ("\\<\\(NEXT\\)" 1 'font-lock-next-face t)
-             ("\\<\\(HOLD\\)" 1 'font-lock-next-face t)
-             ("\\<\\(PROGRESS\\)" 1 'font-lock-progress-face t)
-             ("\\<\\(PROG\\)" 1 'font-lock-progress-face t)
-             ("\\<\\(DONE\\)" 1 'font-lock-done-face t)
-             )))
-        fixme-modes)
-
-  (modify-face 'font-lock-todo-face "firebrick3" nil nil t nil t nil nil)
-  (modify-face 'font-lock-bug-face "Red" nil nil t nil t nil nil)
-  (modify-face 'font-lock-cleanup-face "Yellow" nil nil t nil t nil nil)
-  (modify-face 'font-lock-speed-face "Yellow" nil nil t nil t nil nil)
-  (modify-face 'font-lock-next-face "CornflowerBlue" nil nil t nil t nil nil)
-  (modify-face 'font-lock-progress-face "Yellow" nil nil t nil t nil nil)
-  (modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
-  (modify-face 'font-lock-done-face "Green" nil nil t nil t nil nil)
-  (modify-face 'font-lock-note-face "CornflowerBlue" nil nil t nil t nil nil))
