@@ -92,11 +92,6 @@
     (setq evil-vsplit-window-right t)
     (setq evil-split-window-below t)
 
-    (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
-    (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
-
-    (define-key evil-normal-state-map (kbd "-") 'find-file)
-
     ;; (counsel-mode)
 
     (with-system darwin
@@ -111,16 +106,41 @@
 
     (define-key evil-normal-state-map (kbd "C-c C-c") 'eval-buffer)
 
-    ;; NOTE: This is the way to re-bind an ex command if i ever need it
-    ;; (define-key evil-ex-map "e" 'counsel-fzf)
+    :bind (:map evil-normal-state-map
+                ("j" . 'evil-next-visual-line)
+                ("k" . 'evil-previous-visual-line)
+                ("-" . 'find-file)
 
-    (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
-    (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
-    (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
-    (define-key evil-insert-state-map (kbd "C-u") (lambda ()
-      (interactive)
-      (evil-delete (point-at-bol) (point)))
-    )
+                ("M-n" . 'next-error)
+                ("M-C-n" . 'previous-error)
+                ("C-f" . 'ag-project-at-point)
+                ("C-u" . 'evil-scroll-up)
+                ("C-c C-c" . 'eval-buffer)
+
+                ([tab] . 'evil-toggle-fold)
+                ("M-j" . 'counsel-imenu)
+                ("M-6" . 'switch-other-window-to-last-buffer)
+                ("SPC n" . 'evil-search-highlight-persist-remove-all)
+                ("C-w C-h" . 'evil-window-left)
+                ("C-w C-l" . 'evil-window-right)
+                ("C-k" . 'evil-backward-paragraph)
+                ("C-j" . 'evil-forward-paragraph)
+                ("C-e" . 'end-of-line)
+                ("C-a" . 'beginning-of-line)
+                ("<f5>" . 'load-notes-directory)
+
+                ("M-b"  . 'counsel-ibuffer)
+                ("C-M-b"  . (lambda () ;; Switch buffer other window
+                              (interactive)
+                              (other-window 1)
+                              (counsel-ibuffer))
+                 )
+                )
+    (:map evil-visual-state-map
+          ("C-u" . 'evil-scroll-up)
+          ("C-k" . 'evil-backward-paragraph)
+          ("C-j" . 'evil-forward-paragraph)
+          )
 )
 
 ;; Treat emacs 'symbol' as a word
@@ -328,36 +348,14 @@
     (find-file notes-directory)
 )
 
-(define-key evil-normal-state-map [tab] 'evil-toggle-fold)
-(define-key evil-normal-state-map (kbd "M-j") 'counsel-imenu)
-(define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
-(define-key evil-normal-state-map (kbd "SPC n") 'evil-search-highlight-persist-remove-all)
-(define-key evil-normal-state-map (kbd "C-w C-h") 'evil-window-left)
-(define-key evil-normal-state-map (kbd "C-w C-l") 'evil-window-right)
-(define-key evil-normal-state-map (kbd "C-k") 'evil-backward-paragraph)
-(define-key evil-normal-state-map (kbd "C-j") 'evil-forward-paragraph)
-(define-key evil-visual-state-map (kbd "C-k") 'evil-backward-paragraph)
-(define-key evil-visual-state-map (kbd "C-j") 'evil-forward-paragraph)
-(define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
-(define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
-(define-key evil-normal-state-map (kbd "<f5>") 'load-notes-directory)
 
 ;; Changing some default bindings for special mode
 (define-key special-mode-map (kbd "C-k") 'scroll-up-command)
 (define-key special-mode-map (kbd "C-j") 'scroll-down-command)
 
-;; Navigating buffers
-(define-key global-map (kbd "M-b" ) 'counsel-ibuffer)
-(define-key global-map (kbd "C-M-b" ) (lambda () ;; Switch buffer other window
-  (interactive)
-  (other-window 1)
-  (counsel-ibuffer))
-)
 
 ;; Navigating errors
 (define-key global-map [f9] 'first-error)
-(define-key global-map (kbd "M-n") 'next-error)
-(define-key global-map (kbd "M-C-n") 'previous-error)
 
 ;; - Dired Keymap -
 ;;   -   : Move to the parent directory
@@ -374,28 +372,9 @@
   )
 )
 
-
-;; TODO(craig): iterate through all modes i'm using and use the iterator to test
-;;     (setq loaded-modes '())
-;;     (add-to-list 'loaded-modes 'markdown-mode)
-;;     (add-to-list 'loaded-modes 'scala-mode)
 (defun save-buffers-without-asking ()
-  "Saves all loaded buffers without prompting."
   (interactive)
-  (save-some-buffers 'no-confirm (lambda ()
-                                   (cond
-                                    ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
-                                    ((and buffer-file-name (eq major-mode 'markdown-mode)))
-                                    ((and buffer-file-name (eq major-mode 'c-mode)))
-                                    ((and buffer-file-name (eq major-mode 'cc-mode)))
-                                    ((and buffer-file-name (eq major-mode 'c++-mode)))
-                                    ((and buffer-file-name (eq major-mode 'kotlin-mode)))
-                                    ((and buffer-file-name (eq major-mode 'scala-mode)))
-                                    ((and buffer-file-name (eq major-mode 'go-mode)))
-                                    ((and buffer-file-name (eq major-mode 'jai-mode)))
-                                    ((and buffer-file-name (eq major-mode 'php-mode)))
-                                    ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
-                                    ((and buffer-file-name (derived-mode-p 'org-mode)))))))
+  (save-some-buffers t))
 
 ;; TODO create a function that asks if a vertical split exists (or if
 ;; there is only one window) if one window then split vertically and
