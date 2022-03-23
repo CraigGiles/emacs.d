@@ -60,18 +60,18 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+;; (defvar bootstrap-version)
+;; (let ((bootstrap-file
+;;        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+;;       (bootstrap-version 5))
+;;   (unless (file-exists-p bootstrap-file)
+;;     (with-current-buffer
+;;         (url-retrieve-synchronously
+;;          "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+;;          'silent 'inhibit-cookies)
+;;       (goto-char (point-max))
+;;       (eval-print-last-sexp)))
+;;   (load bootstrap-file nil 'nomessage))
 
 ;; ===============================================================
 ;;   Installed Packages
@@ -177,14 +177,22 @@
         (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line)
 )
 
+(use-package smooth-scrolling
+  :pin melpa
+  :config
+    (setq scroll-margin 8
+          scroll-conservatively 9999
+          scroll-step 1))
+
 (use-package magit
   :pin melpa
   :config
     (use-package evil-magit)
     (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
+    (key-chord-define evil-normal-state-map "ga" 'vc-annotate)
     (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
     (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
-) ;; magit
+)
 
 (use-package markdown-mode
   :pin melpa

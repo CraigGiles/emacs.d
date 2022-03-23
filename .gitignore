@@ -10,3 +10,5 @@ target/
 local-init.el
 custom.el
 transient/
+server/
+eshell/
