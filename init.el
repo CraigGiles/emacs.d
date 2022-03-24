@@ -157,6 +157,10 @@
     ) ;; use-package-chords
 ) ;; evil
 
+(use-package ag
+  :ensure t
+  :commands (ag ag-regexp ag-project))
+
 ;; All code within an #if 0 block should be set to the comment color
 (defun if0-font-lock (limit)
   (save-restriction
