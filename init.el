@@ -110,6 +110,7 @@
 	      ("C-u" . 'evil-scroll-up)
 	      ("C-k" . 'evil-backward-paragraph)
 	      ("C-j" . 'evil-forward-paragraph)
+
 	      :map evil-insert-state-map
 	      ("C-u" . (lambda ()
 			 (interactive)
@@ -196,3 +197,7 @@
       (find-alternate-file "..")))
   )
 )
+
+;; Changing some default bindings for special mode
+(define-key special-mode-map (kbd "C-p") 'scroll-up-command)
+(define-key special-mode-map (kbd "C-n") 'scroll-down-command)
