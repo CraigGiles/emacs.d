@@ -287,14 +287,27 @@
 
 (add-hook 'kotlin-mode-hook 'my-kotlin-mode-hook)
 
-(use-package magit
-  :pin melpa
+;; (use-package magit
+;;   :pin melpa
+;;   :config
+;;     (use-package evil-magit)
+;;     (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
+;;     (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
+;;     (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
+;; ) ;; magit
+(use-package evil-collection
+  :after evil
+  :ensure t
   :config
-    (use-package evil-magit)
-    (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
-    (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
-    (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
-) ;; magit
+  (evil-collection-init))
+
+(use-package undo-tree
+  :ensure t
+  :after evil
+  :diminish
+  :config
+    (evil-set-undo-system 'undo-tree)
+    (global-undo-tree-mode 1))
 
 (use-package markdown-mode
   :pin melpa
