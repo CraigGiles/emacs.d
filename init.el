@@ -90,10 +90,15 @@
   :init
     (evil-commentary-mode t))
 
-;; NOTE: Should look over this config file at some point.
+(use-package counsel
+  :init (counsel-mode t))
+(use-package counsel-projectile
+  :init (counsel-projectile-mode t))
+
+;; Note: Should look over this config file at some point.
 ;;       https://github.com/krisajenkins/EvilBegins/blob/master/.emacs
 (use-package evil
-  :pin melpa
+  :after counsel
   :init
     (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
     (setq evil-want-keybinding nil)
@@ -109,14 +114,11 @@
 
     (define-key evil-normal-state-map (kbd "-") 'find-file)
 
-    ;; (counsel-mode)
-
     (with-system darwin
                  (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
                  (define-key evil-normal-state-map (kbd "C-p") 'counsel-fzf))
 
     (with-system windows-nt
-                 (projectile-mode)
                  (define-key evil-normal-state-map (kbd "M-p") 'counsel-projectile-find-file)
                  (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file))
 
