@@ -30,11 +30,11 @@
 ;; Anything else indicates some sort of Unix system.
 ;;
 ;; Example Usage:
-;; (with-system gnu/linux
+;; (if-system gnu/linux
 ;;   (message "Free as in Beer")
 ;;   (message "Free as in Freedom!"))
 
-(defmacro with-system (type &rest body)
+(defmacro if-system (type &rest body)
   "Evaluate BODY if `system-type' equals TYPE."
   (declare (indent defun))
   `(when (eq system-type ',type)
@@ -114,11 +114,11 @@
 
     (define-key evil-normal-state-map (kbd "-") 'find-file)
 
-    (with-system darwin
+    (if-system darwin
                  (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
                  (define-key evil-normal-state-map (kbd "C-p") 'counsel-fzf))
 
-    (with-system windows-nt
+    (if-system windows-nt
                  (define-key evil-normal-state-map (kbd "M-p") 'counsel-projectile-find-file)
                  (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file))
 
@@ -210,11 +210,11 @@
     (add-to-list 'fixme-modes 'c-mode)
     (initialize-fixme-modes)
 
-    (with-system darwin
+    (if-system darwin
                  (setq build-file-name "build.sh")
                  (setq compile-command "./build.sh"))
 
-    (with-system windows-nt
+    (if-system windows-nt
                  (setq build-file-name "build.bat")
                  (setq compile-command "build.bat"))
 
@@ -359,11 +359,11 @@
 ;;   keymap key-bindings keybindings
 ;; ---------------------------------------------------------------
 
-(with-system darwin
+(if-system darwin
     (setq notes-directory "~/Development/notes/")
 )
 
-(with-system windows-nt
+(if-system windows-nt
     (setq notes-directory "w:/notes")
 )
 
