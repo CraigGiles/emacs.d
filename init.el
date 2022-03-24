@@ -1,7 +1,8 @@
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+
 (global-set-key (kbd "M-f") 'find-file)
 (setq compile-command "make") ;; NOTE: make is the default compile command. Change on a per-language basis
 
-(add-to-list 'load-path "~/.emacs.d/lisp/")
 (setq fixme-modes '(markdown-mode emacs-lisp-mode prog-mode fundamental-mode))
 (require 'fixme-mode)
 (initialize-fixme-modes)
@@ -81,19 +82,9 @@
 ;; ===============================================================
 ;;   Installed Packages
 ;; ---------------------------------------------------------------
-(load "kotlin-mode")
-(load "jai-mode")
+(require 'kotlin-mode)
+(require 'jai-mode)
 
-(use-package evil-commentary
-  :after evil
-  :pin melpa
-  :init
-    (evil-commentary-mode t))
-
-(use-package counsel
-  :init (counsel-mode t))
-(use-package counsel-projectile
-  :init (counsel-projectile-mode t))
 
 ;; Note: Should look over this config file at some point.
 ;;       https://github.com/krisajenkins/EvilBegins/blob/master/.emacs
@@ -114,14 +105,17 @@
 
     (define-key evil-normal-state-map (kbd "-") 'find-file)
 
-    (if-system darwin
-                 (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
-                 (define-key evil-normal-state-map (kbd "C-p") 'counsel-fzf))
+    ;; TODO(craig): unsure if i want to have fzf if it splits the way i have to do things on different OSes
+    ;; (if-system darwin
+    ;;              (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
+    ;;              (define-key evil-normal-state-map (kbd "C-p") 'counsel-fzf))
 
-    (if-system windows-nt
-                 (define-key evil-normal-state-map (kbd "M-p") 'counsel-projectile-find-file)
-                 (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file))
+    ;; (if-system windows-nt
+    ;;              (define-key evil-normal-state-map (kbd "M-p") 'counsel-projectile-find-file)
+    ;;              (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file))
 
+    (define-key evil-normal-state-map (kbd "M-p") 'counsel-projectile-find-file)
+    (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file)
 
     (define-key evil-normal-state-map (kbd "C-c C-c") 'eval-buffer)
 
@@ -135,59 +129,48 @@
       (interactive)
       (evil-delete (point-at-bol) (point)))
     )
-
-     (use-package evil-escape
-       :pin melpa
-       :config
-         (evil-escape-mode)
-     )
-
-    (use-package evil-search-highlight-persist
-      :pin melpa
-      :config
-        (global-evil-search-highlight-persist t))
-
-    (use-package use-package-chords
-      :pin melpa
-      :config
-        (key-chord-mode 1)
-        (setq key-chord-two-keys-delay 0.1)
-        (key-chord-define evil-insert-state-map "Jj" 'evil-escape)
-        (key-chord-define evil-insert-state-map "JJ" 'evil-escape)
-        (key-chord-define evil-insert-state-map "jj" 'evil-escape)
-        (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line)
-    ) ;; use-package-chords
 ) ;; evil
+
+
+(use-package evil-escape
+  :after evil
+  :config
+  (evil-escape-mode))
+
+(use-package evil-search-highlight-persist
+  :after evil
+  :config
+  (global-evil-search-highlight-persist t))
+
+(use-package use-package-chords
+  :after evil
+  :config (key-chord-mode 1)
+          (setq key-chord-two-keys-delay 0.1)
+          (key-chord-define evil-insert-state-map "Jj" 'evil-escape)
+          (key-chord-define evil-insert-state-map "JJ" 'evil-escape)
+          (key-chord-define evil-insert-state-map "jj" 'evil-escape)
+          (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line))
+
+(use-package evil-commentary
+  :after evil
+  :init (evil-commentary-mode t))
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config (evil-collection-init))
+
+(use-package counsel-projectile
+  :ensure t
+  :defer t
+  :init (counsel-projectile-mode t))
 
 (use-package ag
   :ensure t
+  :defer t
   :commands (ag ag-regexp ag-project))
 
-;; All code within an #if 0 block should be set to the comment color
-(defun if0-font-lock (limit)
-  (save-restriction
-    (widen)
-    (save-excursion
-      (goto-char (point-min))
-      (let ((depth 0) str start start-depth)
-        (while (re-search-forward "^\\s-*#\\s-*\\(if\\|else\\|endif\\)" limit 'move)
-          (setq str (match-string 1))
-          (if (string= str "if")
-              (progn
-                (setq depth (1+ depth))
-                (when (and (null start) (looking-at "\\s-+0"))
-                  (setq start (match-end 0)
-                        start-depth depth)))
-            (when (and start (= depth start-depth))
-              (c-put-font-lock-face start (match-beginning 0) 'font-lock-comment-face)
-              (setq start nil))
-            (when (string= str "endif")
-              (setq depth (1- depth)))))
-        (when (and start (> depth 0))
-          (c-put-font-lock-face start (point) 'font-lock-comment-face)))))
-  nil)
 (use-package cc-mode
-  :pin melpa
   :defer t
   :config
     (add-hook 'before-save-hook 'fix-format-buffer t)
@@ -250,7 +233,6 @@
 ) ;; use-package cc-mode
 
 (use-package go-mode
-  :pin melpa
   :defer t
   :init
   :config
@@ -302,6 +284,7 @@
 
 (add-hook 'kotlin-mode-hook 'my-kotlin-mode-hook)
 
+;;
 ;;   --- Jai Mode ---
 ;; ---------------------------------------------------------------
 (defun my-jai-mode-hook ()
@@ -323,15 +306,10 @@
 
 (add-hook 'jai-mode-hook 'my-jai-mode-hook)
 
-(use-package evil-collection
-  :after evil
-  :ensure t
-  :config
-
-  (evil-collection-init))
 
 
 (use-package magit
+  :defer t
   :after evil-collection
   :config
     (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
@@ -352,8 +330,35 @@
     (global-undo-tree-mode 1))
 
 (use-package markdown-mode
-  :pin melpa
   :init)
+
+;;
+;;   --- Functions ---
+;; ---------------------------------------------------------------
+;; All code within an #if 0 block should be set to the comment color
+(defun if0-font-lock (limit)
+  (save-restriction
+    (widen)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((depth 0) str start start-depth)
+        (while (re-search-forward "^\\s-*#\\s-*\\(if\\|else\\|endif\\)" limit 'move)
+          (setq str (match-string 1))
+          (if (string= str "if")
+              (progn
+                (setq depth (1+ depth))
+                (when (and (null start) (looking-at "\\s-+0"))
+                  (setq start (match-end 0)
+                        start-depth depth)))
+            (when (and start (= depth start-depth))
+              (c-put-font-lock-face start (match-beginning 0) 'font-lock-comment-face)
+              (setq start nil))
+            (when (string= str "endif")
+              (setq depth (1- depth)))))
+        (when (and start (> depth 0))
+          (c-put-font-lock-face start (point) 'font-lock-comment-face)))))
+  nil)
+
 
 ;; ===============================================================
 ;;   keymap key-bindings keybindings
