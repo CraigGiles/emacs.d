@@ -1,11 +1,16 @@
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
-(global-set-key (kbd "M-f") 'find-file)
-(setq compile-command "make") ;; NOTE: make is the default compile command. Change on a per-language basis
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
+(require 'gilesc-theme)
 
 (setq fixme-modes '(markdown-mode emacs-lisp-mode prog-mode fundamental-mode))
 (require 'fixme-mode)
 (initialize-fixme-modes)
+
+
+(global-set-key (kbd "M-f") 'find-file)
+(setq compile-command "make") ;; NOTE: make is the default compile command. Change on a per-language basis
 
 ;; Clean up window
 (menu-bar-mode -1)
@@ -569,27 +574,3 @@
 ;; Treat emacs 'symbol' as a word
 (with-eval-after-load 'evil
   (defalias #'forward-evil-word #'forward-evil-symbol))
-
-;; Font
-(set-face-attribute 'default t       :font "Liberation Mono-12")
-(add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
-(add-to-list 'default-frame-alist '(width . 165))
-(add-to-list 'default-frame-alist '(height . 60))
-
-;; Colors
-(setq foreground-font-color                                       "#D2CBC0")
-(set-face-attribute 'font-lock-builtin-face nil       :foreground "#DAB98F")
-(set-face-attribute 'font-lock-comment-face nil       :foreground "#53A347") ;; green-ish
-(set-face-attribute 'font-lock-doc-face nil           :foreground "#7F7F7F") ;; grey50
-(set-face-attribute 'font-lock-string-face nil        :foreground "#65B29E") ;; maybe #458B74
-(set-face-attribute 'font-lock-keyword-face nil       :foreground "#DAB98F") ;; DarkGoldenRod3
-(set-face-attribute 'font-lock-constant-face nil      :foreground foreground-font-color)
-(set-face-attribute 'font-lock-function-name-face nil :foreground foreground-font-color)
-(set-face-attribute 'font-lock-variable-name-face nil :foreground foreground-font-color)
-(set-face-attribute 'font-lock-type-face nil          :foreground foreground-font-color)
-(set-foreground-color                                             foreground-font-color)
-(set-background-color                                             "#072626") ;; Actually J.Blow's theme
-(set-face-background 'hl-line                                     "#191970") ;; The -always on- horizontal highlight
-(set-cursor-color                                                 "#40FF40") ;; Green-ish cursor color
-(set-face-attribute 'mode-line nil                    :background "#CDAA7D" ;; "burlywood3"
-                                                      :foreground "#000000")
