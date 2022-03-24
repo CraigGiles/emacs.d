@@ -1,6 +1,10 @@
 (global-set-key (kbd "M-f") 'find-file)
 (setq compile-command "make") ;; NOTE: make is the default compile command. Change on a per-language basis
+
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 (setq fixme-modes '(markdown-mode emacs-lisp-mode prog-mode fundamental-mode))
+(require 'fixme-mode)
+(initialize-fixme-modes)
 
 ;; Clean up window
 (menu-bar-mode -1)
@@ -77,11 +81,11 @@
 ;; ===============================================================
 ;;   Installed Packages
 ;; ---------------------------------------------------------------
-(add-to-list 'load-path "~/.emacs.d/lisp/")
 (load "kotlin-mode")
 (load "jai-mode")
 
 (use-package evil-commentary
+  :after evil
   :pin melpa
   :init
     (evil-commentary-mode t))
@@ -93,6 +97,7 @@
   :init
     (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
     (setq evil-want-keybinding nil)
+
     (evil-mode t)
 
   :config
@@ -193,11 +198,11 @@
     (add-to-list 'auto-mode-alist '("\\.m$"       . c++-mode))
     (add-to-list 'auto-mode-alist '("\\.mm$"      . c++-mode))
 
-    ;; (add-to-list 'fixme-modes 'make-mode)
-    ;; (add-to-list 'fixme-modes 'c++-mode)
-    ;; (add-to-list 'fixme-modes 'cc-mode)
-    ;; (add-to-list 'fixme-modes 'c-mode)
-    ;; (initialize-fixme-modes)
+    (add-to-list 'fixme-modes 'make-mode)
+    (add-to-list 'fixme-modes 'c++-mode)
+    (add-to-list 'fixme-modes 'cc-mode)
+    (add-to-list 'fixme-modes 'c-mode)
+    (initialize-fixme-modes)
 
     (with-system darwin
                  (setq build-file-name "build.sh")
@@ -259,8 +264,8 @@
     (add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
     (add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
 
-    ;; (add-to-list 'fixme-modes 'go-mode)
-    ;; (initialize-fixme-modes)
+    (add-to-list 'fixme-modes 'go-mode)
+    (initialize-fixme-modes)
 
     (setq build-file-name "build.sh")
     (setq compile-command "make")
@@ -274,8 +279,8 @@
 ;; ---------------------------------------------------------------
 (defun my-kotlin-mode-hook ()
     (add-to-list 'auto-mode-alist '("\\.kt$" . kotlin-mode))
-    ;; (add-to-list 'fixme-modes 'kotlin-mode)
-    ;; (initialize-fixme-modes)
+    (add-to-list 'fixme-modes 'kotlin-mode)
+    (initialize-fixme-modes)
     (projectile-mode)
 
     (setq tab-stop 4)
@@ -295,8 +300,8 @@
 ;; ---------------------------------------------------------------
 (defun my-jai-mode-hook ()
     (add-to-list 'auto-mode-alist '("\\.jai$" . jai-mode))
-    ;; (add-to-list 'fixme-modes 'jai-mode)
-    ;; (initialize-fixme-modes)
+    (add-to-list 'fixme-modes 'jai-mode)
+    (initialize-fixme-modes)
     (projectile-mode)
 
     (setq tab-stop 4)
@@ -312,26 +317,32 @@
 
 (add-hook 'jai-mode-hook 'my-jai-mode-hook)
 
-;; (use-package magit
-;;   :pin melpa
-;;   :config
-;;     (use-package evil-magit)
-;;     (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
-;;     (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
-;;     (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
-;; ) ;; magit
 (use-package evil-collection
   :after evil
   :ensure t
   :config
+
   (evil-collection-init))
+
+
+(use-package magit
+  :after evil-collection
+  :config
+    (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
+    (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
+    (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
+)
 
 (use-package undo-tree
   :ensure t
   :after evil
   :diminish
   :config
+    (setq undo-tree-auto-save-history t)
+    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+
     (evil-set-undo-system 'undo-tree)
+
     (global-undo-tree-mode 1))
 
 (use-package markdown-mode
@@ -613,3 +624,11 @@
 ;;   (modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
 ;;   (modify-face 'font-lock-done-face "Green" nil nil t nil t nil nil)
 ;;   (modify-face 'font-lock-note-face "CornflowerBlue" nil nil t nil t nil nil))
+
+;; TODO help
+;; TODO(craig) Help
+;; TODO: Something
+;; (fic-ext-mode)
+
+;; (require 'fic-ext-mode)
+;; (fic-ext-mode)
