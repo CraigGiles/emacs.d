@@ -44,6 +44,29 @@
 ;; Auto revert files that change on the hard disk
 (global-auto-revert-mode 1)
 
+;; Special values:
+;;   `gnu'         compiled for a GNU Hurd system.
+;;   `gnu/linux'   compiled for a GNU/Linux system.
+;;   `darwin'      compiled for Darwin (GNU-Darwin, Mac OS X, ...).
+;;   `ms-dos'      compiled as an MS-DOS application.
+;;   `windows-nt'  compiled as a native W32 application.
+;;   `cygwin'      compiled using the Cygwin library.
+;; Anything else indicates some sort of Unix system.
+;;
+;; Example Usage:
+;; (with-system gnu/linux
+;;   (message "Free as in Beer")
+;;   (message "Free as in Freedom!"))
+
+(defmacro if-system (type &rest body)
+  "Evaluate BODY if `system-type' equals TYPE."
+  (declare (indent defun))
+  `(when (eq system-type ',type)
+     ,@body))
+
+;;
+;;   Package Management
+;; ---------------------------------------------------------------
 
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -82,6 +105,15 @@
   :config (ivy-mode 1)
 )
 
+(use-package counsel)
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode 1)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap
+    ("C-c p" . projectile-command-map))
+	  
+
 (use-package evil
   :ensure t
   :bind (:map evil-normal-state-map
@@ -105,6 +137,7 @@
 	      ("M-b" . 'counsel-ibuffer)
 	      ("M-n" . 'next-error)
 	      ("M-C-n" . 'previous-error)
+              ("M-p" . 'projectile--find-file)
 
 	      :map evil-visual-state-map
 	      ("C-u" . 'evil-scroll-up)
@@ -167,6 +200,14 @@
   :config
   (evil-collection-init))
 
+(use-package undo-tree
+  :ensure t
+  :after evil
+  :diminish
+  :config
+    (evil-set-undo-system 'undo-tree)
+    (global-undo-tree-mode 1))
+
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
@@ -179,6 +220,14 @@
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . helpful-variable)
   ([remap describe-key] . helpful-key))
+
+;; Scale text when needed
+(use-package hydra)
+(defhydra hydra-scale-text ()
+  "Scale the font size on screen."
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t))
 
 (with-eval-after-load 'evil
   (defalias #'forward-evil-word #'forward-evil-symbol))
