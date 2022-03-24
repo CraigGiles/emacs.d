@@ -1,7 +1,10 @@
 (global-set-key (kbd "M-f") 'find-file)
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-(load "gilesc-theme")
+(require 'gilesc-theme)
+
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
 
 ;; Clean up window
 (menu-bar-mode -1)
@@ -89,13 +92,20 @@
 	      ("C-f" . 'ag-project-at-point)
 	      ("C-c C-c" . 'eval-buffer)
 	      ([tab] . 'evil-toggle-fold)
-	      ("M-j" . 'counsel-imenu)
 	      ("M-6" . 'switch-other-window-to-last-buffer)
 	      ("SPC n" . 'evil-search-highlight-persist-remove-all)
 	      ("C-w C-h" . 'evil-window-left)
 	      ("C-w C-l" . 'evil-window-right)
 	      ("C-p" . 'evil-backward-paragraph)
 	      ("C-n" . 'evil-forward-paragraph)
+	      ("M-j" . 'counsel-imenu)
+	      ("C-f" . 'ag-project-at-point)
+	      ("C-k" . 'evil-backward-paragraph)
+	      ("C-j" . 'evil-forward-paragraph)
+	      ("M-b" . 'counsel-ibuffer)
+	      ("M-n" . 'next-error)
+	      ("M-C-n" . 'previous-error)
+
 	      :map evil-visual-state-map
 	      ("C-u" . 'evil-scroll-up)
 	      ("C-k" . 'evil-backward-paragraph)
@@ -109,13 +119,17 @@
     (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
     (setq evil-want-keybinding nil)
 
-    (evil-mode t)
-
   :config
     (setq evil-vsplit-window-right t)
     (setq evil-split-window-below t)
-    ;; (counsel-mode)
+
+    (evil-mode t)
 )
+
+(use-package evil-commentary
+  :after evil
+  :init
+    (evil-commentary-mode t))
 
 (use-package evil-escape
   :diminish
@@ -157,22 +171,28 @@
   :diminish which-key-mode
   :config (setq which-key-idle-delay 0.3))
 
-(use-package counsel
-  :bind (("M-b" . 'counsel-switch-buffer)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history))
-  :custom
-  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
-  :config
-  (counsel-mode 1))
-
 (use-package helpful
   :ensure t
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
   :bind
-  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-function] . helpful-function)
   ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-variable] . helpful-variable)
   ([remap describe-key] . helpful-key))
+
+(with-eval-after-load 'evil
+  (defalias #'forward-evil-word #'forward-evil-symbol))
+
+;; - Dired Keymap -
+;;   -   : Move to the parent directory
+;;   S-D : Create directory
+;;   %   : Create File
+(eval-after-load "dired" '(progn
+  (define-key dired-mode-map (kbd "M-o") 'other-window)
+  (define-key dired-mode-map "%" 'find-file)
+  (define-key dired-mode-map "D" 'dired-create-directory)
+  (define-key dired-mode-map "-"
+    (lambda ()
+      (interactive)
+      (find-alternate-file "..")))
+  )
+)

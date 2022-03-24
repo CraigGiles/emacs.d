@@ -60,3 +60,6 @@
   (modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
   (modify-face 'font-lock-done-face "Green" nil nil t nil t nil nil)
   (modify-face 'font-lock-note-face "CornflowerBlue" nil nil t nil t nil nil))
+
+
+(provide 'gilesc-theme)
