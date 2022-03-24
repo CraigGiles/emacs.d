@@ -384,6 +384,19 @@
     (evil-set-undo-system 'undo-tree)
     (global-undo-tree-mode 1))
 
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config (setq which-key-idle-delay 0.3))
+
+(use-package helpful
+  :ensure t
+  :bind
+  ([remap describe-function] . helpful-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . helpful-variable)
+  ([remap describe-key] . helpful-key))
+
 (use-package markdown-mode
   :init)
 
