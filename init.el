@@ -18,13 +18,9 @@
 (tool-bar-mode -1)
 
 
-(defun untabify-except-makefiles ()
-  "Replace tabs with spaces except in makefiles."
-  (unless (derived-mode-p 'makefile-mode)
-    (untabify (point-min) (point-max))))
-
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'before-save-hook 'untabify-except-makefiles)
+;;
+;;   --- Functions ---
+;; ---------------------------------------------------------------
 
 ;; Special values:
 ;;   `gnu'         compiled for a GNU Hurd system.
@@ -39,12 +35,57 @@
 ;; (if-system gnu/linux
 ;;   (message "Free as in Beer")
 ;;   (message "Free as in Freedom!"))
-
+;; ---------------------------------------------------------------
 (defmacro if-system (type &rest body)
   "Evaluate BODY if `system-type' equals TYPE."
   (declare (indent defun))
   `(when (eq system-type ',type)
      ,@body))
+
+;; All code within an #if 0 block should be set to the comment color
+(defun if0-font-lock (limit)
+  (save-restriction
+    (widen)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((depth 0) str start start-depth)
+        (while (re-search-forward "^\\s-*#\\s-*\\(if\\|else\\|endif\\)" limit 'move)
+          (setq str (match-string 1))
+          (if (string= str "if")
+              (progn
+                (setq depth (1+ depth))
+                (when (and (null start) (looking-at "\\s-+0"))
+                  (setq start (match-end 0)
+                        start-depth depth)))
+            (when (and start (= depth start-depth))
+              (c-put-font-lock-face start (match-beginning 0) 'font-lock-comment-face)
+              (setq start nil))
+            (when (string= str "endif")
+              (setq depth (1- depth)))))
+        (when (and start (> depth 0))
+          (c-put-font-lock-face start (point) 'font-lock-comment-face)))))
+  nil)
+
+(if-system darwin
+    (setq notes-directory "~/Development/notes/")
+)
+
+(if-system windows-nt
+    (setq notes-directory "w:/notes")
+)
+
+(defun load-notes-directory ()
+    (interactive)
+    (find-file notes-directory)
+)
+
+(defun untabify-except-makefiles ()
+  "Replace tabs with spaces except in makefiles."
+  (unless (derived-mode-p 'makefile-mode)
+    (untabify (point-min) (point-max))))
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook 'untabify-except-makefiles)
 
 
 ;; ===============================================================
@@ -98,43 +139,54 @@
   :init
     (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
     (setq evil-want-keybinding nil)
-
-    (evil-mode t)
-
-  :config
     (setq evil-vsplit-window-right t)
     (setq evil-split-window-below t)
 
-    (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
-    (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+    (evil-mode t)
 
-    (define-key evil-normal-state-map (kbd "-") 'find-file)
+  :bind (:map evil-normal-state-map
+              ("j" . 'evil-next-visual-line)
+              ("k" . 'evil-previous-visual-line)
+              ("-" . 'find-file)
+              ("C-f" . 'ag-project-at-point)
+              ("C-u" . 'evil-scroll-up)
+              ("M-p" . 'counsel-projectile-find-file)
+              ("C-p" . 'counsel-projectile-find-file)
+              ("C-c C-c" . 'eval-buffer)
+              ([tab] . 'evil-toggle-fold)
+              ("M-j" . 'counsel-imenu)
+              ("M-6" . 'switch-other-window-to-last-buffer)
+              ("SPC n" . 'evil-search-highlight-persist-remove-all)
+              ("C-w C-h" . 'evil-window-left)
+              ("C-w C-l" . 'evil-window-right)
+              ("C-k" . 'evil-backward-paragraph)
+              ("C-j" . 'evil-forward-paragraph)
+              ("C-k" . 'evil-backward-paragraph)
+              ("C-j" . 'evil-forward-paragraph)
+              ("C-e" . 'end-of-line)
+              ("C-a" . 'beginning-of-line)
+              ("<f5>" . 'load-notes-directory)
 
-    ;; TODO(craig): unsure if i want to have fzf if it splits the way i have to do things on different OSes
-    ;; (if-system darwin
-    ;;              (define-key evil-normal-state-map (kbd "M-p") 'counsel-fzf)
-    ;;              (define-key evil-normal-state-map (kbd "C-p") 'counsel-fzf))
+              ;; Navigating Errors
+              ([f9] . 'first-error)
+              ("M-n" . 'next-error)
+              ("M-C-n" . 'previous-error)
 
-    ;; (if-system windows-nt
-    ;;              (define-key evil-normal-state-map (kbd "M-p") 'counsel-projectile-find-file)
-    ;;              (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file))
+              ;; Switching Buffers
+              ("M-b"  . 'counsel-ibuffer)
+              ("C-M-b"  . (lambda () ;; Switch buffer other window
+                            (interactive)
+                            (other-window 1)
+                            (counsel-ibuffer)))
 
-    (define-key evil-normal-state-map (kbd "M-p") 'counsel-projectile-find-file)
-    (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file)
-
-    (define-key evil-normal-state-map (kbd "C-c C-c") 'eval-buffer)
-
-    ;; NOTE: This is the way to re-bind an ex command if i ever need it
-    ;; (define-key evil-ex-map "e" 'counsel-fzf)
-
-    (define-key evil-normal-state-map (kbd "C-f") 'ag-project-at-point)
-    (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
-    (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
-    (define-key evil-insert-state-map (kbd "C-u") (lambda ()
-      (interactive)
-      (evil-delete (point-at-bol) (point)))
-    )
-) ;; evil
+              )(:map evil-visual-state-map
+              ("C-u" . 'evil-scroll-up)
+              )(:map evil-insert-state-map
+              ("C-u" . (lambda ()
+                         (interactive)
+                         (evil-delete (point-at-bol) (point))))
+              )
+)
 
 
 (use-package evil-escape
@@ -329,89 +381,19 @@
   :config
     (setq undo-tree-auto-save-history t)
     (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-
     (evil-set-undo-system 'undo-tree)
-
     (global-undo-tree-mode 1))
 
 (use-package markdown-mode
   :init)
 
-;;
-;;   --- Functions ---
-;; ---------------------------------------------------------------
-;; All code within an #if 0 block should be set to the comment color
-(defun if0-font-lock (limit)
-  (save-restriction
-    (widen)
-    (save-excursion
-      (goto-char (point-min))
-      (let ((depth 0) str start start-depth)
-        (while (re-search-forward "^\\s-*#\\s-*\\(if\\|else\\|endif\\)" limit 'move)
-          (setq str (match-string 1))
-          (if (string= str "if")
-              (progn
-                (setq depth (1+ depth))
-                (when (and (null start) (looking-at "\\s-+0"))
-                  (setq start (match-end 0)
-                        start-depth depth)))
-            (when (and start (= depth start-depth))
-              (c-put-font-lock-face start (match-beginning 0) 'font-lock-comment-face)
-              (setq start nil))
-            (when (string= str "endif")
-              (setq depth (1- depth)))))
-        (when (and start (> depth 0))
-          (c-put-font-lock-face start (point) 'font-lock-comment-face)))))
-  nil)
-
-
 ;; ===============================================================
 ;;   keymap key-bindings keybindings
 ;; ---------------------------------------------------------------
 
-(if-system darwin
-    (setq notes-directory "~/Development/notes/")
-)
-
-(if-system windows-nt
-    (setq notes-directory "w:/notes")
-)
-
-(defun load-notes-directory ()
-    (interactive)
-    (find-file notes-directory)
-)
-
-(define-key evil-normal-state-map [tab] 'evil-toggle-fold)
-(define-key evil-normal-state-map (kbd "M-j") 'counsel-imenu)
-(define-key evil-normal-state-map (kbd "M-6") 'switch-other-window-to-last-buffer)
-(define-key evil-normal-state-map (kbd "SPC n") 'evil-search-highlight-persist-remove-all)
-(define-key evil-normal-state-map (kbd "C-w C-h") 'evil-window-left)
-(define-key evil-normal-state-map (kbd "C-w C-l") 'evil-window-right)
-(define-key evil-normal-state-map (kbd "C-k") 'evil-backward-paragraph)
-(define-key evil-normal-state-map (kbd "C-j") 'evil-forward-paragraph)
-(define-key evil-visual-state-map (kbd "C-k") 'evil-backward-paragraph)
-(define-key evil-visual-state-map (kbd "C-j") 'evil-forward-paragraph)
-(define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
-(define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
-(define-key evil-normal-state-map (kbd "<f5>") 'load-notes-directory)
-
 ;; Changing some default bindings for special mode
 (define-key special-mode-map (kbd "C-k") 'scroll-up-command)
 (define-key special-mode-map (kbd "C-j") 'scroll-down-command)
-
-;; Navigating buffers
-(define-key global-map (kbd "M-b" ) 'counsel-ibuffer)
-(define-key global-map (kbd "C-M-b" ) (lambda () ;; Switch buffer other window
-  (interactive)
-  (other-window 1)
-  (counsel-ibuffer))
-)
-
-;; Navigating errors
-(define-key global-map [f9] 'first-error)
-(define-key global-map (kbd "M-n") 'next-error)
-(define-key global-map (kbd "M-C-n") 'previous-error)
 
 ;; - Dired Keymap -
 ;;   -   : Move to the parent directory
