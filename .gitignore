@@ -11,3 +11,8 @@ local-init.el
 custom.el
 transient/
 elpa/
+*.~undo-tree~
+projectile.cache
+eshell/
+server/
+straight/
