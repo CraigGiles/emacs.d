@@ -1,5 +1,6 @@
 (global-set-key (kbd "M-f") 'find-file)
 (setq compile-command "make") ;; NOTE: make is the default compile command. Change on a per-language basis
+(setq fixme-modes '(markdown-mode emacs-lisp-mode prog-mode fundamental-mode))
 
 ;; Clean up window
 (menu-bar-mode -1)
@@ -78,6 +79,7 @@
 ;; ---------------------------------------------------------------
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 (load "kotlin-mode")
+(load "jai-mode")
 
 (use-package evil-commentary
   :pin melpa
@@ -89,6 +91,8 @@
 (use-package evil
   :pin melpa
   :init
+    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+    (setq evil-want-keybinding nil)
     (evil-mode t)
 
   :config
@@ -189,11 +193,11 @@
     (add-to-list 'auto-mode-alist '("\\.m$"       . c++-mode))
     (add-to-list 'auto-mode-alist '("\\.mm$"      . c++-mode))
 
-    (add-to-list 'fixme-modes 'make-mode)
-    (add-to-list 'fixme-modes 'c++-mode)
-    (add-to-list 'fixme-modes 'cc-mode)
-    (add-to-list 'fixme-modes 'c-mode)
-    (initialize-fixme-modes)
+    ;; (add-to-list 'fixme-modes 'make-mode)
+    ;; (add-to-list 'fixme-modes 'c++-mode)
+    ;; (add-to-list 'fixme-modes 'cc-mode)
+    ;; (add-to-list 'fixme-modes 'c-mode)
+    ;; (initialize-fixme-modes)
 
     (with-system darwin
                  (setq build-file-name "build.sh")
@@ -255,8 +259,8 @@
     (add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
     (add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
 
-    (add-to-list 'fixme-modes 'go-mode)
-    (initialize-fixme-modes)
+    ;; (add-to-list 'fixme-modes 'go-mode)
+    ;; (initialize-fixme-modes)
 
     (setq build-file-name "build.sh")
     (setq compile-command "make")
@@ -270,8 +274,8 @@
 ;; ---------------------------------------------------------------
 (defun my-kotlin-mode-hook ()
     (add-to-list 'auto-mode-alist '("\\.kt$" . kotlin-mode))
-    (add-to-list 'fixme-modes 'kotlin-mode)
-    (initialize-fixme-modes)
+    ;; (add-to-list 'fixme-modes 'kotlin-mode)
+    ;; (initialize-fixme-modes)
     (projectile-mode)
 
     (setq tab-stop 4)
@@ -287,14 +291,48 @@
 
 (add-hook 'kotlin-mode-hook 'my-kotlin-mode-hook)
 
-(use-package magit
-  :pin melpa
+;;   --- Jai Mode ---
+;; ---------------------------------------------------------------
+(defun my-jai-mode-hook ()
+    (add-to-list 'auto-mode-alist '("\\.jai$" . jai-mode))
+    ;; (add-to-list 'fixme-modes 'jai-mode)
+    ;; (initialize-fixme-modes)
+    (projectile-mode)
+
+    (setq tab-stop 4)
+    (setq indent-tabs-mode nil)
+
+    (define-key jai-mode-map "\em" 'make-without-asking)
+    (define-key jai-mode-map (kbd "C-M-m") 'test-without-asking)
+
+    (setq build-file-name "build.bat")
+    (setq compile-command "call build.bat")
+    (message "Jai hook added")
+)
+
+(add-hook 'jai-mode-hook 'my-jai-mode-hook)
+
+;; (use-package magit
+;;   :pin melpa
+;;   :config
+;;     (use-package evil-magit)
+;;     (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
+;;     (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
+;;     (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
+;; ) ;; magit
+(use-package evil-collection
+  :after evil
+  :ensure t
   :config
-    (use-package evil-magit)
-    (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
-    (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
-    (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
-) ;; magit
+  (evil-collection-init))
+
+(use-package undo-tree
+  :ensure t
+  :after evil
+  :diminish
+  :config
+    (evil-set-undo-system 'undo-tree)
+    (global-undo-tree-mode 1))
 
 (use-package markdown-mode
   :pin melpa
@@ -534,45 +572,44 @@
 (set-face-attribute 'mode-line nil                    :background "#CDAA7D" ;; "burlywood3"
                                                       :foreground "#000000")
 
-(setq fixme-modes '(markdown-mode emacs-lisp-mode prog-mode fundamental-mode))
-(defun initialize-fixme-modes ()
-  "Sets the highlighted words like TODO and NOTE and colorschemes for these words"
-  (interactive)
-  (make-face 'font-lock-todo-face)
-  (make-face 'font-lock-done-face)
-  (make-face 'font-lock-next-face)
-  (make-face 'font-lock-progress-face)
-  (make-face 'font-lock-bug-face)
-  (make-face 'font-lock-cleanup-face)
-  (make-face 'font-lock-speed-face)
-  (make-face 'font-lock-important-face)
-  (make-face 'font-lock-note-face)
+;; (defun initialize-fixme-modes ()
+;;   "Sets the highlighted words like TODO and NOTE and colorschemes for these words"
+;;   (interactive)
+;;   (make-face 'font-lock-todo-face)
+;;   (make-face 'font-lock-done-face)
+;;   (make-face 'font-lock-next-face)
+;;   (make-face 'font-lock-progress-face)
+;;   (make-face 'font-lock-bug-face)
+;;   (make-face 'font-lock-cleanup-face)
+;;   (make-face 'font-lock-speed-face)
+;;   (make-face 'font-lock-important-face)
+;;   (make-face 'font-lock-note-face)
 
-  (mapc (lambda (mode)
-          (font-lock-add-keywords
-           mode
-           '(
-             ("\\<\\(BUG\\)" 1 'font-lock-bug-face t)
-             ("\\<\\(NOTE\\)" 1 'font-lock-note-face t)
-             ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
-             ("\\<\\(CLEANUP\\)" 1 'font-lock-cleanup-face t)
-             ("\\<\\(SPEED\\)" 1 'font-lock-speed-face t)
+;;   (mapc (lambda (mode)
+;;           (font-lock-add-keywords
+;;            mode
+;;            '(
+;;              ("\\<\\(BUG\\)" 1 'font-lock-bug-face t)
+;;              ("\\<\\(NOTE\\)" 1 'font-lock-note-face t)
+;;              ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
+;;              ("\\<\\(CLEANUP\\)" 1 'font-lock-cleanup-face t)
+;;              ("\\<\\(SPEED\\)" 1 'font-lock-speed-face t)
 
-             ("\\<\\(TODO\\)" 1 'font-lock-todo-face t)
-             ("\\<\\(NEXT\\)" 1 'font-lock-next-face t)
-             ("\\<\\(HOLD\\)" 1 'font-lock-next-face t)
-             ("\\<\\(PROGRESS\\)" 1 'font-lock-progress-face t)
-             ("\\<\\(PROG\\)" 1 'font-lock-progress-face t)
-             ("\\<\\(DONE\\)" 1 'font-lock-done-face t)
-             )))
-        fixme-modes)
+;;              ("\\<\\(TODO\\)" 1 'font-lock-todo-face t)
+;;              ("\\<\\(NEXT\\)" 1 'font-lock-next-face t)
+;;              ("\\<\\(HOLD\\)" 1 'font-lock-next-face t)
+;;              ("\\<\\(PROGRESS\\)" 1 'font-lock-progress-face t)
+;;              ("\\<\\(PROG\\)" 1 'font-lock-progress-face t)
+;;              ("\\<\\(DONE\\)" 1 'font-lock-done-face t)
+;;              )))
+;;         fixme-modes)
 
-  (modify-face 'font-lock-todo-face "firebrick3" nil nil t nil t nil nil)
-  (modify-face 'font-lock-bug-face "Red" nil nil t nil t nil nil)
-  (modify-face 'font-lock-cleanup-face "Yellow" nil nil t nil t nil nil)
-  (modify-face 'font-lock-speed-face "Yellow" nil nil t nil t nil nil)
-  (modify-face 'font-lock-next-face "CornflowerBlue" nil nil t nil t nil nil)
-  (modify-face 'font-lock-progress-face "Yellow" nil nil t nil t nil nil)
-  (modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
-  (modify-face 'font-lock-done-face "Green" nil nil t nil t nil nil)
-  (modify-face 'font-lock-note-face "CornflowerBlue" nil nil t nil t nil nil))
+;;   (modify-face 'font-lock-todo-face "firebrick3" nil nil t nil t nil nil)
+;;   (modify-face 'font-lock-bug-face "Red" nil nil t nil t nil nil)
+;;   (modify-face 'font-lock-cleanup-face "Yellow" nil nil t nil t nil nil)
+;;   (modify-face 'font-lock-speed-face "Yellow" nil nil t nil t nil nil)
+;;   (modify-face 'font-lock-next-face "CornflowerBlue" nil nil t nil t nil nil)
+;;   (modify-face 'font-lock-progress-face "Yellow" nil nil t nil t nil nil)
+;;   (modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
+;;   (modify-face 'font-lock-done-face "Green" nil nil t nil t nil nil)
+;;   (modify-face 'font-lock-note-face "CornflowerBlue" nil nil t nil t nil nil))
