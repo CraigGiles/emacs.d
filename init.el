@@ -341,7 +341,7 @@
     (define-key kotlin-mode-map (kbd "C-M-m") 'test-without-asking)
 
     (setq build-file-name "build.gradle.kts")
-    (setq compile-command "./gradlew compileKotlin")
+    (setq compile-command "../gradlew compileKotlin")
     (message "Kotlin hook added")
 )
 
@@ -404,7 +404,11 @@
   ([remap describe-key] . helpful-key))
 
 (use-package markdown-mode
-  :init)
+  :init
+  :config (flyspell-mode 1))
+
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
 
 ;; ===============================================================
 ;;   keymap key-bindings keybindings
