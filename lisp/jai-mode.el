@@ -49,7 +49,7 @@
   "Built-in functions and types for the Jai language. Used for font locking.")
 
 (defconst jai-mode-keywords
-  '("if" "else" "then" "while" "for" "switch" "case" "struct" "enum"
+  '("if" "ifx" "else" "then" "while" "for" "switch" "case" "struct" "enum"
     "return" "new" "remove" "continue" "break" "defer" "inline" "no_inline"
     "using" "SOA" "it")
   "Built in keywords for the jai language.  Used for font locking.")
