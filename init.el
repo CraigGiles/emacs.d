@@ -74,6 +74,12 @@
     (setq notes-directory "w:/notes")
 )
 
+(defun save-buffers-without-asking ()
+  "Saves all loaded buffers without prompting."
+  (interactive)
+  (save-some-buffers t))
+
+
 (defun load-notes-directory ()
     (interactive)
     (find-file notes-directory)
@@ -335,7 +341,7 @@
     (define-key kotlin-mode-map (kbd "C-M-m") 'test-without-asking)
 
     (setq build-file-name "build.gradle.kts")
-    (setq compile-command "./gradlew compileKotlin")
+    (setq compile-command "../gradlew compileKotlin")
     (message "Kotlin hook added")
 )
 
@@ -398,7 +404,11 @@
   ([remap describe-key] . helpful-key))
 
 (use-package markdown-mode
-  :init)
+  :init
+  :config (flyspell-mode 1))
+
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
 
 ;; ===============================================================
 ;;   keymap key-bindings keybindings
@@ -423,28 +433,27 @@
   )
 )
 
-
 ;; TODO(craig): iterate through all modes i'm using and use the iterator to test
 ;;     (setq loaded-modes '())
 ;;     (add-to-list 'loaded-modes 'markdown-mode)
 ;;     (add-to-list 'loaded-modes 'scala-mode)
-(defun save-buffers-without-asking ()
-  "Saves all loaded buffers without prompting."
-  (interactive)
-  (save-some-buffers 'no-confirm (lambda ()
-                                   (cond
-                                    ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
-                                    ((and buffer-file-name (eq major-mode 'markdown-mode)))
-                                    ((and buffer-file-name (eq major-mode 'c-mode)))
-                                    ((and buffer-file-name (eq major-mode 'cc-mode)))
-                                    ((and buffer-file-name (eq major-mode 'c++-mode)))
-                                    ((and buffer-file-name (eq major-mode 'kotlin-mode)))
-                                    ((and buffer-file-name (eq major-mode 'scala-mode)))
-                                    ((and buffer-file-name (eq major-mode 'go-mode)))
-                                    ((and buffer-file-name (eq major-mode 'jai-mode)))
-                                    ((and buffer-file-name (eq major-mode 'php-mode)))
-                                    ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
-                                    ((and buffer-file-name (derived-mode-p 'org-mode)))))))
+;; (defun save-buffers-without-asking ()
+;;   "Saves all loaded buffers without prompting."
+;;   (interactive)
+;;   (save-some-buffers 'no-confirm (lambda ()
+;;                                    (cond
+;;                                     ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
+;;                                     ((and buffer-file-name (eq major-mode 'markdown-mode)))
+;;                                     ((and buffer-file-name (eq major-mode 'c-mode)))
+;;                                     ((and buffer-file-name (eq major-mode 'cc-mode)))
+;;                                     ((and buffer-file-name (eq major-mode 'c++-mode)))
+;;                                     ((and buffer-file-name (eq major-mode 'kotlin-mode)))
+;;                                     ((and buffer-file-name (eq major-mode 'scala-mode)))
+;;                                     ((and buffer-file-name (eq major-mode 'go-mode)))
+;;                                     ((and buffer-file-name (eq major-mode 'jai-mode)))
+;;                                     ((and buffer-file-name (eq major-mode 'php-mode)))
+;;                                     ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+;;                                     ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
 ;; TODO create a function that asks if a vertical split exists (or if
 ;; there is only one window) if one window then split vertically and
