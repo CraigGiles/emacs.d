@@ -326,6 +326,26 @@
 
 ) ;; go-mode
 
+(use-package csharp-mode
+  :mode "\\.cs\\'"
+  :hook (csharp-mode . my-csharp-mode)
+  :config
+    (defun my-csharp-mode ()
+        (omnisharp-mode 1)
+        (flycheck-mode 1)
+    )
+)
+
+;; (use-package omnisharp
+;;   :bind
+;;   (:map csharp-mode-map
+;;         ("<f12>" . omnisharp-go-to-definition)
+;;         ("S-<f12>" . omnisharp-find-usages))
+;;   :config
+;;   ;;(setq omnisharp-server-executable-path "~/.emacs.d/.cache/omnisharp/server/v1.32.18/run")
+;;   (setq omnisharp-server-executable-path "~/.vscode/extensions/ms-vscode.csharp-1.20.0/.omnisharp/1.32.20/run")
+;;   (add-to-list 'company-backends #'company-omnisharp))
+
 ;;   --- Kotlin Mode ---
 ;; ---------------------------------------------------------------
 (defun my-kotlin-mode-hook ()
