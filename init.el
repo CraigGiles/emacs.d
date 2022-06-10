@@ -376,6 +376,13 @@
     (initialize-fixme-modes)
     (projectile-mode)
 
+    (add-to-list
+     'compilation-error-regexp-alist
+     (list "^\\([A-Za-z]:.+?\\):\\([0-9]+\\),\\([0-9]+\\):.*"
+           1   ;FILE
+           2   ;LINE
+           3)) ;COLUMN
+
     (setq tab-stop 4)
     (setq indent-tabs-mode nil)
 
@@ -389,12 +396,6 @@
 
 (add-hook 'jai-mode-hook 'my-jai-mode-hook)
 
-(add-to-list
- 'compilation-error-regexp-alist
-  (list "^\\([A-Za-z]:.+?\\):\\([0-9]+\\),\\([0-9]+\\):.*"
-       1   ;FILE
-       2   ;LINE
-       3)) ;COLUMN
 
 
 (use-package magit
