@@ -389,41 +389,12 @@
 
 (add-hook 'jai-mode-hook 'my-jai-mode-hook)
 
-;; http://praveen.kumar.in/2011/03/09/making-gnu-emacs-detect-custom-error-messages-a-maven-example/
-;; Gotta figure this out
 (add-to-list
  'compilation-error-regexp-alist
-  (list (concat
-        "^"
-        "([A-Za-z]:\\(.+?\\):"                       ; 1 -- file path
-        "(\\([0-9]+\\))"
-
-        "(\\([0-9]+\\)\\(?:,\\([0-9]+\\)\\)?) ?: "   ; 2,(3)
-        "\\(\\(?:error\\|\\(warning\\)\\) [^ :]+\\)" ; 4,(5)
-        )
-       1                          ;FILE
-       2                          ;LINE
-       3                          ;COLUMN
-       '(5)                       ;ERROR is warning if 5 matched, else error.
-       nil                        ;HYPERLINK
-       '(4 font-lock-comment-face)
-       ) )
-
-;; (add-to-list
-;;  'compilation-error-regexp-alist
-;;   (list (concat
-;;         "^"
-;;         "\\([^(]+\\)"                                ; 1
-;;         "(\\([0-9]+\\)\\(?:,\\([0-9]+\\)\\)?) ?: "   ; 2,(3)
-;;         "\\(\\(?:error\\|\\(warning\\)\\) [^ :]+\\)" ; 4,(5)
-;;         )
-;;        1                          ;FILE
-;;        2                          ;LINE
-;;        3                          ;COLUMN
-;;        '(5)                       ;ERROR is warning if 5 matched, else error.
-;;        nil                        ;HYPERLINK
-;;        '(4 font-lock-comment-face)
-;;        ) )
+  (list "^\\([A-Za-z]:.+?\\):\\([0-9]+\\),\\([0-9]+\\):.*"
+       1   ;FILE
+       2   ;LINE
+       3)) ;COLUMN
 
 
 (use-package magit
