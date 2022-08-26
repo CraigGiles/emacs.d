@@ -171,7 +171,6 @@
               ("C-j" . 'evil-forward-paragraph)
               ("C-e" . 'end-of-line)
               ("C-a" . 'beginning-of-line)
-              ("<f5>" . 'load-notes-directory)
 
               ;; Navigating Errors
               ([f9] . 'first-error)
@@ -335,6 +334,21 @@
         (flycheck-mode 1)
     )
 )
+
+(defun godot-run-main-scene ()
+    (interactive)
+    (save-buffers-without-asking)
+    (gdscript-godot-run-project-debug))
+
+(setq gdscript-godot-executable "W:/godot/Godot_v4.0-alpha14_win64.exe")
+(use-package gdscript-mode
+    :straight (gdscript-mode
+               :type git
+               :host github
+               :repo "godotengine/emacs-gdscript-mode")
+    :config
+        (define-key gdscript-mode-map "<f5>" 'godot-run-main-scene)
+        (define-key gdscript-mode-map [f5] 'godot-run-main-scene))
 
 ;; (use-package omnisharp
 ;;   :bind
