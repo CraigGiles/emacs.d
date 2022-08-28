@@ -42,6 +42,19 @@
   `(when (eq system-type ',type)
      ,@body))
 
+
+(defun set-programming-mode ()
+  "Set the font size for emacs"
+  (interactive)
+  (set-face-attribute 'default nil :height 128)
+)
+
+(defun set-streaming-mode ()
+  "Set the font size for emacs"
+  (interactive)
+  (set-face-attribute 'default nil :height 200)
+)
+
 ;; All code within an #if 0 block should be set to the comment color
 (defun if0-font-lock (limit)
   (save-restriction
