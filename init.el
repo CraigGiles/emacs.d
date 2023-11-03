@@ -47,12 +47,14 @@
   "Set the font size for emacs"
   (interactive)
   (set-face-attribute 'default nil :height 128)
+  (set-background-color "#072626") ;; Actually J.Blow's theme
 )
 
 (defun set-streaming-mode ()
   "Set the font size for emacs"
   (interactive)
   (set-face-attribute 'default nil :height 200)
+  (set-background-color "#073642") ;; Solarized background color
 )
 
 ;; All code within an #if 0 block should be set to the comment color
