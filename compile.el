@@ -39,11 +39,10 @@
     (find-project-directory-recursive)
     (setq last-compilation-directory default-directory)))
 
-(defun make-without-asking ()
+(defun compile-project ()
   "Make the current build."
   (interactive)
   (split-window-right-if-single-window)
   (save-buffers-without-asking)
   (if (find-project-directory) (compile compile-command))
   (other-window 1))
-

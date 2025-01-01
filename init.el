@@ -59,10 +59,9 @@
 (load custom_file_path)
 
 (load-file (expand-file-name "gilesc-theme.el" user-emacs-directory))
-(load-file (expand-file-name "compile-functions.el" user-emacs-directory))
+(load-file (expand-file-name "compile.el" user-emacs-directory))
 (load-file (expand-file-name "untabify.el" user-emacs-directory))
 (load-file (expand-file-name "rc.el" user-emacs-directory))
-
 
 ;;
 ;;      -- Packages --
@@ -188,23 +187,14 @@
 (require 'jai-mode)
 
 (defun my-jai-mode-hook ()
-    (add-to-list
-     'compilation-error-regexp-alist
-     (list "^\\([A-Za-z]:.+?\\):\\([0-9]+\\),\\([0-9]+\\):.*"
-           1   ;FILE
-           2   ;LINE
-           3)) ;COLUMN
+  (define-key jai-mode-map "\em" 'compile-project)
 
-    (setq tab-stop 4)
-    (setq indent-tabs-mode nil)
+  (setq build-file-name "build.bat")
+  (setq compile-command "call build.bat")
 
-    (define-key jai-mode-map "\em" 'make-without-asking)
+  (message "Jai hook added")
+  )
 
-    (setq build-file-name "build.bat")
-    (setq compile-command "call build.bat")
-
-    (message "Jai hook added")
-)
 (add-hook 'jai-mode-hook 'my-jai-mode-hook)
 
 ;;
