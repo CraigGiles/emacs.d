@@ -14,9 +14,10 @@
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
-(ido-mode 1)
-(ido-everywhere 1)
 (global-display-line-numbers-mode 1)
+
+(ido-mode 0)
+;; (ido-everywhere 1)
 
 (rc/require 'ag)
 (rc/require 'magit)
@@ -24,6 +25,14 @@
 (counsel-projectile-mode 1)
 
 (global-set-key (kbd "M-f") 'find-file)
+
+(defun untabify-except-makefiles ()
+  "Replace tabs with spaces except in makefiles."
+  (unless (derived-mode-p 'makefile-mode)
+    (untabify (point-min) (point-max))))
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook 'untabify-except-makefiles)
 
 ;;
 ;;      -- Evil --
@@ -78,7 +87,7 @@
 
   ;; Visual Mode
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
-  
+
   ;; Insert Mode
   (define-key evil-insert-state-map (kbd "C-u") (lambda ()
                                                 (interactive)
@@ -126,3 +135,58 @@
     (message "Jai hook added")
 )
 (add-hook 'jai-mode-hook 'my-jai-mode-hook)
+
+;;
+;;      -- jai --
+;; -----------------------------------------------------------------
+(rc/require 'markdown-mode)
+(add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
+
+;; - Dired Keymap -
+;;   -   : Move to the parent directory
+;;   S-D : Create directory
+;;   %   : Create File
+(eval-after-load "dired" '(progn
+  (define-key dired-mode-map (kbd "M-o") 'other-window)
+  (define-key dired-mode-map "%" 'find-file)
+  (define-key dired-mode-map "D" 'dired-create-directory)
+  (define-key dired-mode-map "-"
+    (lambda ()
+      (interactive)
+      (find-alternate-file "..")))
+  )
+)
+
+
+;; Put all the backup files in an ~/.emacs.d/backup dir
+(setq backup-directory-alist '(("." . "~/.emacs.d/auto-saves")))
+(setq create-lockfiles nil)
+(setq auto-save-default nil) ;; IMPORTANT(craig) - remove this if it becomes necessary
+
+(setq next-line-add-newlines nil)
+(setq truncate-partial-width-windows nil)
+(setq-default truncate-lines t)
+
+;; Stop Emacs from losing undo information by setting high limits
+(setq undo-limit 20000000)
+(setq undo-strong-limit 40000000)
+
+;; Set the OSX's CMD key as the meta key
+(setq mac-option-key-is-meta nil)
+(setq mac-command-key-is-meta t)
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier nil)
+
+;; turn on the column numbers in modeline
+(setq column-number-mode 1)
+
+;; Turn off the bell on Mac OS X
+(defun nil-bell ())
+(setq ring-bell-function 'nil-bell)
+
+;; Auto revert files that change on the hard disk
+(global-auto-revert-mode 1)
+
+;; Treat emacs 'symbol' as a word
+(with-eval-after-load 'evil
+  (defalias #'forward-evil-word #'forward-evil-symbol))

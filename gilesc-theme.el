@@ -5,8 +5,6 @@
 ;; Font
 (set-face-attribute 'default t       :font "Liberation Mono-12")
 (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
-(add-to-list 'default-frame-alist '(width . 165))
-(add-to-list 'default-frame-alist '(height . 60))
 
 ;; Colors
 (setq foreground-font-color                                       "#D2CBC0")
