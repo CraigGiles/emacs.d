@@ -144,6 +144,13 @@
   (defalias #'forward-evil-word #'forward-evil-symbol))
 
 ;;
+;;      -- fixme hilighting --
+;; -----------------------------------------------------------------
+(require 'fixme-mode)
+(setq fixme-modes '(markdown-mode emacs-lisp-mode prog-mode fundamental-mode jai-mode))
+(initialize-fixme-modes)
+
+;;
 ;;      -- C/CPP --
 ;; -----------------------------------------------------------------
 (require 'simpc-mode)
@@ -176,7 +183,7 @@
 (add-hook 'jai-mode-hook 'my-jai-mode-hook)
 
 ;;
-;;      -- jai --
+;;      -- markdown --
 ;; -----------------------------------------------------------------
 (rc/require 'markdown-mode)
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
