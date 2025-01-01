@@ -70,6 +70,12 @@
 (rc/require 'ag)
 (rc/require 'magit)
 (rc/require 'counsel-projectile)
+(rc/require 'yaml-mode)
+(rc/require 'toml-mode)
+(rc/require 'glsl-mode)
+(rc/require 'cmake-mode)
+(rc/require 'csharp-mode)
+(rc/require 'markdown-mode)
 
 (counsel-projectile-mode 1)
 
@@ -204,4 +210,3 @@
 ;;
 ;;      -- Required Modes --
 ;; -----------------------------------------------------------------
-(rc/require 'markdown-mode)
