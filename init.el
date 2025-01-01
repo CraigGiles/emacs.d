@@ -1,5 +1,8 @@
 (package-initialize)
 
+;;
+;;      -- Loading --
+;; -----------------------------------------------------------------
 (add-to-list 'load-path (expand-file-name "local" user-emacs-directory))
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
@@ -7,7 +10,11 @@
 (load-file (expand-file-name "rc.el" user-emacs-directory))
 (load-file (expand-file-name "gilesc-theme.el" user-emacs-directory))
 (load-file (expand-file-name "compile-functions.el" user-emacs-directory))
+(load-file (expand-file-name "untabify.el" user-emacs-directory))
 
+;;
+;;      -- Settings --
+;; -----------------------------------------------------------------
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
 
@@ -16,23 +23,45 @@
 (scroll-bar-mode 0)
 (global-display-line-numbers-mode 1)
 
-(ido-mode 0)
-;; (ido-everywhere 1)
+;; Put all the backup files in an ~/.emacs.d/backup dir
+(setq backup-directory-alist '(("." . "~/.emacs.d/auto-saves")))
+(setq create-lockfiles nil)
+(setq auto-save-default nil) ;; IMPORTANT(craig) - remove this if it becomes necessary
 
-(rc/require 'ag)
-(rc/require 'magit)
-(rc/require 'counsel-projectile)
-(counsel-projectile-mode 1)
+(setq next-line-add-newlines nil)
+(setq truncate-partial-width-windows nil)
+(setq-default truncate-lines t)
+
+;; Stop Emacs from losing undo information by setting high limits
+(setq undo-limit 20000000)
+(setq undo-strong-limit 40000000)
+
+;; Set the OSX's CMD key as the meta key
+(setq mac-option-key-is-meta nil)
+(setq mac-command-key-is-meta t)
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier nil)
+
+;; turn on the column numbers in modeline
+(setq column-number-mode 1)
+
+;; Turn off the bell on Mac OS X
+(defun nil-bell ())
+(setq ring-bell-function 'nil-bell)
+
+;; Auto revert files that change on the hard disk
+(global-auto-revert-mode 1)
 
 (global-set-key (kbd "M-f") 'find-file)
 
-(defun untabify-except-makefiles ()
-  "Replace tabs with spaces except in makefiles."
-  (unless (derived-mode-p 'makefile-mode)
-    (untabify (point-min) (point-max))))
+;;
+;;      -- Packages --
+;; -----------------------------------------------------------------
+(rc/require 'ag)
+(rc/require 'magit)
+(rc/require 'counsel-projectile)
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'before-save-hook 'untabify-except-makefiles)
+(counsel-projectile-mode 1)
 
 ;;
 ;;      -- Evil --
@@ -42,6 +71,7 @@
 (rc/require 'evil-commentary)
 (rc/require 'evil-search-highlight-persist)
 (rc/require 'use-package-chords)
+(rc/require 'undo-tree)
 
 (setq evil-want-keybinding nil) ; NOTE: must be set before evil-collection
 (rc/require 'evil-collection)
@@ -51,6 +81,11 @@
 (key-chord-mode 1)
 (evil-commentary-mode 1)
 (global-evil-search-highlight-persist 1)
+
+(setq undo-tree-auto-save-history t)
+(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+(global-undo-tree-mode 1)
+(evil-set-undo-system 'undo-tree)
 
 (evil-collection-init)
 
@@ -104,6 +139,10 @@
 (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
 (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
 
+;; Treat emacs 'symbol' as a word
+(with-eval-after-load 'evil
+  (defalias #'forward-evil-word #'forward-evil-symbol))
+
 ;;
 ;;      -- C/CPP --
 ;; -----------------------------------------------------------------
@@ -141,52 +180,3 @@
 ;; -----------------------------------------------------------------
 (rc/require 'markdown-mode)
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
-
-;; - Dired Keymap -
-;;   -   : Move to the parent directory
-;;   S-D : Create directory
-;;   %   : Create File
-(eval-after-load "dired" '(progn
-  (define-key dired-mode-map (kbd "M-o") 'other-window)
-  (define-key dired-mode-map "%" 'find-file)
-  (define-key dired-mode-map "D" 'dired-create-directory)
-  (define-key dired-mode-map "-"
-    (lambda ()
-      (interactive)
-      (find-alternate-file "..")))
-  )
-)
-
-
-;; Put all the backup files in an ~/.emacs.d/backup dir
-(setq backup-directory-alist '(("." . "~/.emacs.d/auto-saves")))
-(setq create-lockfiles nil)
-(setq auto-save-default nil) ;; IMPORTANT(craig) - remove this if it becomes necessary
-
-(setq next-line-add-newlines nil)
-(setq truncate-partial-width-windows nil)
-(setq-default truncate-lines t)
-
-;; Stop Emacs from losing undo information by setting high limits
-(setq undo-limit 20000000)
-(setq undo-strong-limit 40000000)
-
-;; Set the OSX's CMD key as the meta key
-(setq mac-option-key-is-meta nil)
-(setq mac-command-key-is-meta t)
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier nil)
-
-;; turn on the column numbers in modeline
-(setq column-number-mode 1)
-
-;; Turn off the bell on Mac OS X
-(defun nil-bell ())
-(setq ring-bell-function 'nil-bell)
-
-;; Auto revert files that change on the hard disk
-(global-auto-revert-mode 1)
-
-;; Treat emacs 'symbol' as a word
-(with-eval-after-load 'evil
-  (defalias #'forward-evil-word #'forward-evil-symbol))
