@@ -61,6 +61,7 @@
 (load-file (expand-file-name "gilesc-theme.el" user-emacs-directory))
 (load-file (expand-file-name "compile.el" user-emacs-directory))
 (load-file (expand-file-name "untabify.el" user-emacs-directory))
+(load-file (expand-file-name "system.el" user-emacs-directory))
 (load-file (expand-file-name "rc.el" user-emacs-directory))
 
 ;;
@@ -185,6 +186,12 @@
         c-default-style "ellemtel"
         c-basic-offset 4)
 
+  (add-to-list 'fixme-modes 'make-mode)
+  (add-to-list 'fixme-modes 'c++-mode)
+  (add-to-list 'fixme-modes 'cc-mode)
+  (add-to-list 'fixme-modes 'c-mode)
+  (initialize-fixme-modes)
+
   (message "Applied custom C/CPP settings"))
 
 (add-hook 'c++-mode-hook 'c-settings)
@@ -197,8 +204,16 @@
 (defun jai-settings ()
   (define-key jai-mode-map "\em" 'compile-project)
 
-  (setq build-file-name "build.bat"
-        compile-command "call build.bat")
+  (add-to-list 'fixme-modes 'jai-mode)
+  (initialize-fixme-modes)
+
+  (if-system darwin
+             (setq build-file-name "build.sh"
+                   compile-command "./build.sh"))
+
+  (if-system windows-nt
+             (setq build-file-name "build.bat"
+                   compile-command "call build.bat"))
 
   (message "Applied custom JAI settings"))
 
