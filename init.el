@@ -207,13 +207,20 @@
   (add-to-list 'fixme-modes 'jai-mode)
   (initialize-fixme-modes)
 
-  (if-system darwin
-             (setq build-file-name "build.sh"
-                   compile-command "./build.sh"))
+  ;; NOTE: since I use JAI on a linux and windows system, i have to
+  ;; swap between the two in settings
+  (defun jai-windows-settings ()
+    (setq build-file-name "build.bat"
+          compile-command "call build.bat"))
 
-  (if-system windows-nt
-             (setq build-file-name "build.bat"
-                   compile-command "call build.bat"))
+  (defun jai-nix-settings ()
+    (setq build-file-name "build.sh"
+          compile-command "./build.sh"))
+
+  (if-system darwin     (jai-nix-settings))
+  (if-system gnu        (jai-nix-settings))
+  (if-system gnu/linux  (jai-nix-settings))
+  (if-system windows-nt (jai-windows-settings))
 
   (message "Applied custom JAI settings"))
 
