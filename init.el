@@ -1,16 +1,9 @@
 (package-initialize)
 
-;;
-;;      -- Loading --
-;; -----------------------------------------------------------------
-(add-to-list 'load-path (expand-file-name "local" user-emacs-directory))
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file)
-
-(load-file (expand-file-name "rc.el" user-emacs-directory))
-(load-file (expand-file-name "gilesc-theme.el" user-emacs-directory))
-(load-file (expand-file-name "compile-functions.el" user-emacs-directory))
-(load-file (expand-file-name "untabify.el" user-emacs-directory))
+(menu-bar-mode 0)
+(tool-bar-mode 0)
+(scroll-bar-mode 0)
+(global-display-line-numbers-mode 1)
 
 ;;
 ;;      -- Settings --
@@ -18,10 +11,6 @@
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
 
-(menu-bar-mode 0)
-(tool-bar-mode 0)
-(scroll-bar-mode 0)
-(global-display-line-numbers-mode 1)
 
 ;; Put all the backup files in an ~/.emacs.d/backup dir
 (setq backup-directory-alist '(("." . "~/.emacs.d/auto-saves")))
@@ -53,6 +42,27 @@
 (global-auto-revert-mode 1)
 
 (global-set-key (kbd "M-f") 'find-file)
+
+;;
+;;      -- Loading --
+;; -----------------------------------------------------------------
+(add-to-list 'load-path (expand-file-name "local" user-emacs-directory))
+
+;; NOTE: this will create the custom.el file if it does not exist
+(setq custom_file_path (expand-file-name "custom.el" user-emacs-directory))
+(if (file-exists-p custom_file_path)
+    ()
+    (make-empty-file custom_file_path)
+)
+
+(setq custom-file custom_file_path)
+(load custom_file_path)
+
+(load-file (expand-file-name "gilesc-theme.el" user-emacs-directory))
+(load-file (expand-file-name "compile-functions.el" user-emacs-directory))
+(load-file (expand-file-name "untabify.el" user-emacs-directory))
+(load-file (expand-file-name "rc.el" user-emacs-directory))
+
 
 ;;
 ;;      -- Packages --
@@ -135,6 +145,9 @@
 (key-chord-define evil-insert-state-map "jj" 'evil-escape)
 (key-chord-define evil-normal-state-map "gc" 'evil-commentary-line)
 
+(define-key special-mode-map (kbd "C-k") 'scroll-up-command)
+(define-key special-mode-map (kbd "C-j") 'scroll-down-command)
+
 (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
 (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
 (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
@@ -153,14 +166,20 @@
 ;;
 ;;      -- C/CPP --
 ;; -----------------------------------------------------------------
-(require 'simpc-mode)
-(add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
+(rc/require 'cc-mode)
+
+(add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
+(add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
+
+(setq c-default-style "ellemtel"
+      c-basic-offset 4)
+
 
 ;;
 ;;      -- jai --
 ;; -----------------------------------------------------------------
 (require 'jai-mode)
-(add-to-list 'auto-mode-alist '("\\.jai$" . jai-mode))
 
 (defun my-jai-mode-hook ()
     (add-to-list
@@ -183,7 +202,6 @@
 (add-hook 'jai-mode-hook 'my-jai-mode-hook)
 
 ;;
-;;      -- markdown --
+;;      -- Required Modes --
 ;; -----------------------------------------------------------------
 (rc/require 'markdown-mode)
-(add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
