@@ -177,25 +177,34 @@
 (add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
 (add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
 
-(setq c-default-style "ellemtel"
-      c-basic-offset 4)
+(defun c-settings ()
+  (define-key c++-mode-map "\em" 'compile-project)
 
+  (setq build-file-name "build.bat"
+        compile-command "call build.bat"
+        c-default-style "ellemtel"
+        c-basic-offset 4)
+
+  (message "Applied custom C/CPP settings")
+  )
+
+(add-hook 'c++-mode-hook 'c-settings)
 
 ;;
 ;;      -- jai --
 ;; -----------------------------------------------------------------
 (require 'jai-mode)
 
-(defun my-jai-mode-hook ()
+(defun jai-settings ()
   (define-key jai-mode-map "\em" 'compile-project)
 
-  (setq build-file-name "build.bat")
-  (setq compile-command "call build.bat")
+  (setq build-file-name "build.bat"
+        compile-command "call build.bat")
 
-  (message "Jai hook added")
+  (message "Applied custom JAI settings")
   )
 
-(add-hook 'jai-mode-hook 'my-jai-mode-hook)
+(add-hook 'jai-mode-hook 'jai-settings)
 
 ;;
 ;;      -- Required Modes --
