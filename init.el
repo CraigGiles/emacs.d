@@ -185,8 +185,7 @@
         c-default-style "ellemtel"
         c-basic-offset 4)
 
-  (message "Applied custom C/CPP settings")
-  )
+  (message "Applied custom C/CPP settings"))
 
 (add-hook 'c++-mode-hook 'c-settings)
 
@@ -201,8 +200,7 @@
   (setq build-file-name "build.bat"
         compile-command "call build.bat")
 
-  (message "Applied custom JAI settings")
-  )
+  (message "Applied custom JAI settings"))
 
 (add-hook 'jai-mode-hook 'jai-settings)
 
