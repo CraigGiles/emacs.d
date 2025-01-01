@@ -3,11 +3,10 @@
 (add-to-list 'load-path (expand-file-name "local" user-emacs-directory))
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
+
 (load-file (expand-file-name "rc.el" user-emacs-directory))
-
 (load-file (expand-file-name "gilesc-theme.el" user-emacs-directory))
-
-; (add-to-list 'default-frame-alist '(font . "Liberation Mono-12"))
+(load-file (expand-file-name "compile-functions.el" user-emacs-directory))
 
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
@@ -19,14 +18,12 @@
 (ido-everywhere 1)
 (global-display-line-numbers-mode 1)
 
-
-; (rc/require 'smex)
-; (global-set-key (kbd "M-x") 'smex)
-
-(rc/require-theme 'gruber-darker)
-
-; (rc/require 'ag)
+(rc/require 'ag)
 (rc/require 'magit)
+(rc/require 'counsel-projectile)
+(counsel-projectile-mode 1)
+
+(global-set-key (kbd "M-f") 'find-file)
 
 ;;
 ;;      -- Evil --
@@ -34,15 +31,18 @@
 (rc/require 'evil)
 (rc/require 'evil-escape)
 (rc/require 'evil-commentary)
-(setq evil-want-keybinding nil) ; NOTE: kept getting a warning to set this before evil-collection
-(rc/require 'evil-collection)
-
+(rc/require 'evil-search-highlight-persist)
 (rc/require 'use-package-chords)
+
+(setq evil-want-keybinding nil) ; NOTE: must be set before evil-collection
+(rc/require 'evil-collection)
 
 (evil-mode 1)
 (evil-escape-mode 1)
 (key-chord-mode 1)
 (evil-commentary-mode 1)
+(global-evil-search-highlight-persist 1)
+
 (evil-collection-init)
 
 (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
@@ -74,6 +74,7 @@
   (define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
   (define-key evil-normal-state-map (kbd "M-n") 'next-error)
   (define-key evil-normal-state-map (kbd "M-C-n") 'previous-error)
+  (define-key evil-normal-state-map (kbd "M-b") 'counsel-ibuffer)
 
   ;; Visual Mode
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
@@ -93,8 +94,35 @@
 (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
 (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
 (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
+
 ;;
-;;      -- C --
+;;      -- C/CPP --
 ;; -----------------------------------------------------------------
 (require 'simpc-mode)
 (add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
+
+;;
+;;      -- jai --
+;; -----------------------------------------------------------------
+(require 'jai-mode)
+(add-to-list 'auto-mode-alist '("\\.jai$" . jai-mode))
+
+(defun my-jai-mode-hook ()
+    (add-to-list
+     'compilation-error-regexp-alist
+     (list "^\\([A-Za-z]:.+?\\):\\([0-9]+\\),\\([0-9]+\\):.*"
+           1   ;FILE
+           2   ;LINE
+           3)) ;COLUMN
+
+    (setq tab-stop 4)
+    (setq indent-tabs-mode nil)
+
+    (define-key jai-mode-map "\em" 'make-without-asking)
+
+    (setq build-file-name "build.bat")
+    (setq compile-command "call build.bat")
+
+    (message "Jai hook added")
+)
+(add-hook 'jai-mode-hook 'my-jai-mode-hook)
