@@ -216,6 +216,8 @@
   (setq-local beginning-of-defun-function 'jai-beginning-of-defun)
   (setq-local end-of-defun-function 'jai-end-of-defun)
 
+  (electric-indent-mode 0)
+
   ;; add indent functionality to some characters
   (jai--add-self-insert-hooks)
 
