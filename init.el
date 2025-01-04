@@ -3,7 +3,7 @@
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
-(global-display-line-numbers-mode 1)
+(global-display-line-numbers-mode 0)
 
 ;;
 ;;      -- Settings --
@@ -178,6 +178,12 @@
 (add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
 (add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
 
+;; (setq split-width-threshold 1600)
+(defun never-split-a-window ()
+    "Never, ever split a window."
+    nil)
+(setq split-window-preferred-function 'never-split-a-window)
+
 (defun c-settings ()
   (define-key c++-mode-map "\em" 'compile-project)
 
@@ -207,20 +213,8 @@
   (add-to-list 'fixme-modes 'jai-mode)
   (initialize-fixme-modes)
 
-  ;; NOTE: since I use JAI on a linux and windows system, i have to
-  ;; swap between the two in settings
-  (defun jai-windows-settings ()
-    (setq build-file-name "build.bat"
-          compile-command "call build.bat"))
-
-  (defun jai-nix-settings ()
-    (setq build-file-name "build.sh"
-          compile-command "./build.sh"))
-
-  (if-system darwin     (jai-nix-settings))
-  (if-system gnu        (jai-nix-settings))
-  (if-system gnu/linux  (jai-nix-settings))
-  (if-system windows-nt (jai-windows-settings))
+  (setq build-file-name "first.jai"
+        compile-command "jai first.jai")
 
   (message "Applied custom JAI settings"))
 
