@@ -10,11 +10,15 @@
 ;;      -- Settings --
 ;; -----------------------------------------------------------------
 
+;; Useful for use-package
+(setq use-package-always-ensure t)
+
+;; Needed for evil
 (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
 (setq evil-want-keybinding nil)
+
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
-
 
 ;; Put all the backup files in an ~/.emacs.d/backup dir
 (setq backup-directory-alist '(("." . "~/.emacs.d/auto-saves")))
@@ -66,7 +70,6 @@
 (load-file (expand-file-name "compile.el" user-emacs-directory))
 (load-file (expand-file-name "untabify.el" user-emacs-directory))
 (load-file (expand-file-name "system.el" user-emacs-directory))
-(load-file (expand-file-name "use-package.el" user-emacs-directory))
 
 ;;
 ;;      -- Packages --
@@ -76,7 +79,10 @@
 
 (use-package magit
   :defer t
-  :bind (("C-x g" . magit-status)))
+  :bind ("C-x g" . magit-status)
+  :config
+  (setq magit-section-initial-visibility-alist '((untracked . show)))
+  )
 
 (use-package counsel-projectile
   :defer t
