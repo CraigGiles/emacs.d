@@ -166,7 +166,7 @@
 ;;      -- fixme hilighting --
 ;; -----------------------------------------------------------------
 (require 'fixme-mode)
-(setq fixme-modes '(markdown-mode emacs-lisp-mode prog-mode fundamental-mode jai-mode))
+(setq fixme-modes '(markdown-mode emacs-lisp-mode prog-mode fundamental-mode jai-mode python-mode))
 (initialize-fixme-modes)
 
 ;;
@@ -219,6 +219,23 @@
   (message "Applied custom JAI settings"))
 
 (add-hook 'jai-mode-hook 'jai-settings)
+
+;;
+;;      -- python --
+;; -----------------------------------------------------------------
+(setq py-shell-name "py")
+(defun python-settings ()
+  (define-key python-mode-map "\em" 'compile-project)
+
+  (add-to-list 'fixme-modes 'python-mode)
+  (initialize-fixme-modes)
+
+  (setq build-file-name "build.bat"
+        compile-command "call build.bat")
+
+  (message "Applied custom PYTHON settings"))
+
+(add-hook 'python-mode-hook 'python-settings)
 
 ;;
 ;;      -- Required Modes --
