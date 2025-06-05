@@ -1,5 +1,5 @@
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
+;; (add-to-list 'package-archives
+;;              '("melpa" . "https://melpa.org/packages/") t)
 ;; (add-to-list 'package-archives
 ;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
@@ -19,13 +19,13 @@
   (dolist (package packages)
     (rc/require-one-package package)))
 
-(defun rc/require-theme (theme)
-  (let ((theme-package (->> theme
-                            (symbol-name)
-                            (funcall (-flip #'concat) "-theme")
-                            (intern))))
-    (rc/require theme-package)
-    (load-theme theme t)))
+;; (defun rc/require-theme (theme)
+;;   (let ((theme-package (->> theme
+;;                             (symbol-name)
+;;                             (funcall (-flip #'concat) "-theme")
+;;                             (intern))))
+;;     (rc/require theme-package)
+;;     (load-theme theme t)))
 
 (rc/require 'dash)
 (require 'dash)

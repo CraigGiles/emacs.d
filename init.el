@@ -1,3 +1,4 @@
+
 (package-initialize)
 
 (menu-bar-mode 0)
@@ -5,20 +6,12 @@
 (scroll-bar-mode 0)
 (global-display-line-numbers-mode 0)
 
-
 ;;
 ;;      -- Settings --
 ;; -----------------------------------------------------------------
-
-;; Useful for use-package
-(setq use-package-always-ensure t)
-
-;; Needed for evil
-(setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-(setq evil-want-keybinding nil)
-
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
+
 
 ;; Put all the backup files in an ~/.emacs.d/backup dir
 (setq backup-directory-alist '(("." . "~/.emacs.d/auto-saves")))
@@ -52,6 +45,15 @@
 (global-set-key (kbd "M-f") 'find-file)
 
 ;;
+;;      -- Font Scaling --
+;; -----------------------------------------------------------------
+;; Add font scaling with CTRL+= and CTRL+-
+(global-set-key (kbd "C-=") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "C-0") 'text-scale-adjust) ;; Reset font size
+;; Set the OSX's CMD key as the meta key
+
+;;
 ;;      -- Loading --
 ;; -----------------------------------------------------------------
 (add-to-list 'load-path (expand-file-name "local" user-emacs-directory))
@@ -70,93 +72,51 @@
 (load-file (expand-file-name "compile.el" user-emacs-directory))
 (load-file (expand-file-name "untabify.el" user-emacs-directory))
 (load-file (expand-file-name "system.el" user-emacs-directory))
+(load-file (expand-file-name "rc.el" user-emacs-directory))
 
 ;;
 ;;      -- Packages --
 ;; -----------------------------------------------------------------
-(use-package ag
-  :defer t)
-
-(use-package magit
-  :defer t
-  :bind ("C-x g" . magit-status)
-  :config
-  (setq magit-section-initial-visibility-alist '((untracked . show)))
-  )
-
-(use-package counsel-projectile
-  :defer t
-  :config
-  (counsel-projectile-mode 1))
-
-(use-package yaml-mode
-  :defer t)
-
-(use-package toml-mode
-  :defer t)
-
-(use-package glsl-mode
-  :defer t)
-
-(use-package cmake-mode
-  :defer t)
-
-(use-package csharp-mode
-  :defer t)
-
-(use-package markdown-mode
-  :defer t)
+(rc/require 'ag)
+(rc/require 'magit)
+(rc/require 'counsel-projectile)
+(rc/require 'yaml-mode)
+(rc/require 'toml-mode)
+(rc/require 'glsl-mode)
+(rc/require 'cmake-mode)
+(rc/require 'csharp-mode)
+(rc/require 'markdown-mode)
 
 (counsel-projectile-mode 1)
 
 ;;
 ;;      -- Evil --
 ;; -----------------------------------------------------------------
-(use-package evil
-  :demand t
-  :config
-  (evil-mode 1)
-  (setq evil-vsplit-window-right t)
-  (setq evil-split-window-below t))
-
-(use-package evil-escape
-  :after evil
-  :config
-  (evil-escape-mode 1))
-
-(use-package evil-commentary
-  :after evil
-  :config
-  (evil-commentary-mode 1))
-
-(use-package evil-search-highlight-persist
-  :after evil
-  :config
-  (global-evil-search-highlight-persist 1))
-
-(use-package use-package-chords
-  :after evil
-  :config
-  (key-chord-mode 1))
-
-(use-package undo-tree
-  :after evil
-  :config
-  (setq undo-tree-auto-save-history t)
-  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-  (global-undo-tree-mode 1)
-  (evil-set-undo-system 'undo-tree))
+(rc/require 'evil)
+(rc/require 'evil-escape)
+(rc/require 'evil-commentary)
+(rc/require 'evil-search-highlight-persist)
+(rc/require 'use-package-chords)
+(rc/require 'undo-tree)
 
 (setq evil-want-keybinding nil) ; NOTE: must be set before evil-collection
+(rc/require 'evil-collection)
 
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
+(evil-mode 1)
+(evil-escape-mode 1)
+(key-chord-mode 1)
+(evil-commentary-mode 1)
+(global-evil-search-highlight-persist 1)
 
 (setq undo-tree-auto-save-history t)
 (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+(global-undo-tree-mode 1)
+(evil-set-undo-system 'undo-tree)
 
+(evil-collection-init)
+
+(setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+(setq evil-want-keybinding nil)
 (setq evil-vsplit-window-right t)
 (setq evil-split-window-below t)
 
@@ -222,12 +182,11 @@
 ;;
 ;;      -- C/CPP --
 ;; -----------------------------------------------------------------
-(use-package cc-mode
-  :defer t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . c++-mode))
-  (add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
-  (add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode)))
+(rc/require 'cc-mode)
+
+(add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\makefile$" . make-mode))
+(add-to-list 'auto-mode-alist '("\\Makefile$" . make-mode))
 
 ;; (setq split-width-threshold 1600)
 (defun never-split-a-window ()
@@ -291,11 +250,3 @@
 ;;
 ;;      -- Required Modes --
 ;; -----------------------------------------------------------------
-
-;;
-;;      -- Font Scaling --
-;; -----------------------------------------------------------------
-;; Add font scaling with CTRL+= and CTRL+-
-(global-set-key (kbd "C-=") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
-(global-set-key (kbd "C-0") 'text-scale-adjust) ;; Reset font size
