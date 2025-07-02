@@ -3,8 +3,8 @@
 (global-visual-line-mode 1)
 
 ;; Font
-(set-face-attribute 'default t       :font "Liberation Mono-16")
-(add-to-list 'default-frame-alist '(font . "Liberation Mono-16"))
+(set-face-attribute 'default t       :font "Liberation Mono-14")
+(add-to-list 'default-frame-alist '(font . "Liberation Mono-14"))
 
 ;; Colors
 (setq foreground-font-color                                       "#D2CBC0")
