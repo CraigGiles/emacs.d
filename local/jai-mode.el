@@ -65,6 +65,16 @@
 
     table))
 
+
+;; This is needed for correct directive indentation.
+;; This jai-mode uses js-mode indentation and it needs precise list of "preprocessor"
+;; directives. You could ask "what does javascript mode have to do with C++ preprocessor?",
+;; or "why does jai-mode use javascript indentation?".
+;; And my answer to that is - senator, I don't know, I just work here.
+(defconst cpp-font-lock-keywords-source-directives
+  "add_context\\|align\\|as\\|asm\\|assert\\|bake\\|bake_arguments\\|bytes\\|caller_location\\|c_call\\|char\\|code\\|compiler\\|compile_time\\|complete\\|cpp_method\\|define \\|deprecated\\|dump\\|else\\|endif\\|expand\\|file\\|filepath\\|foreign\\|foreign_library\\|foreign_system_library\\|if\\|ifdef\\|ifndef\\|import\\|insert\\|insert_internal\\|intrinsic\\|library\\|load\\|location\\|modify\\|module_parameters\\|must\\|no_abc\\|no_alias\\|no_aoc\\|no_context\\|no_debug\\|no_padding\\|no_reset\\|place\\|placeholder\\|poke_name\\|procedure_name\\|program_export\\|run\\|run_and_insert\\|runtime_support\\|scope_export\\|scope_file\\|scope_module\\|specified\\|string\\|symmetric\\|system_library\\|this\\|through\\|type\\|type_info_none\\|type_info_procedures_are_void_pointers"
+  "Regular expression used in `cpp-font-lock-keywords'.")
+
 (defconst jai-builtins
   '("it" "it_index"))
 
@@ -79,7 +89,7 @@
   '("int" "u64" "u32" "u16" "u8"
     "s64" "s32" "s16" "s8" "float"
     "float32" "float64" "string"
-    "bool"))
+    "bool" "void"))
 
 (defun jai-wrap-word-rx (s)
   (concat "\\<" s "\\>"))
@@ -88,7 +98,6 @@
   "build keyword regexp"
   (jai-wrap-word-rx (regexp-opt keywords t)))
 
-(defconst jai-hat-type-rx (rx (group (and "^" (1+ word)))))
 (defconst jai-dollar-type-rx (rx (group "$" (or (1+ word) (opt "$")))))
 (defconst jai-number-rx
   (rx (and
@@ -97,6 +106,37 @@
            (and "0" (any "xX") (+ hex-digit)))
        (opt (and (any "_" "A-Z" "a-z") (* (any "_" "A-Z" "a-z" "0-9"))))
        symbol-end)))
+
+(defun jai-syntax-propertize-function (start end)
+  "Mark all heredoc regions as strings in the buffer."
+  (goto-char start)
+  ;; If we're already inside a herestring we have to take care of that one first
+  (when-let* ((ppss (syntax-ppss))
+         (inside (eq t (nth 3 ppss)))
+         (start-pos (nth 8 ppss))
+         (tag (get-text-property start-pos 'here-string-marker)))
+    (when (re-search-forward (concat "^[[:space:]]*" (regexp-quote tag) ";?$") end 'move)
+      (let ((end (match-end 0)))
+        (put-text-property (1- end) end 'syntax-table (string-to-syntax "|"))
+        )
+      ))
+  (while (re-search-forward "#string +\\([a-zA-Z_][a-zA-Z0-9_]+\\)" end 'move)
+    (unless (nth 4 (syntax-ppss))
+      (let ((tag (match-string 1))
+          (beg (match-beginning 1)))
+      (unless (string= tag "CODE")
+        (put-text-property beg (1+ beg) 'here-string-marker tag)
+        (put-text-property beg (1+ beg) 'syntax-table (string-to-syntax "|"))
+        (when (re-search-forward (concat "^[[:space:]]*" (regexp-quote tag) ";?$") end 'move)
+          ;; Apply string syntax to everything between the start and end of heredoc
+          (let ((end (match-end 0)))
+            (put-text-property (1- end) end 'syntax-table (string-to-syntax "|"))
+            ))))
+
+      )
+    )
+  )
+
 
 (defconst jai-font-lock-defaults
   `(;; Keywords
@@ -120,10 +160,17 @@
     ;; Numbers
     (,(jai-wrap-word-rx jai-number-rx) . font-lock-constant-face)
 
+    ;; Procedure names
+    ("\\([[:word:]]+\\)[[:space:]]*:[[:space:]]*:?[[:space:]]*\\(inline\\|#type\\)?[[:space:]]*\(" 1 font-lock-function-name-face)
+
     ;; Types
     (,(jai-keywords-rx jai-typenames) 1 font-lock-type-face)
-    (,jai-hat-type-rx 1 font-lock-type-face)
     (,jai-dollar-type-rx 1 font-lock-type-face)
+    ("\\([[:word:]]+\\)[[:space:]]*:[[:space:]]*:[[:space:]]*\\(struct\\|enum\\|union\\|#type,\\)" 1 font-lock-type-face)
+    ;; TODO: This detects false-positives in case of `for it_index, it: foo`, it thinks that foo is a type.
+    ;; Emacs regexes do not support negative lookaheads, so I'd need to add proper logic to jai-syntax-propertize-function
+    ;; but it's too hard for now. Oh well!
+    ("[[:word:]]+[[:space:]]*:[[:space:]]*\\**\\(\[[[:word:]]*\]\\)?*\\**\\([[:word:]]+\\)" 2 font-lock-type-face)
 
     ("---" . font-lock-constant-face)))
 
@@ -215,7 +262,7 @@
   (setq-local font-lock-defaults '(jai-font-lock-defaults))
   (setq-local beginning-of-defun-function 'jai-beginning-of-defun)
   (setq-local end-of-defun-function 'jai-end-of-defun)
-
+  (setq-local syntax-propertize-function 'jai-syntax-propertize-function)
   ;; add indent functionality to some characters
   (jai--add-self-insert-hooks)
 
