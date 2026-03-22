@@ -7,6 +7,21 @@
 (global-display-line-numbers-mode 0)
 
 ;;
+;;      -- Encoding --
+;; -----------------------------------------------------------------
+;; Set UTF-8 as default encoding
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(setq default-buffer-file-coding-system 'utf-8)
+
+;; Windows-specific encoding settings
+(when (eq system-type 'windows-nt)
+  (set-selection-coding-system 'utf-16-le)
+  (setq default-process-coding-system '(utf-8-dos . utf-8-dos)))
+
+;;
 ;;      -- Settings --
 ;; -----------------------------------------------------------------
 (setq inhibit-splash-screen t)
