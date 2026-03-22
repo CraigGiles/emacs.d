@@ -135,6 +135,11 @@
 (setq evil-vsplit-window-right t)
 (setq evil-split-window-below t)
 
+(defun counsel-projectile-find-file-invalidate ()
+    "Call `counsel-projectile-find-file' with cache invalidation."
+    (interactive)
+    (counsel-projectile-find-file 4))
+
 (with-eval-after-load 'evil-maps
   ;; Normal Mode
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
@@ -144,6 +149,8 @@
   (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-normal-state-map (kbd "M-p") 'counsel-projectile-find-file)
   (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file)
+  (define-key evil-normal-state-map (kbd "M-S-p") 'counsel-projectile-find-file-invalidate)
+  (define-key evil-normal-state-map (kbd "C-S-p") 'counsel-projectile-find-file-invalidate)
   (define-key evil-normal-state-map (kbd "C-c C-c") 'eval-buffer)
   (define-key evil-normal-state-map [tab]  'evil-toggle-fold)
   (define-key evil-normal-state-map (kbd "M-j") 'counsel-imenu)
