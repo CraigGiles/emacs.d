@@ -245,7 +245,10 @@
   (add-to-list 'fixme-modes 'jai-mode)
   (initialize-fixme-modes)
 
-  (setq build-file-name "first.jai"
+  (setq indent-tabs-mode nil
+        tab-width 4
+        js-indent-level 4
+        build-file-name "first.jai"
         compile-command "jai first.jai")
 
   (message "Applied custom JAI settings"))
