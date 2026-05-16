@@ -123,7 +123,7 @@
 (evil-commentary-mode 1)
 (global-evil-search-highlight-persist 1)
 
-(setq undo-tree-auto-save-history t)
+(setq undo-tree-auto-save-history nil)
 (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
 (global-undo-tree-mode 1)
 (evil-set-undo-system 'undo-tree)
