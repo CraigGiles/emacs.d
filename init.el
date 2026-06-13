@@ -102,6 +102,7 @@
 (rc/require 'csharp-mode)
 (rc/require 'markdown-mode)
 
+(setq projectile-sort-order 'recently-active)
 (counsel-projectile-mode 1)
 
 ;;
