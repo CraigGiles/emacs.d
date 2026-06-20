@@ -10,16 +10,16 @@
 ;;      -- Encoding --
 ;; -----------------------------------------------------------------
 ;; Set UTF-8 as default encoding
-(prefer-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(setq default-buffer-file-coding-system 'utf-8)
+;; (prefer-coding-system 'utf-8)
+;; (set-default-coding-systems 'utf-8)
+;; (set-terminal-coding-system 'utf-8)
+;; (set-keyboard-coding-system 'utf-8)
+;; (setq default-buffer-file-coding-system 'utf-8)
 
-;; Windows-specific encoding settings
-(when (eq system-type 'windows-nt)
-  (set-selection-coding-system 'utf-16-le)
-  (setq default-process-coding-system '(utf-8-dos . utf-8-dos)))
+;; ;; Windows-specific encoding settings
+;; (when (eq system-type 'windows-nt)
+;;   (set-selection-coding-system 'utf-16-le)
+;;   (setq default-process-coding-system '(utf-8-dos . utf-8-dos)))
 
 ;;
 ;;      -- Settings --
@@ -56,6 +56,9 @@
 
 ;; Auto revert files that change on the hard disk
 (global-auto-revert-mode 1)
+
+;; Reload the TAGS table without asking when a compile regenerates it
+(setq tags-revert-without-query t)
 
 (global-set-key (kbd "M-f") 'find-file)
 
@@ -256,22 +259,6 @@
 
 (add-hook 'jai-mode-hook 'jai-settings)
 
-;;
-;;      -- python --
-;; -----------------------------------------------------------------
-(setq py-shell-name "py")
-(defun python-settings ()
-  (define-key python-mode-map "\em" 'compile-project)
-
-  (add-to-list 'fixme-modes 'python-mode)
-  (initialize-fixme-modes)
-
-  (setq build-file-name "build.bat"
-        compile-command "call build.bat")
-
-  (message "Applied custom PYTHON settings"))
-
-(add-hook 'python-mode-hook 'python-settings)
 
 ;;
 ;;      -- Required Modes --
