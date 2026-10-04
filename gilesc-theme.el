@@ -18,9 +18,9 @@
 (set-face-attribute 'font-lock-variable-name-face nil :foreground foreground-font-color)
 (set-face-attribute 'font-lock-type-face nil          :foreground foreground-font-color)
 (set-foreground-color                                             foreground-font-color)
-;; (set-background-color                                             "#072626") ;; Actually J.Blow's theme
+(set-background-color                                             "#072626") ;; Actually J.Blow's theme
+;; (set-background-color                                             "#002630") ;; Testing Solarized background
 ;; (set-background-color                                             "#002b36") ;; Solarized background
-(set-background-color                                             "#002630") ;; Testing Solarized background
 ;; (set-background-color                                             "#002020") ;; based on Solarized background
 ;; (set-background-color                                             "#001e20") ;; based on Solarized background
 ;; (set-background-color                                             "#001a1d") ;; based on Solarized background
