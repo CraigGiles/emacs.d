@@ -106,7 +106,11 @@
 (rc/require 'markdown-mode)
 
 (setq projectile-sort-order 'recently-active)
+(setq projectile-project-search-path '(("~/Development/" . 1)))
 (counsel-projectile-mode 1)
+;; NOTE: projectile loads known projects lazily, but counsel-projectile reads the
+;; variable directly -- so force the load (and discovery) at startup.
+(projectile-known-projects)
 
 ;;
 ;;      -- Evil --
@@ -181,6 +185,51 @@
                                                 (evil-delete (point-at-bol) (point))))
 )
 
+;; Make the jump list behave like Vim's:
+;;  - setting a new jump after C-o does NOT throw away the newer entries
+;;    (evil truncates them like a browser history; Vim appends to the end)
+;;  - only one entry per line is kept (Vim removes older entries on the same line)
+(defun gilesc/evil--jumps-dedupe-line ()
+  "Remove older entries in the jump list that are on the same line as the newest."
+  (let ((ring (evil--jumps-get-window-jump-list)))
+    (when (> (ring-length ring) 1)
+      (let* ((newest (ring-ref ring 0))
+             (pos (car newest))
+             (file (cadr newest))
+             (line (and (markerp pos) (marker-buffer pos)
+                        (with-current-buffer (marker-buffer pos)
+                          (line-number-at-pos pos t)))))
+        (when line
+          (let ((i 1))
+            (while (< i (ring-length ring))
+              (let* ((entry (ring-ref ring i))
+                     (p (car entry)))
+                (if (and (equal (cadr entry) file)
+                         (markerp p) (marker-buffer p)
+                         (= line (with-current-buffer (marker-buffer p)
+                                   (line-number-at-pos p t))))
+                    (ring-remove ring i)
+                  (setq i (1+ i)))))))))))
+
+(define-advice evil-set-jump (:override (&optional pos) gilesc-vim-style)
+  "Set jump point at POS, keeping forward jumps like Vim does."
+  (save-excursion
+    (when (markerp pos)
+      (set-buffer (marker-buffer pos)))
+    (unless (or (region-active-p) (evil-visual-state-p))
+      (push-mark pos t))
+    (unless evil--jumps-jumping
+      (setf (evil-jumps-struct-idx (evil--jumps-get-current)) -1)
+      (when pos
+        (goto-char pos))
+      (evil--jumps-push))))
+
+(advice-add 'evil--jumps-push :after #'gilesc/evil--jumps-dedupe-line)
+
+;; Treat these as jumps (Vim treats tag/definition jumps as jumps)
+(evil-add-command-properties #'counsel-imenu :jump t)
+(evil-add-command-properties #'xref-find-definitions :jump t)
+
 (setq key-chord-two-keys-delay 0.1)
 (key-chord-define evil-insert-state-map "Jj" 'evil-escape)
 (key-chord-define evil-insert-state-map "JJ" 'evil-escape)
@@ -193,6 +242,20 @@
 (evil-define-key 'normal magit-mode-map [tab] 'magit-section-toggle)
 (evil-define-key 'normal magit-blame-mode-map (kbd "g q") 'magit-blame-quit)
 (evil-define-key 'normal magit-mode-map (kbd "C-r") 'magit-status)
+
+(defun my/magit-diff-peek-file ()
+  "Show the file at point in the other window, keep focus in magit."
+  (interactive)
+  (save-selected-window
+    (magit-diff-visit-worktree-file-other-window)))
+
+;; NOTE: evil-collection binds RET directly on the file/hunk section maps
+;; when magit loads, so rebind after its setup has run.
+(add-hook 'evil-collection-setup-hook
+          (lambda (mode &rest _rest)
+            (when (eq mode 'magit)
+              (define-key magit-file-section-map (kbd "RET") #'my/magit-diff-peek-file)
+              (define-key magit-hunk-section-map (kbd "RET") #'my/magit-diff-peek-file))))
 
 ;; Treat emacs 'symbol' as a word
 (with-eval-after-load 'evil
