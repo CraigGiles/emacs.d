@@ -5,6 +5,7 @@
 ;; Font
 (set-face-attribute 'default t       :font "Liberation Mono-14")
 (add-to-list 'default-frame-alist '(font . "Liberation Mono-14"))
+(set-face-attribute 'fixed-pitch nil :family "Liberation Mono") ; markdown tables/code; Emacs' "Monospace" default doesn't exist on Windows
 
 ;; Colors
 (setq foreground-font-color                                       "#D2CBC0")
