@@ -1,5 +1,9 @@
-;; (add-to-list 'package-archives
-;;              '("melpa" . "https://melpa.org/packages/") t)
+;; Windows Emacs' GnuTLS often dies mid-download over TLS 1.3 ("No Data" errors)
+(when (eq system-type 'windows-nt)
+  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
 ;; (add-to-list 'package-archives
 ;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
@@ -30,5 +34,6 @@
 (rc/require 'dash)
 (require 'dash)
 
-(rc/require 'dash-functional)
-(require 'dash-functional)
+;; dash-functional was merged into dash (2.18+) and removed from the archives
+;; (rc/require 'dash-functional)
+;; (require 'dash-functional)
